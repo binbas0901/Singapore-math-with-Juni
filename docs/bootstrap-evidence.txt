@@ -1,0 +1,42 @@
+Building for debugging...
+[0/13] Write sources
+[2/13] Write swift-version--1BA0962812E73E12.txt
+[4/15] Compiling JuniCore NumberBond.swift
+[5/15] Emitting module JuniCore
+[6/16] Wrapping AST for JuniCore for debugging
+[8/18] Compiling JuniCoreTests NumberBondTests.swift
+[9/18] Emitting module JuniCoreTests
+[10/19] /mnt/data/juni-engineering/app/JuniCore/.build/x86_64-unknown-linux-gnu/debug/JuniCorePackageDiscoveredTests.derived/all-discovered-tests.swift
+[11/19] Write sources
+[12/19] Wrapping AST for JuniCoreTests for debugging
+[14/22] Compiling JuniCorePackageDiscoveredTests all-discovered-tests.swift
+[15/22] Emitting module JuniCorePackageDiscoveredTests
+[16/22] Compiling JuniCorePackageDiscoveredTests JuniCoreTests.swift
+[17/23] /mnt/data/juni-engineering/app/JuniCore/.build/x86_64-unknown-linux-gnu/debug/JuniCorePackageTests.derived/runner.swift
+[18/23] Write sources
+[19/23] Wrapping AST for JuniCorePackageDiscoveredTests for debugging
+[21/25] Compiling JuniCorePackageTests runner.swift
+[22/25] Emitting module JuniCorePackageTests
+[23/26] Wrapping AST for JuniCorePackageTests for debugging
+[24/26] Write Objects.LinkFileList
+[25/26] Linking JuniCorePackageTests.xctest
+Build complete! (9.52s)
+Test Suite 'All tests' started at 2026-11-18 01:07:56.015
+Test Suite 'debug.xctest' started at 2026-11-18 01:07:56.029
+Test Suite 'NumberBondTests' started at 2026-11-18 01:07:56.029
+Test Case 'NumberBondTests.testAllValidPairs' started at 2026-11-18 01:07:56.029
+Test Case 'NumberBondTests.testAllValidPairs' passed (0.001 seconds)
+Test Case 'NumberBondTests.testInvalidPairs' started at 2026-11-18 01:07:56.031
+Test Case 'NumberBondTests.testInvalidPairs' passed (0.101 seconds)
+Test Suite 'NumberBondTests' passed at 2026-11-18 01:07:56.131
+	 Executed 2 tests, with 0 failures (0 unexpected) in 0.102 (0.102) seconds
+Test Suite 'debug.xctest' passed at 2026-11-18 01:07:56.132
+	 Executed 2 tests, with 0 failures (0 unexpected) in 0.102 (0.102) seconds
+Test Suite 'All tests' passed at 2026-11-18 01:07:56.132
+	 Executed 2 tests, with 0 failures (0 unexpected) in 0.102 (0.102) seconds
+◇ Test run started.
+↳ Testing Library Version: 6.2.1 (c9d57c83568b06d)
+↳ Target Platform: x86_64-unknown-linux-gnu
+✔ Test run with 0 tests in 0 suites passed after 0.001 seconds.
+Swift test exit: 0
+89f547aa4a72dded867bc2715234305d90f9d61d

@@ -1,0 +1,8 @@
+.build/
+DerivedData/
+*.xcuserstate
+.env
+*.p12
+*.mobileprovision
+*.pdf
+.DS_Store
