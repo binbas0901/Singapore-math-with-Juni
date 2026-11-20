@@ -1,9 +1,11 @@
 # Primary 1 curriculum coverage — CUR-002
-Version 1.2 draft | Focused independent Education re-review pending
+Version 1.2 | Lead accepted curriculum inventory after independent Education re-review
 
 Source: MOE-MATH-2021-2025-10, pp. 31–32. SHA-256: `e8f77fe10d768e2ad5266dfc39a8821674be7eb1c81bc545ba4b841b12ae70e1`. Original instructional decomposition; not an official lesson sequence.
 
 ## Coverage
+
+Independent Education re-review resolved all original findings. Lead accepted the inventory after synchronizing the six enrichment slot assessments with their concept records to explicitly accept alternative correct strategies. See [final independent review](qa/cur-002-final-review.md). Acceptance does not certify authored lessons or runtime behavior.
 
 32/32 numbered entries mapped. The inventory includes 59 core concepts and lesson slots plus six optional enrichment concepts and slots. The slots represent planned instruction, practice and independent assessment. Authored lessons and learning validation are pending.
 
@@ -125,7 +127,7 @@ Each slot plans readiness, appropriate concrete/pictorial/abstract engagement, i
 
 ## First unit scope
 
-The owner approved **Numbers and Number Bonds to 10** on 2026-11-17. Education approval and CUR-002 acceptance remain pending. Introductory evidence in 0–10 applies to parts of NUM-01/02/03/04/05 and ADD-01. Number bonds are a teaching strategy within ADD-01. Full-range mastery requires later evidence. See the [unit specification](first-unit.md).
+The owner approved **Numbers and Number Bonds to 10** on 2026-11-17. CUR-003 Education approval remains pending. Introductory evidence in 0–10 applies to parts of NUM-01/02/03/04/05 and ADD-01. Number bonds are a teaching strategy within ADD-01. Full-range mastery requires later evidence. See the [unit specification](first-unit.md).
 
 ## Gaps and review requirements
 
