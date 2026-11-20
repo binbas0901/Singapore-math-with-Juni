@@ -1,0 +1,36 @@
+name: iPad scaffold verification
+
+# Manual dispatch requires owner authorization for hosted runner usage.
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  verify:
+    runs-on: macos-26
+    timeout-minutes: 30
+    env:
+      DEVELOPER_DIR: /Applications/Xcode_26.3.app/Contents/Developer
+    steps:
+      - uses: actions/checkout@v4
+      - name: Select the iPad (A16) simulator on iOS 26.3
+        shell: bash
+        run: |
+          xcodebuild -version
+          simulator=$(xcrun simctl list devices available -j | python3 -c '
+          import json, sys
+          devices = json.load(sys.stdin)["devices"].get("com.apple.CoreSimulator.SimRuntime.iOS-26-3", [])
+          print(next((device["udid"] for device in devices if device["name"] == "iPad (A16)"), ""))
+          ')
+          if [[ -z "$simulator" ]]; then
+              echo "The runner needs an iPad (A16) simulator on iOS 26.3." >&2
+              exit 1
+          fi
+          echo "JUNI_SIMULATOR=$simulator" >> "$GITHUB_ENV"
+          xcrun simctl bootstatus "$simulator" -b
+      - name: Build and test
+        run: |
+          tools/verify-ipad.sh build "$JUNI_SIMULATOR" "$RUNNER_TEMP/JuniDerivedData"
+          tools/verify-ipad.sh test "$JUNI_SIMULATOR" "$RUNNER_TEMP/JuniDerivedData"
