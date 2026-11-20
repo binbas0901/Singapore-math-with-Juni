@@ -127,7 +127,7 @@ Each slot plans readiness, appropriate concrete/pictorial/abstract engagement, i
 
 ## First unit scope
 
-The owner approved **Numbers and Number Bonds to 10** on 2026-11-17. CUR-003 Education approval remains pending. Introductory evidence in 0–10 applies to parts of NUM-01/02/03/04/05 and ADD-01. Number bonds are a teaching strategy within ADD-01. Full-range mastery requires later evidence. See the [unit specification](first-unit.md).
+The owner approved **Numbers and Number Bonds to 10** on 2026-11-17. CUR-003 specification is accepted; owner sample-slice approval remains pending. Introductory evidence in 0–10 applies to parts of NUM-01/02/03/04/05 and ADD-01. Number bonds are a teaching strategy within ADD-01. Full-range mastery requires later evidence. See the [unit specification](first-unit.md).
 
 ## Gaps and review requirements
 
