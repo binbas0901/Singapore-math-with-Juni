@@ -1,12 +1,12 @@
 # Singapore Math with Juni --- Project Status
 
-**Version:** 1.8 \| **Baseline:** 2026-11-17 \| **Maintainer:** Lead agent \| **Current milestone:** M0 / Sprint 0
+**Version:** 1.10 \| **Baseline:** 2026-11-17 \| **Maintainer:** Lead agent \| **Current milestone:** M0 / Sprint 0
 
 ## 1. Executive status
 
 Target: one complete P1 learning unit, offline native iPad private beta, preceded by a reviewed vertical slice. D01--D13 and agent-driven delivery remain binding. This ledger is the operational state record, not an independent change to the roadmap or blueprint.
 
-**34 tasks: 4 review, 1 ready, 27 backlog, 0 in progress, 0 blocked, 2 accepted.** No milestone gate has been accepted. The Lead accepted ENV-001. Verification covered the local Mac toolchain, access to the existing private GitHub repository, successful iPad (A16) simulator startup, and two passing JuniCore tests. ENV-002 is ready for dispatch once integration into main is confirmed. Native iPad build and device readiness remain open.
+**34 tasks: 4 review, 0 ready, 27 backlog, 0 in progress, 0 blocked, 3 accepted.** No milestone gate has been accepted. ENV-001 is integrated into main at `a2954204d7edacf8f05241e3af18bf210f12f6ef`. The Lead accepted ENV-002 after independent QA verified the native iPad scaffold in the simulator. PR #2 awaits integration. Physical-device readiness remains open.
 
 ## 2. Source baseline and evidence
 
@@ -35,9 +35,9 @@ States: backlog, ready, in progress, review, blocked, accepted. Ready means depe
   ---------- ---------- ------------------ ----------------------------- ---------------------------------------------- ----------------------------------------------------------------------------------------------------------------------------------------------------------------- ----------------------------------------------------------------
   LEAD-001   accepted   Lead / Owner       None                          docs/ --- blueprint, AGENTS, roadmap, status   All 13 decisions present; references consistent; status ledger initialized; owner review recorded.                                                                Owner approved baseline in current conversation.
 
-  ENV-001    accepted   Release / Lead     LEAD-001 (draft sufficient)   docs/environment.md; repository setup plan     Check actual Codex access, Git permissions, Mac/Xcode and iPad; record versions, costs, blockers and signing path; obtain authorization before remote creation.   Lead independently reviewed and accepted the evidence. Integration into main is pending.
+  ENV-001    accepted   Release / Lead     LEAD-001 (draft sufficient)   docs/environment.md; repository setup plan     Check actual Codex access, Git permissions, Mac/Xcode and iPad; record versions, costs, blockers and signing path; obtain authorization before remote creation.   Lead independently reviewed and accepted the evidence. Integrated into main at `a2954204`.
 
-  ENV-002    ready      Release / QA       ENV-001                       app/ build skeleton; CI configuration          Authorized repo initialized; clean checkout builds and runs a smoke test on macOS; exact commands and logs recorded; no secrets committed.                        Dispatch after integration into main is confirmed.
+  ENV-002    accepted     Release / QA       ENV-001                       app/ build skeleton; CI configuration          Authorized repo initialized; clean checkout builds and runs a smoke test on macOS; exact commands and logs recorded; no secrets committed.                        Lead accepted after [independent QA review](qa/env-002-independent-review.md).
   --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 
 ### M1 / Sprint 1
@@ -153,8 +153,10 @@ States: backlog, ready, in progress, review, blocked, accepted. Ready means depe
 
   CUR-001     Current ChatGPT research turn                                                source-register.md; official indexed PDF pp. 4 and 30   Original acquired via owner upload; 50 pages; SHA-256 recorded                                                         QA; pending              Independent QA review
 
-  ENV-001     Local Codex / task/ENV-001-environment                    environment.md                                                                  Toolchain, GitHub read access, two passing XCTest cases, iPad (A16) boot, physical-device and signing inventories       Lead; accepted after independent review    Integrate the acceptance changes into main
+  ENV-001     Local Codex / task/ENV-001-environment                    environment.md                                                                  Toolchain, GitHub read access, two passing XCTest cases, iPad (A16) boot, physical-device and signing inventories       Lead; accepted after independent review    Integrated at `a2954204`
   -----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+ENV-002 ran in local Codex on `task/ENV-002-ipad-scaffold`. The [verification record](qa/env-002.md) contains the clean build, simulator install and launch, screenshot, and unit and UI test results. The [independent QA report](qa/env-002-independent-review.md) reproduces the clean build, two host unit tests, the simulator launch and rotation test, and the direct install and launch. The Lead accepted the scaffold on that evidence.
 
 ## 5. Immediate dispatch queue
 
@@ -165,7 +167,7 @@ States: backlog, ready, in progress, review, blocked, accepted. Ready means depe
 
   2              CUR-001              Research; parallel eligible                LEAD-001 draft exists                                        Source register, verified official URL, edition, page references, checksum if available, QA review
 
-  3              ENV-002              Native build skeleton and CI               ENV-001 accepted and integration into main confirmed       Clean checkout build and smoke-test evidence
+  3              ENV-002              Integration pending                        Lead acceptance and QA findings resolved                  PR #2 remains open for integration
 
   4              IOS-001              Architecture                               LEAD-001 accepted                                            Architecture draft and interface boundaries
 
@@ -174,7 +176,7 @@ States: backlog, ready, in progress, review, blocked, accepted. Ready means depe
   6              CUR-003 / DATA-001   Design                                     Their respective dependencies accepted or draft sufficient   Approved unit / schema fixtures
   ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 
-ENV-002 is ready and awaits confirmed integration of ENV-001 into main before dispatch. The curriculum and architecture reviews retain their existing dependencies.
+ENV-002 was dispatched after ENV-001 merged into main and is accepted pending integration. The curriculum and architecture reviews retain their existing dependencies.
 
 ### Dispatch brief template
 
@@ -294,3 +296,13 @@ Release Engineering recommends accepting ENV-001 as an environment verification 
 The Lead independently reviewed GitHub commit [`c244cb3f205e19c1a2a94cd65b1afb5ee45bfcff`](https://github.com/binbas0901/Singapore-math-with-Juni/commit/c244cb3f205e19c1a2a94cd65b1afb5ee45bfcff) and accepted ENV-001. ENV-002 moved from backlog to ready. Dispatch awaits confirmation that ENV-001 is integrated into main.
 
 The native app build and install, authorized Apple development team, valid signing identity and matching provisioning profile remain downstream requirements. Physical iPad, iPadOS and stylus compatibility and device testing remain open.
+
+## 18. ENV-002 execution (v1.9)
+
+Release Engineering confirmed ENV-001 integration at `a2954204d7edacf8f05241e3af18bf210f12f6ef`. The iPad scaffold builds from a clean checkout and runs on iPad (A16) in the simulator. See the [ENV-002 verification record](qa/env-002.md) for test results, the screenshot and pending checks. ENV-002 entered independent review.
+
+## 19. ENV-002 Lead acceptance (v1.10)
+
+The Lead accepted ENV-002 based on the [independent QA report](qa/env-002-independent-review.md), originally committed as [`ac149ff135838f60a06ca8fb42b1f97a34177347`](https://github.com/binbas0901/Singapore-math-with-Juni/commit/ac149ff135838f60a06ca8fb42b1f97a34177347). Both low-severity findings are resolved on PR #2. The workflow pins checkout v4.3.1 to its verified upstream full commit SHA and disables credential persistence. The reproduction instructions explicitly check out and verify the tested scaffold SHA.
+
+Hosted CI, iPadOS 17 runtime and physical-device readiness remain unverified.

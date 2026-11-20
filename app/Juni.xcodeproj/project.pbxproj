@@ -1,0 +1,299 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {};
+	objectVersion = 60;
+	objects = {
+
+/* Begin PBXFileReference section */
+		000000000000000000000001 /* AppSource */ = {
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.swift;
+			path = JuniApp.swift;
+			sourceTree = "<group>";
+		};
+		000000000000000000000002 /* TestSource */ = {
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.swift;
+			path = LaunchTests.swift;
+			sourceTree = "<group>";
+		};
+		000000000000000000000003 /* AppProduct */ = {
+			isa = PBXFileReference;
+			explicitFileType = wrapper.application;
+			path = Juni.app;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		000000000000000000000004 /* TestProduct */ = {
+			isa = PBXFileReference;
+			explicitFileType = wrapper.cfbundle;
+			path = JuniUITests.xctest;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+/* End PBXFileReference section */
+
+/* Begin PBXGroup section */
+		000000000000000000000005 /* Root */ = {
+			isa = PBXGroup;
+			children = (000000000000000000000006 /* AppGroup */, 000000000000000000000007 /* TestGroup */, 000000000000000000000008 /* Products */,);  sourceTree = "<group>";
+		};
+		000000000000000000000006 /* AppGroup */ = {
+			isa = PBXGroup;
+			children = (000000000000000000000001 /* AppSource */,);
+			path = Juni;
+			sourceTree = "<group>";
+		};
+		000000000000000000000007 /* TestGroup */ = {
+			isa = PBXGroup;
+			children = (000000000000000000000002 /* TestSource */,);
+			path = JuniUITests;
+			sourceTree = "<group>";
+		};
+		000000000000000000000008 /* Products */ = {
+			isa = PBXGroup;
+			children = (000000000000000000000003 /* AppProduct */, 000000000000000000000004 /* TestProduct */,);
+			name = Products;
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin XCLocalSwiftPackageReference section */
+		000000000000000000000009 /* Package */ = {
+			isa = XCLocalSwiftPackageReference;
+			relativePath = JuniCore;
+		};
+/* End XCLocalSwiftPackageReference section */
+
+/* Begin XCSwiftPackageProductDependency section */
+		00000000000000000000000A /* Core */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 000000000000000000000009 /* Package */;
+			productName = JuniCore;
+		};
+/* End XCSwiftPackageProductDependency section */
+
+/* Begin PBXBuildFile section */
+		00000000000000000000000B /* AppBuildFile */ = {
+			isa = PBXBuildFile;
+			fileRef = 000000000000000000000001 /* AppSource */;
+		};
+		00000000000000000000000C /* TestBuildFile */ = {
+			isa = PBXBuildFile;
+			fileRef = 000000000000000000000002 /* TestSource */;
+		};
+		00000000000000000000000D /* CoreBuildFile */ = {
+			isa = PBXBuildFile;
+			productRef = 00000000000000000000000A /* Core */;
+		};
+/* End PBXBuildFile section */
+
+/* Begin PBXSourcesBuildPhase section */
+		00000000000000000000000E /* AppSources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (00000000000000000000000B /* AppBuildFile */,);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		00000000000000000000000F /* TestSources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (00000000000000000000000C /* TestBuildFile */,);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		000000000000000000000010 /* AppFrameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (00000000000000000000000D /* CoreBuildFile */,);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		000000000000000000000011 /* TestFrameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = ();
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXResourcesBuildPhase section */
+		000000000000000000000012 /* AppResources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = ();
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		000000000000000000000013 /* TestResources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = ();
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXContainerItemProxy section */
+		000000000000000000000014 /* Proxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 000000000000000000000015 /* Project */;
+			proxyType = 1;
+			remoteGlobalIDString = 000000000000000000000016 /* App */;
+			remoteInfo = Juni;
+		};
+/* End PBXContainerItemProxy section */
+
+/* Begin PBXTargetDependency section */
+		000000000000000000000017 /* AppDependency */ = {
+			isa = PBXTargetDependency;
+			target = 000000000000000000000016 /* App */;
+			targetProxy = 000000000000000000000014 /* Proxy */;
+		};
+/* End PBXTargetDependency section */
+
+/* Begin PBXNativeTarget section */
+		000000000000000000000016 /* App */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 000000000000000000000018 /* AppConfigs */;
+			buildPhases = (00000000000000000000000E /* AppSources */, 000000000000000000000010 /* AppFrameworks */, 000000000000000000000012 /* AppResources */,);
+			buildRules = ();
+			dependencies = ();
+			name = Juni;
+			packageProductDependencies = (00000000000000000000000A /* Core */,);
+			productName = Juni;
+			productReference = 000000000000000000000003 /* AppProduct */;
+			productType = "com.apple.product-type.application";
+		};
+		000000000000000000000019 /* Test */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 00000000000000000000001A /* TestConfigs */;
+			buildPhases = (00000000000000000000000F /* TestSources */, 000000000000000000000011 /* TestFrameworks */, 000000000000000000000013 /* TestResources */,);
+			buildRules = ();
+			dependencies = (000000000000000000000017 /* AppDependency */,);
+			name = JuniUITests;
+			packageProductDependencies = ();
+			productName = JuniUITests;
+			productReference = 000000000000000000000004 /* TestProduct */;
+			productType = "com.apple.product-type.bundle.ui-testing";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		000000000000000000000015 /* Project */ = {
+			isa = PBXProject;
+			attributes = { TargetAttributes = { 000000000000000000000019 /* Test */ = { TestTargetID = 000000000000000000000016 /* App */; }; }; };
+			buildConfigurationList = 00000000000000000000001B /* ProjectConfigs */;
+			compatibilityVersion = "Xcode 15.0";
+			developmentRegion = en;
+			knownRegions = (en, Base,);
+			mainGroup = 000000000000000000000005 /* Root */;
+			packageReferences = (000000000000000000000009 /* Package */,);
+			productRefGroup = 000000000000000000000008 /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (000000000000000000000016 /* App */, 000000000000000000000019 /* Test */,);
+		};
+/* End PBXProject section */
+
+/* Begin XCBuildConfiguration section */
+		00000000000000000000001C /* ProjectDebug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
+				SDKROOT = iphoneos;
+				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
+				SWIFT_VERSION = 6.0;
+				TARGETED_DEVICE_FAMILY = 2;
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+				ENABLE_TESTABILITY = YES;
+				ONLY_ACTIVE_ARCH = YES;
+			};
+			name = Debug;
+		};
+		00000000000000000000001D /* ProjectRelease */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
+				SDKROOT = iphoneos;
+				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
+				SWIFT_VERSION = 6.0;
+				TARGETED_DEVICE_FAMILY = 2;
+			};
+			name = Release;
+		};
+		00000000000000000000001E /* AppDebug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_KEY_CFBundleDisplayName = "Singapore Math with Juni";
+				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
+				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				PRODUCT_BUNDLE_IDENTIFIER = com.binbas0901.singaporemathwithjuni;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				CURRENT_PROJECT_VERSION = 1;
+				MARKETING_VERSION = 0.1.0;
+			};
+			name = Debug;
+		};
+		00000000000000000000001F /* AppRelease */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_KEY_CFBundleDisplayName = "Singapore Math with Juni";
+				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
+				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				PRODUCT_BUNDLE_IDENTIFIER = com.binbas0901.singaporemathwithjuni;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				CURRENT_PROJECT_VERSION = 1;
+				MARKETING_VERSION = 0.1.0;
+			};
+			name = Release;
+		};
+		000000000000000000000020 /* TestDebug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				GENERATE_INFOPLIST_FILE = YES;
+				PRODUCT_BUNDLE_IDENTIFIER = com.binbas0901.singaporemathwithjuni.uitests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				TEST_TARGET_NAME = Juni;
+			};
+			name = Debug;
+		};
+		000000000000000000000021 /* TestRelease */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				GENERATE_INFOPLIST_FILE = YES;
+				PRODUCT_BUNDLE_IDENTIFIER = com.binbas0901.singaporemathwithjuni.uitests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				TEST_TARGET_NAME = Juni;
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		00000000000000000000001B /* ProjectConfigs */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (00000000000000000000001C /* ProjectDebug */, 00000000000000000000001D /* ProjectRelease */,);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		000000000000000000000018 /* AppConfigs */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (00000000000000000000001E /* AppDebug */, 00000000000000000000001F /* AppRelease */,);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		00000000000000000000001A /* TestConfigs */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (000000000000000000000020 /* TestDebug */, 000000000000000000000021 /* TestRelease */,);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = 000000000000000000000015 /* Project */;
+}
