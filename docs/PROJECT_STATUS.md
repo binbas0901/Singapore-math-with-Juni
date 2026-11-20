@@ -6,7 +6,7 @@
 
 Target: one complete P1 learning unit, offline native iPad private beta, preceded by a reviewed vertical slice. D01--D13 and agent-driven delivery remain binding. This ledger is the operational state record, not an independent change to the roadmap or blueprint.
 
-**34 tasks: 3 review, 1 ready, 26 backlog, 0 in progress, 0 blocked, 4 accepted.** No milestone gate has been accepted. ENV-001 is integrated into main at `a2954204d7edacf8f05241e3af18bf210f12f6ef`. The Lead accepted ENV-002 after independent QA verified the native iPad scaffold in the simulator. PR #2 was integrated into main at `1206df736d6916c2da798aa35af10d1d1000f599`. CUR-001 was accepted after independent source QA and integrated through PR #3 at `e546204882c4f8d12af0fca758bbf9b218d766b0`. CUR-002 remains in review following independent Education review. CUR-004 is ready. Physical-device readiness remains open.
+**34 tasks: 3 review, 1 ready, 26 backlog, 0 in progress, 0 blocked, 4 accepted.** No milestone gate has been accepted. ENV-001 is integrated into main at `a2954204d7edacf8f05241e3af18bf210f12f6ef`. The Lead accepted ENV-002 after independent QA verified the native iPad scaffold in the simulator. PR #2 was integrated into main at `1206df736d6916c2da798aa35af10d1d1000f599`. CUR-001 was accepted after independent source QA and integrated through PR #3 at `e546204882c4f8d12af0fca758bbf9b218d766b0`. CUR-002 remains in review pending focused independent Education re-review of the corrected mapping. CUR-004 is ready. Physical-device readiness remains open.
 
 ## 2. Source baseline and evidence
 
@@ -47,9 +47,9 @@ States: backlog, ready, in progress, review, blocked, accepted. Ready means depe
   ---------- ---------- ------------------------ ----------------------------- ---------------------------------------------------- --------------------------------------------------------------------------------------------------------------------------------------------------------- ---------------------------------------------------
   CUR-001    accepted   Curriculum / QA          LEAD-001 (draft sufficient)   references/source-register.md                        Retrieve official MOE syllabus; verify edition and applicability, URL, date, page references, checksum if bytes available; flag missing sources.          Lead accepted independent QA; integrated through PR #3 at e546204.
 
-  CUR-002    review     Curriculum / Education   CUR-001                       curriculum/p1/objectives.json; docs/coverage-p1.md   All P1 objectives mapped to stable IDs, source pages and strands; explicit gaps, prerequisites and core/enrichment distinctions; independent check.       Independent Education review completed; targeted corrections recommended before acceptance.
+  CUR-002    review     Curriculum / Education   CUR-001                       curriculum/p1/objectives.json; docs/coverage-p1.md   All P1 objectives mapped to stable IDs, source pages and strands; explicit gaps, prerequisites and core/enrichment distinctions; independent check.       M1–M3 and L1–L3 corrections recorded in PR #4; focused independent Education re-review pending.
 
-  CUR-003    review    Curriculum / Education   CUR-002                       docs/first-unit.md                                   Propose number-sense/number-bond unit with verified ranges and prerequisites; map each objective to teaching/practice/assessment; owner approves scope.   Draft first-unit.md produced; owner and Education approval pending.
+  CUR-003    review    Curriculum / Education   CUR-002                       docs/first-unit.md                                   Propose number-sense/number-bond unit with verified ranges and prerequisites; map each objective to teaching/practice/assessment; owner approves scope.   Owner approved Numbers and Number Bonds to 10 on 2026-11-17; Education approval and CUR-002 acceptance pending.
 
   CUR-004    ready      Curriculum / QA          CUR-001                       curriculum/p2--p6/; docs/CURRICULUM_MASTER.md        Map remaining levels with provenance and completeness report; may run alongside implementation; no requirement to finish before private beta.             Eligible following CUR-001 integration; prioritize P1 review.
   -----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
@@ -235,7 +235,7 @@ Report: outputs, actual checks, missing checks, findings, blockers, next action.
 
   R03               Mac/Xcode and simulator startup verified. Physical iPad and development signing unavailable in this check   Blocks physical-device acceptance   Release: ENV-001/002
 
-  R04               First unit sequence provisional                               Blocks lesson scope approval                                         Curriculum: CUR-003
+  R04               First unit scope owner-approved; sequence provisional          Education approval and CUR-002 acceptance pending                                         Curriculum: CUR-003
 
   R05               Mastery thresholds and recognition feasibility unvalidated    Learning accuracy risk                                               Math: MATH-000; iOS: IOS-003
 
@@ -318,3 +318,20 @@ Lead inspected the independent QA report at `752930402b87eb139e674e0d72b4311512d
 ## 22. CUR-001 integration and CUR-002 independent Education review — 2026-11-19
 
 CUR-001 was integrated into main through [PR #3](https://github.com/binbas0901/Singapore-math-with-Juni/pull/3) at [e546204](https://github.com/binbas0901/Singapore-math-with-Juni/commit/e546204882c4f8d12af0fca758bbf9b218d766b0). The [CUR-002 independent Education review](qa/cur-002-independent-review.md) independently downloaded the official PDF, matched its registered SHA-256 and reconciled all 32 numbered P1 objectives. It verified 59 core and six enrichment concepts and acyclic prerequisite graphs. CUR-002 stays in review pending Lead disposition of active-use evidence, grid-format mastery and prerequisite findings. Task counts are unchanged. No dependent work was started.
+
+## 23. CUR-002 targeted corrections for independent Education re-review — 2026-11-19
+
+Status remains **review**. Corrections follow the [Lead disposition on PR #4](https://github.com/binbas0901/Singapore-math-with-Juni/pull/4#issuecomment-7029605195), D02, D06, D07 and D13. The [original independent review](qa/cur-002-independent-review.md) at `fb39588c1012b980aebbd1b76df8df75631b9f1d` is preserved.
+
+| Finding | Correction evidence |
+|---|---|
+| M1 | ADD-02 calls for producing meaningful equations and using equality. ADD-06 specifies independently carrying out each written algorithm, with and without regrouping, within 100. TIM-02 requires selecting and using am/pm in familiar contexts. Boundary examples use explicit noon and midnight labels. Concept and lesson assessment descriptions agree. |
+| M2 | GEO-04 uses `any_linked_concept` instead of the default `all_linked_concepts`. Dot-only and square-only evidence each satisfy the official objective. Neither format depends on the other. Both slots remain for instruction as a product extension. |
+| M3 | Core slot sequence stays advisory. The mapping adds 58 task-bounded readiness checks. It specifies four mastery edges for using ordinal symbols after identifying positions, reading five-minute times with knowledge of the clock hands, and measuring or drawing segments with ruler-alignment skill. Independent evidence can be prior or concurrent. The single cross-objective summary link is LEN-04 to LEN-01. Cent counting, small-set bonds and initial work with clock hands have no full-range mastery gate. |
+| L1 | The P1-L046 title is synchronized in the mapping and coverage, with the repeated noon and midnight clause removed. |
+| L2 | TIM-03 requires use of h and min, GEO-03 targets identification of component shapes, and LEN-04 teaches how to read to the nearest cm with a ruler. Shape wording introduces half circle and semicircle together. |
+| L3 | JSON, coverage, blueprint, unit specification header and current ledger record owner approval of **Numbers and Number Bonds to 10** on 2026-11-17, with Education approval and CUR-002 acceptance pending. |
+
+I reran SHA-256 and a temporary Python reconciliation using the previously independently downloaded official PDF outside Git. The hash matched the register and `pdftotext -layout` confirmed all 32 unique page/strand/topic/item tuples (19 on p. 31 and 13 on p. 32). Comparison to `fb39588` verified stable IDs, source anchors, slot order and classification. Counts remain 32 objectives, 59 core and six enrichment concepts, and the same 65 linked slots. Both prerequisite graphs topologically sort. Objective edges fell from 36 to one and concept edges from 187 to four as suggested sequencing and bounded readiness moved out of the mastery graph. The audit checked exact Markdown table parity for all 32 objective rows and 65 concept rows. Evidence cases accepted either grid alone or both and rejected empty or unrelated evidence. The default rule still requires all linked concepts for the other 31 objectives. This tests the inventory rules as data. Authored materials, learner assessments and runtime behavior were outside scope.
+
+Next reviewer is an independent Education reviewer for M1–M3 and L1–L3 on the corrected PR revision, followed by Lead disposition. Task statuses and counts remain unchanged. No downstream implementation was started.

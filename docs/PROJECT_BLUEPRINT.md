@@ -58,7 +58,7 @@ Content lifecycle: source verification → mapping → instructional design → 
 
 ## 5. First release scope
 
-Proposed unit: **Primary 1 — Number sense and number bonds**. Working sequence (not yet MOE-validated): counting objects; recognizing numbers; writing numbers; comparing quantities; ordering numbers; parts and wholes; number bonds; making ten; applying number bonds; mastery assessment; optional advanced number puzzles. Target roughly 10–15 lessons, adjusted after curriculum verification and placement assessment. Define number ranges and exact learning targets from verified objectives rather than guessing.
+The owner approved **Primary 1 — Numbers and Number Bonds to 10** on 2026-11-17. Education approval and CUR-002 acceptance are pending. The proposed sequence starts with counting, recognizing, writing, comparing and ordering numbers, then moves to parts and wholes, making ten and applying number bonds. It closes with a mastery assessment and an optional number puzzle. The [unit specification](first-unit.md) gives the proposed sequence and learning targets.
 
 ### Required capabilities
 
@@ -219,7 +219,7 @@ Cost drivers: agent usage, Mac/build access, Apple developer distribution, voice
 
 ## 14. Open decisions and immediate next action
 
-Open: confirmed Mac/Xcode and target device access; GitHub repository and agent access; MOE version and unit scope; final mascot/art/voice; persistence and animation libraries; content schema; mastery thresholds; precise lesson duration; privacy and release policy; budget; iPadOS deployment target. Do not treat these as approved merely because a candidate appears here.
+Open: confirmed Mac/Xcode and target device access; GitHub repository and agent access; Education approval of the first-unit specification; final mascot/art/voice; persistence and animation libraries; content schema; mastery thresholds; precise lesson duration; privacy and release policy; budget; iPadOS deployment target. Do not treat these as approved merely because a candidate appears here.
 
 **Next deliverable: AGENTS.md**, establishing execution rules and task handoff format. Follow with DEVELOPMENT_ROADMAP.md and PROJECT_STATUS.md, then launch the curriculum verification and architecture work in the appropriate supported environments. The owner should add this blueprint to the ChatGPT Project and later commit the approved version to the repository. No external repository, agent process, curriculum verification, app build or cloud connection has been created by this document.
 
