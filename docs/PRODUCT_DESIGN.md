@@ -1,5 +1,5 @@
 # Singapore Math with Juni — Product Design
-Version 1.0 | 2026-11-19 | Owner-approved design directions; specification pending integration review
+Version 1.1 | 2026-11-19 | Owner-approved design directions; specification pending integration review
 
 ## 1. Purpose and authority
 
@@ -97,3 +97,7 @@ Proposed review checklist:
 - Integrate through reviewed PR; no implementation or test claims from this documentation alone.
 
 Open decisions: exact visual assets/palette/typography, voice and license/budget, narration cue format and animation technique, mastery/diagnostic/retention thresholds, Garden reward specifics, precise rollout of advanced features, and orientation/audio behavior under actual interruptions. All require validation, not silent assumptions.
+
+## Owner-approved character refinement — 2026-11-19
+
+The owner replaced crescent-moon Juni with a friendly **full-moon character** and approved the revised visual concept in the design conversation. Use a warm golden round moon, subtle lunar craters, expressive eyes and a friendly face in the premium Montessori style. No stars or human mascot. This refines PD-03 and PD-16; it does not change the five moon-phase mastery indicators, the female ElevenLabs teacher voice, or lesson scope. Update the older crescent-moon home mockup accordingly. Production character assets, expression consistency, lip sync, visual fidelity, accessibility and rights review remain open. The approved illustrative reference is held in the conversation; no production asset is asserted in this repository.
