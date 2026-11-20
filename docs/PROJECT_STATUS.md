@@ -1,12 +1,12 @@
 # Singapore Math with Juni --- Project Status
 
-**Version:** 1.11 \| **Baseline:** 2026-11-17 \| **Maintainer:** Lead agent \| **Current milestone:** M0 / Sprint 0
+**Version:** 1.12 \| **Baseline:** 2026-11-17 \| **Maintainer:** Lead agent \| **Current milestone:** M0 / Sprint 0
 
 ## 1. Executive status
 
 Target: one complete P1 learning unit, offline native iPad private beta, preceded by a reviewed vertical slice. D01--D13 and agent-driven delivery remain binding. This ledger is the operational state record, not an independent change to the roadmap or blueprint.
 
-**34 tasks: 4 review, 0 ready, 27 backlog, 0 in progress, 0 blocked, 3 accepted.** No milestone gate has been accepted. ENV-001 is integrated into main at `a2954204d7edacf8f05241e3af18bf210f12f6ef`. The Lead accepted ENV-002 after independent QA verified the native iPad scaffold in the simulator. PR #2 was integrated into main at `1206df736d6916c2da798aa35af10d1d1000f599`. Physical-device readiness remains open.
+**34 tasks: 3 review, 1 ready, 26 backlog, 0 in progress, 0 blocked, 4 accepted.** No milestone gate has been accepted. ENV-001 is integrated into main at `a2954204d7edacf8f05241e3af18bf210f12f6ef`. The Lead accepted ENV-002 after independent QA verified the native iPad scaffold in the simulator. PR #2 was integrated into main at `1206df736d6916c2da798aa35af10d1d1000f599`. CUR-001 is accepted after independent source QA; CUR-002 remains in Education review and CUR-004 is ready after integration. Physical-device readiness remains open.
 
 ## 2. Source baseline and evidence
 
@@ -45,13 +45,13 @@ States: backlog, ready, in progress, review, blocked, accepted. Ready means depe
   -----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
   Task       State      Owner / reviewer         Dependencies                  Target deliverable                                   Acceptance criteria                                                                                                                                       Next action
   ---------- ---------- ------------------------ ----------------------------- ---------------------------------------------------- --------------------------------------------------------------------------------------------------------------------------------------------------------- ---------------------------------------------------
-  CUR-001    review     Curriculum / QA          LEAD-001 (draft sufficient)   references/source-register.md                        Retrieve official MOE syllabus; verify edition and applicability, URL, date, page references, checksum if bytes available; flag missing sources.          [Independent QA](qa/cur-001-independent-review.md) verified the official PDF and recommends acceptance; Lead decision pending.
+  CUR-001    accepted   Curriculum / QA          LEAD-001 (draft sufficient)   references/source-register.md                        Retrieve official MOE syllabus; verify edition and applicability, URL, date, page references, checksum if bytes available; flag missing sources.          Lead accepted independent QA; source-register findings resolved.
 
-  CUR-002    review     Curriculum / Education   CUR-001                       curriculum/p1/objectives.json; docs/coverage-p1.md   All P1 objectives mapped to stable IDs, source pages and strands; explicit gaps, prerequisites and core/enrichment distinctions; independent check.       Mapping corrected v1.1; separate Education review and CUR-001 acceptance pending.
+  CUR-002    review     Curriculum / Education   CUR-001                       curriculum/p1/objectives.json; docs/coverage-p1.md   All P1 objectives mapped to stable IDs, source pages and strands; explicit gaps, prerequisites and core/enrichment distinctions; independent check.       Mapping corrected v1.1; independent Education review next after CUR-001 integration.
 
   CUR-003    review    Curriculum / Education   CUR-002                       docs/first-unit.md                                   Propose number-sense/number-bond unit with verified ranges and prerequisites; map each objective to teaching/practice/assessment; owner approves scope.   Draft first-unit.md produced; owner and Education approval pending.
 
-  CUR-004    backlog    Curriculum / QA          CUR-001                       curriculum/p2--p6/; docs/CURRICULUM_MASTER.md        Map remaining levels with provenance and completeness report; may run alongside implementation; no requirement to finish before private beta.             Wait for listed dependencies; then dispatch.
+  CUR-004    ready      Curriculum / QA          CUR-001                       curriculum/p2--p6/; docs/CURRICULUM_MASTER.md        Map remaining levels with provenance and completeness report; may run alongside implementation; no requirement to finish before private beta.             Eligible after CUR-001 integration; prioritize P1 review.
   -----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 
 ### M2 / Sprint 2
@@ -151,7 +151,7 @@ States: backlog, ready, in progress, review, blocked, accepted. Ready means depe
   ----------- --------------------------------------------------------- ------------------------------------------------------------------------------- ---------------------------------------------------------------------------- ------------------------ -----------------------------------------
   LEAD-001    Current ChatGPT document-generation turn; no Git branch   PROJECT_BLUEPRINT.md, AGENTS.md, DEVELOPMENT_ROADMAP.md, PROJECT_STATUS.md      34 unique IDs, dependency references and D01--D13 structural checks passed   Product owner; approved 2026-11-17   Accepted
 
-  CUR-001     Local Codex / task/CUR-001-source-review                    [Source register](../references/source-register.md); [independent QA](qa/cur-001-independent-review.md)     Independent official download, matching SHA-256, 50 pages, level and pathway anchors, rights notice     QA recommends acceptance     Lead decision pending
+  CUR-001     Local Codex / task/CUR-001-source-review                    [Source register](../references/source-register.md); [independent QA](qa/cur-001-independent-review.md)     Independent official download, matching SHA-256, 50 pages, level and pathway anchors, rights notice     QA passed; Lead accepted     CUR-002 review after integration
 
   ENV-001     Local Codex / task/ENV-001-environment                    environment.md                                                                  Toolchain, GitHub read access, two passing XCTest cases, iPad (A16) boot, physical-device and signing inventories       Lead; accepted after independent review    Integrated at `a2954204`
   -----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
@@ -165,7 +165,7 @@ ENV-002 ran in local Codex on `task/ENV-002-ipad-scaffold`. The [verification re
   -------------- -------------------- ------------------------------------------ ------------------------------------------------------------ ----------------------------------------------------------------------------------------------------
   1              LEAD-001             Owner review                               Four foundation artifacts available                          Recorded approval or findings
 
-  2              CUR-001              Lead review                                Independent QA report available                              Record Lead decision on source verification
+  2              CUR-001              Accepted; integration pending              Independent QA and Lead acceptance recorded                  Integrate PR #3
 
   3              ENV-002              Integrated                                 PR #2 merged to main                                         Merge commit `1206df736d6916c2da798aa35af10d1d1000f599`
 
@@ -229,7 +229,7 @@ Report: outputs, actual checks, missing checks, findings, blockers, next action.
   ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
   ID                Open item                                                     Impact                                                               Owner / next action
   ----------------- ------------------------------------------------------------- -------------------------------------------------------------------- ----------------------------------------
-  R01               Official PDF independently verified; Lead decision pending                 Blocks accepted curriculum mapping                                   Curriculum: CUR-001
+  R01               Official PDF independently verified; Lead accepted                 Source verification resolved; commercial rights remain open                    Curriculum: CUR-002; release rights review
 
   R02               Local Codex and authenticated GitHub read access verified   Main branch protection behavior untested                         Release verification in environment.md
 
@@ -310,3 +310,7 @@ Hosted CI, iPadOS 17 runtime and physical-device readiness remain unverified.
 ## 20. ENV-002 integration and CUR-001 independent QA (v1.11)
 
 ENV-002 was integrated through [PR #2](https://github.com/binbas0901/Singapore-math-with-Juni/pull/2) at [`1206df736d6916c2da798aa35af10d1d1000f599`](https://github.com/binbas0901/Singapore-math-with-Juni/commit/1206df736d6916c2da798aa35af10d1d1000f599). [Independent curriculum QA](qa/cur-001-independent-review.md) retrieved the official October 2025 syllabus and confirmed that its SHA-256 matches the acquisition record. QA recommends accepting CUR-001. Its status remains review pending the Lead decision.
+
+## 21. CUR-001 Lead acceptance (v1.12) — 2026-11-19
+
+Lead inspected the independent QA report at `752930402b87eb139e674e0d72b4311512d8ec5f` and PR #3 diff. Accepted source verification: official index and media downloads match the previously recorded fingerprint, 50 pages, 806,004 bytes; edition, applicability, pathways, printed anchors and rights notice verified by independent QA. Lead did not repeat the Mac download. Both low findings corrected in source register v1.4 at `fcb134d7dbcd87a2a09c6d7f27798cb534aaf3a5`. CUR-002 remains review pending independent Education review; CUR-004 moves backlog to ready after integration, not a beta prerequisite. CUR-003 and IOS-001 remain review. Commercial rights clearance, scope of Foundation mapping and device gates remain open. No application changes or PDF committed. Counts: 4 accepted, 3 review, 1 ready, 26 backlog. Next prioritize CUR-002 independent review after PR #3 integration.
