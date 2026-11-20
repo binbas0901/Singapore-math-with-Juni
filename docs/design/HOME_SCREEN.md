@@ -1,10 +1,10 @@
 # Home screen — visual implementation brief
 Version 0.2 | 2026-11-19 | First concept positively received by owner; production layout and assets pending review.
 
-Companion to [PRODUCT_DESIGN.md](PRODUCT_DESIGN.md), PD-03, PD-05, PD-13, PD-18 and PD-20. Design-only; not authorization to start downstream implementation or waive curriculum/architecture gates.
+Companion to [PRODUCT_DESIGN.md](../PRODUCT_DESIGN.md), PD-03, PD-05, PD-13, PD-18 and PD-20. Design-only; not authorization to start downstream implementation or waive curriculum/architecture gates.
 
 ## Reference
-The generated home screen concept in the project design conversation (the owner called it amazing) is the visual target. Original PNG: 1536 × 1024, SHA-256 `3fce16c3bfc7f3649db25d00dd9cb8e0007cdac4ceeb4080fc819fdf2c121c0d`. The binary is held in the conversation, not yet in Git; an implementation agent needs the reference file. Do not fabricate a repo image path or use the screenshot as the live UI. Its 3:2 proportions are not the actual target iPad viewport.
+The generated home screen concept in the project design conversation (the owner called it amazing) is the visual target. The reference image is held in the design conversation, not yet verified as a repository asset. Its exact binary dimensions and SHA-256 must be measured from the original file when acquired; an implementation agent needs that reference file. Do not fabricate a repo image path or use the screenshot as the live UI. Its 3:2 proportions are not the actual target iPad viewport.
 
 ## Hierarchy and layout
 - Landscape-first iPad layout, responsive to safe areas, size classes and portrait.
