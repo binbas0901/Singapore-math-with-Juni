@@ -1,6 +1,6 @@
 # ENV-001 — Development environment and evidence
 
-Verified 2026-11-18 on the local Mac, with simulator and test follow-up on 2026-11-19. Release Engineering completed the verification pass on `task/ENV-001-environment`. Lead review is pending. The relevant blueprint decisions are D08, D11 and D12.
+Verified 2026-11-18 on the local Mac, with simulator and test follow-up on 2026-11-19. Release Engineering completed the verification pass on `task/ENV-001-environment`. The relevant blueprint decisions are D08, D11 and D12.
 
 ## Local toolchain
 
@@ -40,4 +40,6 @@ Xcode and both iOS SDKs are available for the later app skeleton. An unsigned si
 
 The runtime was installed before the follow-up. The verification incurred no costs. Existing local tools and GitHub read access supported this verification. Codex and GitHub allowances, CI costs and any Apple distribution costs were not assessed. Any spending or distribution requires owner authorization.
 
-Lead review is pending for ENV-001. ENV-002 is gated on ENV-001 acceptance. Native app and physical-device verification remain open.
+## Lead acceptance
+
+The Lead independently reviewed GitHub commit [`c244cb3f205e19c1a2a94cd65b1afb5ee45bfcff`](https://github.com/binbas0901/Singapore-math-with-Juni/commit/c244cb3f205e19c1a2a94cd65b1afb5ee45bfcff) and accepted ENV-001. ENV-002 is ready for dispatch once integration into main is confirmed. Native app build, development signing and provisioning, and physical iPad and stylus verification remain downstream requirements.
