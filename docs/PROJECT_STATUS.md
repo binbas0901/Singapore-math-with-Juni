@@ -1,12 +1,12 @@
 # Singapore Math with Juni --- Project Status
 
-**Version:** 1.14 \| **Baseline:** 2026-11-17 \| **Maintainer:** Lead agent \| **Current milestone:** M0 / Sprint 0
+**Version:** 1.15 \| **Baseline:** 2026-11-17 \| **Maintainer:** Lead agent \| **Current milestone:** M0 / Sprint 0
 
 ## 1. Executive status
 
 Target: one complete P1 learning unit, offline native iPad private beta, preceded by a reviewed vertical slice. D01--D13 and agent-driven delivery remain binding. This ledger is the operational state record, not an independent change to the roadmap or blueprint.
 
-**34 tasks: 2 review, 2 ready, 25 backlog, 0 in progress, 0 blocked, 5 accepted.** No milestone gate has been accepted. ENV-001 is integrated into main at `a2954204d7edacf8f05241e3af18bf210f12f6ef`. The Lead accepted ENV-002 after independent QA verified the native iPad scaffold in the simulator. PR #2 was integrated into main at `1206df736d6916c2da798aa35af10d1d1000f599`. CUR-001 was accepted after independent source QA and integrated through PR #3 at `e546204882c4f8d12af0fca758bbf9b218d766b0`. CUR-002 accepted and integrated through PR #4 at `49cbfcaaf167940d367812e9db331739eca43bfc`. CUR-003 corrected in PR #7; focused independent Education re-review pending. CUR-004 and DATA-001 are ready. IOS-001 architecture v1.3 document baseline accepted after independent re-review; task remains review pending DATA-001/MATH-000 reconciliation. Physical-device readiness remains open.
+**34 tasks: 1 review, 2 ready, 25 backlog, 0 in progress, 0 blocked, 6 accepted.** No milestone gate has been accepted. ENV-001 is integrated into main at `a2954204d7edacf8f05241e3af18bf210f12f6ef`. The Lead accepted ENV-002 after independent QA verified the native iPad scaffold in the simulator. PR #2 was integrated into main at `1206df736d6916c2da798aa35af10d1d1000f599`. CUR-001 was accepted after independent source QA and integrated through PR #3 at `e546204882c4f8d12af0fca758bbf9b218d766b0`. CUR-002 accepted and integrated through PR #4 at `49cbfcaaf167940d367812e9db331739eca43bfc`. CUR-003 first-unit specification accepted and integrated through PR #7 at `75f545c9f55ab1439f3e27137049fb07cb3874e2`; owner sample-slice approval and authored lesson verification remain pending. CUR-004 and DATA-001 are ready. IOS-001 architecture v1.3 document baseline accepted after independent re-review; task remains review pending DATA-001/MATH-000 reconciliation. Physical-device readiness remains open.
 
 ## 2. Source baseline and evidence
 
@@ -49,7 +49,7 @@ States: backlog, ready, in progress, review, blocked, accepted. Ready means depe
 
   CUR-002    accepted   Curriculum / Education   CUR-001                       curriculum/p1/objectives.json; docs/coverage-p1.md   All P1 objectives mapped to stable IDs, source pages and strands; explicit gaps, prerequisites and core/enrichment distinctions; independent check.       Lead accepted after independent re-review; six enrichment slot wording corrections verified.
 
-  CUR-003    review    Curriculum / Education   CUR-002                       docs/first-unit.md                                   Propose number-sense/number-bond unit with verified ranges and prerequisites; map each objective to teaching/practice/assessment; owner approves scope.   Owner scope approved 2026-11-17; corrected unit at e37801e awaits focused Education re-review.
+  CUR-003    accepted  Curriculum / Education   CUR-002                       docs/first-unit.md                                   Propose number-sense/number-bond unit with verified ranges and prerequisites; map each objective to teaching/practice/assessment; owner approves scope.   Owner scope approved; independent re-review 421a8da and L1 clarification accepted; integrated 75f545c.
 
   CUR-004    ready      Curriculum / QA          CUR-001                       curriculum/p2--p6/; docs/CURRICULUM_MASTER.md        Map remaining levels with provenance and completeness report; may run alongside implementation; no requirement to finish before private beta.             Eligible following CUR-001 integration; prioritize P1 review.
   -----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
@@ -235,7 +235,7 @@ Report: outputs, actual checks, missing checks, findings, blockers, next action.
 
   R03               Mac/Xcode and simulator startup verified. Physical iPad and development signing unavailable in this check   Blocks physical-device acceptance   Release: ENV-001/002
 
-  R04               First unit scope owner-approved; sequence provisional          CUR-003 independent Education approval pending                                         Curriculum: CUR-003
+  R04               First unit specification accepted                         Owner sample-slice approval and authored lesson verification pending                                         Curriculum: CUR-003
 
   R05               Mastery thresholds and recognition feasibility unvalidated    Learning accuracy risk                                               Math: MATH-000; iOS: IOS-003
 
@@ -343,3 +343,7 @@ Lead verified the [final independent Education review](qa/cur-002-final-review.m
 ## 25. IOS-001 document baseline and CUR-003 review handoff (v1.14) — 2026-11-19
 
 CUR-002 integration verified at `49cbfcaaf167940d367812e9db331739eca43bfc`. Independent architecture re-review [`6d656d7`](qa/ios-001-final-review.md) of `9691d4a` dispositions all 11 findings. Lead corrected R1/R2, explicitly mapped the remaining source tray to part B, asserted the 6–2–4 bond and recombination, and aligned its synthetic fixture with CUR-003 revision `e37801e` (pending Education approval). Advisory sequence, bounded readiness, component mastery prerequisites and placement evidence are distinguished. Architecture v1.3 at `ee22c70ec376961a0f7350326b0b34f91b6bee88` accepted as working document baseline only. IOS-001 remains in review pending DATA-001/MATH-000 reconciliation; no interface freeze, runtime or device acceptance. DATA-001 ready to draft. CUR-003 PR #7 includes the independent report and targeted unit revision, now awaiting focused re-review. Task counts unchanged: 5 accepted, 2 review, 2 ready, 25 backlog. No application changes or new paid work. Full-moon mascot design approved by owner in design conversation; record on separate design PR, no change to moon-phase evidence semantics.
+
+## 26. CUR-003 acceptance and end-of-day design checkpoint (v1.15) — 2026-11-19
+
+CUR-003 specification accepted and integrated at `75f545c9f55ab1439f3e27137049fb07cb3874e2`. [Final Education re-review](qa/cur-003-final-review.md) at `421a8da` resolved M1–M3 and L2; Lead clarified L1 and verified the original review was preserved, with no changes to mathematical examples. Guided readiness does not gate eligible independent evidence or permitted exploration. Eleven core sessions plus optional U12; U07 remains the first slice. Owner sample-slice approval, authored content and device verification remain downstream. Full-moon Juni refinement recorded in design PR #5 at `2761fa0daeda96055b03a6fc0f0821aeff380ae8`; production art and independent design integration remain pending. IOS-001 task remains in review; DATA-001 ready/assignment issued, completion report pending at this checkpoint; MATH-000 awaits DATA-001 draft; no new assignments tonight. Counts: 6 accepted, 1 review, 2 ready, 25 backlog.
