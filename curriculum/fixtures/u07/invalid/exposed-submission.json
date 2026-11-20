@@ -1,0 +1,10 @@
+{
+  "document": "submission",
+  "path": [
+    "exposureAtSubmit"
+  ],
+  "value": [
+    "check-hint"
+  ],
+  "expected": "evidence"
+}

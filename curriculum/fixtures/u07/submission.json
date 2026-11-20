@@ -1,0 +1,61 @@
+{
+  "schemaVersion": 1,
+  "kind": "submission",
+  "id": "synthetic-submission",
+  "sessionId": "synthetic-session",
+  "content": {
+    "packageId": "p1-u07-fixture",
+    "contentVersion": "0.1.0",
+    "locale": "en-SG",
+    "manifestSha256": "acd63ee052aa48232015b6130954843dd1c33e7402f568089003c7f066d11ce9"
+  },
+  "lessonId": "U07",
+  "activityId": "check",
+  "worksheetId": "check-sheet",
+  "worksheetVersion": "0.1.0",
+  "worksheetItemId": "slot-check",
+  "itemOccurrenceId": "synthetic-check-1",
+  "answerRegionId": "answer",
+  "itemSnapshot": {
+    "id": "check",
+    "version": "0.1.0",
+    "targetId": "split-to-10",
+    "familyId": "missing-part",
+    "familyVersion": "0.1.0",
+    "exposureKey": "split-8-3-5",
+    "demandId": "missing-part-with-model",
+    "prompt": "Split 8 into two parts. One part is 3. What is the other part? Show both parts.",
+    "whole": 8,
+    "knownPart": 3,
+    "expectedAnswer": 5,
+    "acceptableAnswers": [
+      5
+    ],
+    "explanation": "3 and 5 make 8.",
+    "difficulty": "check",
+    "modelRequirement": "wholeAndBothParts",
+    "modelOptions": [
+      "counters",
+      "drawing",
+      "accessibleMarking"
+    ],
+    "responseKind": "nonnegativeInteger"
+  },
+  "requestedMode": "independent",
+  "attemptOrdinal": 1,
+  "policyVersion": "0.1.0",
+  "graderVersion": "0.1.0",
+  "response": {
+    "method": "keypad",
+    "confirmedValue": 5
+  },
+  "model": {
+    "status": "observed",
+    "representation": "accessibleMarking",
+    "whole": 8,
+    "partA": 3,
+    "partB": 5
+  },
+  "exposureAtSubmit": [],
+  "evidenceClass": "independent"
+}

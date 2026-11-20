@@ -1,0 +1,10 @@
+{
+  "document": "lesson",
+  "path": [
+    "items",
+    3,
+    "exposureKey"
+  ],
+  "value": "split-8-3-5",
+  "expected": "freshness"
+}

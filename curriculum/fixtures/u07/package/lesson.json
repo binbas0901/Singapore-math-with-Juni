@@ -1,0 +1,663 @@
+{
+  "schemaVersion": 1,
+  "kind": "lesson",
+  "id": "U07",
+  "version": "0.1.0",
+  "unitId": "p1-numbers-to-10",
+  "title": "Split a whole",
+  "classification": "core",
+  "targetIds": [
+    "split-to-10",
+    "count-to-10",
+    "match-to-10"
+  ],
+  "items": [
+    {
+      "id": "worked",
+      "version": "0.1.0",
+      "targetId": "split-to-10",
+      "familyId": "missing-part",
+      "familyVersion": "0.1.0",
+      "exposureKey": "split-6-2-4",
+      "demandId": "missing-part-with-model",
+      "prompt": "Split 6 into two parts. One part is 2. What is the other part? Show both parts.",
+      "whole": 6,
+      "knownPart": 2,
+      "expectedAnswer": 4,
+      "acceptableAnswers": [
+        4
+      ],
+      "explanation": "2 and 4 make 6.",
+      "difficulty": "introductory",
+      "modelRequirement": "wholeAndBothParts",
+      "modelOptions": [
+        "counters",
+        "drawing",
+        "accessibleMarking"
+      ],
+      "responseKind": "nonnegativeInteger"
+    },
+    {
+      "id": "guided",
+      "version": "0.1.0",
+      "targetId": "split-to-10",
+      "familyId": "missing-part",
+      "familyVersion": "0.1.0",
+      "exposureKey": "split-7-1-6",
+      "demandId": "missing-part-with-model",
+      "prompt": "Split 7 into two parts. One part is 1. What is the other part? Show both parts.",
+      "whole": 7,
+      "knownPart": 1,
+      "expectedAnswer": 6,
+      "acceptableAnswers": [
+        6
+      ],
+      "explanation": "1 and 6 make 7.",
+      "difficulty": "practice",
+      "modelRequirement": "wholeAndBothParts",
+      "modelOptions": [
+        "counters",
+        "drawing",
+        "accessibleMarking"
+      ],
+      "responseKind": "nonnegativeInteger"
+    },
+    {
+      "id": "check",
+      "version": "0.1.0",
+      "targetId": "split-to-10",
+      "familyId": "missing-part",
+      "familyVersion": "0.1.0",
+      "exposureKey": "split-8-3-5",
+      "demandId": "missing-part-with-model",
+      "prompt": "Split 8 into two parts. One part is 3. What is the other part? Show both parts.",
+      "whole": 8,
+      "knownPart": 3,
+      "expectedAnswer": 5,
+      "acceptableAnswers": [
+        5
+      ],
+      "explanation": "3 and 5 make 8.",
+      "difficulty": "check",
+      "modelRequirement": "wholeAndBothParts",
+      "modelOptions": [
+        "counters",
+        "drawing",
+        "accessibleMarking"
+      ],
+      "responseKind": "nonnegativeInteger"
+    },
+    {
+      "id": "replacement",
+      "version": "0.1.0",
+      "targetId": "split-to-10",
+      "familyId": "missing-part",
+      "familyVersion": "0.1.0",
+      "exposureKey": "split-9-4-5",
+      "demandId": "missing-part-with-model",
+      "prompt": "Split 9 into two parts. One part is 4. What is the other part? Show both parts.",
+      "whole": 9,
+      "knownPart": 4,
+      "expectedAnswer": 5,
+      "acceptableAnswers": [
+        5
+      ],
+      "explanation": "4 and 5 make 9.",
+      "difficulty": "check",
+      "modelRequirement": "wholeAndBothParts",
+      "modelOptions": [
+        "counters",
+        "drawing",
+        "accessibleMarking"
+      ],
+      "responseKind": "nonnegativeInteger"
+    }
+  ],
+  "assistance": [
+    {
+      "id": "retry",
+      "stage": "neutralRetry",
+      "text": "Try the same question again.",
+      "branch": {
+        "kind": "generic"
+      },
+      "disclosureIds": []
+    },
+    {
+      "id": "hint",
+      "stage": "representationHint",
+      "text": "Look at the counters left in the tray.",
+      "branch": {
+        "kind": "generic"
+      },
+      "disclosureIds": [
+        "check-hint"
+      ]
+    },
+    {
+      "id": "guide",
+      "stage": "guidedAction",
+      "text": "Move three counters to a bowl and count what is left.",
+      "branch": {
+        "kind": "generic"
+      },
+      "disclosureIds": [
+        "check-guide"
+      ]
+    },
+    {
+      "id": "reteach",
+      "stage": "reteach",
+      "text": "Replay the six-counter split, then try the question again.",
+      "branch": {
+        "kind": "generic"
+      },
+      "disclosureIds": [
+        "worked-example",
+        "check-guide"
+      ]
+    }
+  ],
+  "disclosures": [
+    {
+      "id": "worked-example",
+      "exposureKeys": [
+        "split-6-2-4"
+      ],
+      "reason": "workedExample",
+      "channels": [
+        "visual",
+        "audio",
+        "caption",
+        "manual"
+      ]
+    },
+    {
+      "id": "guided-example",
+      "exposureKeys": [
+        "split-7-1-6"
+      ],
+      "reason": "guidedAction",
+      "channels": [
+        "visual"
+      ]
+    },
+    {
+      "id": "check-hint",
+      "exposureKeys": [
+        "split-8-3-5"
+      ],
+      "reason": "taskHint",
+      "channels": [
+        "visual"
+      ]
+    },
+    {
+      "id": "check-guide",
+      "exposureKeys": [
+        "split-8-3-5"
+      ],
+      "reason": "guidedAction",
+      "channels": [
+        "visual"
+      ]
+    },
+    {
+      "id": "check-feedback",
+      "exposureKeys": [
+        "split-8-3-5"
+      ],
+      "reason": "solutionFeedback",
+      "channels": [
+        "feedback"
+      ]
+    }
+  ],
+  "workspaces": [
+    {
+      "id": "demonstration",
+      "tool": "countersAndBond",
+      "whole": 6,
+      "regions": [
+        {
+          "id": "tray",
+          "label": "Source tray"
+        },
+        {
+          "id": "bowl",
+          "label": "Bowl"
+        }
+      ],
+      "counters": [
+        {
+          "id": "C1",
+          "regionId": "tray"
+        },
+        {
+          "id": "C2",
+          "regionId": "tray"
+        },
+        {
+          "id": "C3",
+          "regionId": "tray"
+        },
+        {
+          "id": "C4",
+          "regionId": "tray"
+        },
+        {
+          "id": "C5",
+          "regionId": "tray"
+        },
+        {
+          "id": "C6",
+          "regionId": "tray"
+        }
+      ],
+      "inputModes": [],
+      "legalActions": [
+        "moveCounter",
+        "linkBond",
+        "clearBond"
+      ]
+    },
+    {
+      "id": "try",
+      "tool": "countersAndBond",
+      "whole": 7,
+      "regions": [
+        {
+          "id": "tray",
+          "label": "Source tray"
+        },
+        {
+          "id": "bowl",
+          "label": "Bowl"
+        }
+      ],
+      "counters": [
+        {
+          "id": "C1",
+          "regionId": "tray"
+        },
+        {
+          "id": "C2",
+          "regionId": "tray"
+        },
+        {
+          "id": "C3",
+          "regionId": "tray"
+        },
+        {
+          "id": "C4",
+          "regionId": "tray"
+        },
+        {
+          "id": "C5",
+          "regionId": "tray"
+        },
+        {
+          "id": "C6",
+          "regionId": "tray"
+        },
+        {
+          "id": "C7",
+          "regionId": "tray"
+        }
+      ],
+      "inputModes": [
+        "drag",
+        "tapSelectPlace",
+        "accessibleAction"
+      ],
+      "legalActions": [
+        "moveCounter",
+        "linkBond",
+        "clearBond"
+      ]
+    }
+  ],
+  "worksheets": [
+    {
+      "id": "try-sheet",
+      "version": "0.1.0",
+      "layout": "focused",
+      "items": [
+        {
+          "id": "slot-guided",
+          "itemId": "guided",
+          "regions": [
+            {
+              "id": "answer",
+              "role": "answer",
+              "bounds": {
+                "x": 0,
+                "y": 0,
+                "width": 100,
+                "height": 80
+              }
+            },
+            {
+              "id": "working",
+              "role": "working",
+              "bounds": {
+                "x": 0,
+                "y": 80,
+                "width": 600,
+                "height": 300
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "check-sheet",
+      "version": "0.1.0",
+      "layout": "sheet",
+      "items": [
+        {
+          "id": "slot-check",
+          "itemId": "check",
+          "regions": [
+            {
+              "id": "answer",
+              "role": "answer",
+              "bounds": {
+                "x": 0,
+                "y": 0,
+                "width": 100,
+                "height": 80
+              }
+            },
+            {
+              "id": "working",
+              "role": "working",
+              "bounds": {
+                "x": 0,
+                "y": 80,
+                "width": 600,
+                "height": 300
+              }
+            }
+          ]
+        },
+        {
+          "id": "slot-replacement",
+          "itemId": "replacement",
+          "regions": [
+            {
+              "id": "answer",
+              "role": "answer",
+              "bounds": {
+                "x": 0,
+                "y": 0,
+                "width": 100,
+                "height": 80
+              }
+            },
+            {
+              "id": "working",
+              "role": "working",
+              "bounds": {
+                "x": 0,
+                "y": 80,
+                "width": 600,
+                "height": 300
+              }
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "activities": [
+    {
+      "id": "ready",
+      "kind": "readiness",
+      "targetIds": [
+        "count-to-10",
+        "match-to-10"
+      ],
+      "quantities": [
+        6,
+        7,
+        8
+      ],
+      "prompt": "Count the counters and choose the matching numeral."
+    },
+    {
+      "id": "observe",
+      "kind": "observe",
+      "itemId": "worked",
+      "workspaceId": "demonstration",
+      "disclosureIds": [
+        "worked-example"
+      ],
+      "timeline": {
+        "id": "split-six",
+        "version": "0.1.0",
+        "clipId": "split-six-audio",
+        "clipVersion": "0.1.0",
+        "timebase": "ms",
+        "chapters": [
+          {
+            "id": "step-0",
+            "atMs": 0,
+            "text": "Count six counters in the tray. The whole is six."
+          },
+          {
+            "id": "step-1",
+            "atMs": 1000,
+            "text": "Move one counter from the tray to the bowl."
+          },
+          {
+            "id": "step-2",
+            "atMs": 2000,
+            "text": "Move one more counter to the bowl."
+          },
+          {
+            "id": "step-3",
+            "atMs": 3000,
+            "text": "The bowl is part A with two. The tray is part B with four. Both parts make six."
+          },
+          {
+            "id": "step-4",
+            "atMs": 4000,
+            "text": "Return both counters to the tray. The whole is still six. Our completed bond was six, two and four."
+          }
+        ],
+        "cues": [
+          {
+            "id": "cue-0",
+            "atMs": 0,
+            "order": 0,
+            "payload": {
+              "kind": "presentation",
+              "update": {
+                "kind": "caption",
+                "chapterId": "step-0"
+              }
+            }
+          },
+          {
+            "id": "cue-1",
+            "atMs": 1000,
+            "order": 0,
+            "payload": {
+              "kind": "presentation",
+              "update": {
+                "kind": "hand",
+                "pose": "move",
+                "regionId": "bowl"
+              }
+            }
+          },
+          {
+            "id": "cue-2",
+            "atMs": 1000,
+            "order": 1,
+            "payload": {
+              "kind": "math",
+              "action": {
+                "kind": "moveCounter",
+                "counterId": "C1",
+                "fromRegionId": "tray",
+                "toRegionId": "bowl"
+              }
+            }
+          },
+          {
+            "id": "cue-3",
+            "atMs": 1000,
+            "order": 2,
+            "payload": {
+              "kind": "presentation",
+              "update": {
+                "kind": "caption",
+                "chapterId": "step-1"
+              }
+            }
+          },
+          {
+            "id": "cue-4",
+            "atMs": 2000,
+            "order": 0,
+            "payload": {
+              "kind": "math",
+              "action": {
+                "kind": "moveCounter",
+                "counterId": "C2",
+                "fromRegionId": "tray",
+                "toRegionId": "bowl"
+              }
+            }
+          },
+          {
+            "id": "cue-5",
+            "atMs": 2000,
+            "order": 1,
+            "payload": {
+              "kind": "presentation",
+              "update": {
+                "kind": "caption",
+                "chapterId": "step-2"
+              }
+            }
+          },
+          {
+            "id": "cue-6",
+            "atMs": 3000,
+            "order": 0,
+            "payload": {
+              "kind": "math",
+              "action": {
+                "kind": "linkBond",
+                "partARegionId": "bowl",
+                "partBRegionId": "tray",
+                "whole": 6,
+                "partA": 2,
+                "partB": 4
+              }
+            }
+          },
+          {
+            "id": "cue-7",
+            "atMs": 3000,
+            "order": 1,
+            "payload": {
+              "kind": "presentation",
+              "update": {
+                "kind": "caption",
+                "chapterId": "step-3"
+              }
+            }
+          },
+          {
+            "id": "cue-8",
+            "atMs": 4000,
+            "order": 0,
+            "payload": {
+              "kind": "math",
+              "action": {
+                "kind": "clearBond"
+              }
+            }
+          },
+          {
+            "id": "cue-9",
+            "atMs": 4000,
+            "order": 1,
+            "payload": {
+              "kind": "math",
+              "action": {
+                "kind": "moveCounter",
+                "counterId": "C1",
+                "fromRegionId": "bowl",
+                "toRegionId": "tray"
+              }
+            }
+          },
+          {
+            "id": "cue-10",
+            "atMs": 4000,
+            "order": 2,
+            "payload": {
+              "kind": "math",
+              "action": {
+                "kind": "moveCounter",
+                "counterId": "C2",
+                "fromRegionId": "bowl",
+                "toRegionId": "tray"
+              }
+            }
+          },
+          {
+            "id": "cue-11",
+            "atMs": 4000,
+            "order": 3,
+            "payload": {
+              "kind": "presentation",
+              "update": {
+                "kind": "caption",
+                "chapterId": "step-4"
+              }
+            }
+          }
+        ]
+      }
+    },
+    {
+      "id": "try",
+      "kind": "guidedPractice",
+      "itemId": "guided",
+      "workspaceId": "try",
+      "worksheetId": "try-sheet",
+      "assistanceIds": [
+        "retry"
+      ],
+      "disclosureIds": [
+        "guided-example"
+      ]
+    },
+    {
+      "id": "check",
+      "kind": "assessment",
+      "itemId": "check",
+      "worksheetId": "check-sheet",
+      "mode": "independent",
+      "assistanceIds": [
+        "retry",
+        "hint",
+        "guide",
+        "reteach"
+      ],
+      "replacementItemIds": [
+        "replacement"
+      ],
+      "feedbackDisclosureIds": [
+        "check-feedback"
+      ]
+    }
+  ]
+}

@@ -1,0 +1,10 @@
+{
+  "document": "manifest",
+  "path": [
+    "files",
+    2,
+    "path"
+  ],
+  "value": "../placeholder.wav",
+  "expected": "schema"
+}

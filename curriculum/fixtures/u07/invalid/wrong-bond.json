@@ -1,0 +1,15 @@
+{
+  "document": "lesson",
+  "path": [
+    "activities",
+    1,
+    "timeline",
+    "cues",
+    6,
+    "payload",
+    "action",
+    "partB"
+  ],
+  "value": 3,
+  "expected": "bond"
+}

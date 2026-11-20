@@ -1,0 +1,13 @@
+{
+  "document": "lesson",
+  "path": [
+    "activities",
+    3,
+    "assistanceIds"
+  ],
+  "value": [
+    "guide",
+    "hint"
+  ],
+  "expected": "assistance"
+}

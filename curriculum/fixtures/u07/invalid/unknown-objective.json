@@ -1,0 +1,10 @@
+{
+  "document": "catalog",
+  "path": [
+    "targets",
+    0,
+    "objectiveId"
+  ],
+  "value": "unknown",
+  "expected": "reference"
+}

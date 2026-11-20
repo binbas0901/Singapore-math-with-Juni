@@ -1,0 +1,14 @@
+{
+  "document": "catalog",
+  "path": [
+    "dependencies"
+  ],
+  "value": {
+    "kind": "componentMastery",
+    "forTargetId": "split-to-10",
+    "componentTargetId": "split-to-10",
+    "evidence": "priorOrConcurrentIndependent"
+  },
+  "expected": "cycle",
+  "append": true
+}

@@ -1,0 +1,8 @@
+{
+  "document": "manifest",
+  "path": [
+    "schemaVersion"
+  ],
+  "value": 2,
+  "expected": "schema"
+}

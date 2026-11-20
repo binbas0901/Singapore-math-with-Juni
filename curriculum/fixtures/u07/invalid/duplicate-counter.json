@@ -1,0 +1,12 @@
+{
+  "document": "lesson",
+  "path": [
+    "workspaces",
+    0,
+    "counters",
+    1,
+    "id"
+  ],
+  "value": "C1",
+  "expected": "duplicate"
+}

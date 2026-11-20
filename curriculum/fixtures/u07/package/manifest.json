@@ -1,0 +1,50 @@
+{
+  "schemaVersion": 1,
+  "kind": "manifest",
+  "packageId": "p1-u07-fixture",
+  "contentVersion": "0.1.0",
+  "locale": "en-SG",
+  "minEngineVersion": 1,
+  "usage": "developmentFixture",
+  "catalogFile": "catalog.json",
+  "lessons": [
+    {
+      "id": "U07",
+      "file": "lesson.json"
+    }
+  ],
+  "files": [
+    {
+      "path": "catalog.json",
+      "bytes": 2721,
+      "sha256": "2d1cd8a3cb5f2bf75b4c1577a0d6ff3b1d2c043178f90529902fcdd67f009637",
+      "type": "catalog"
+    },
+    {
+      "path": "lesson.json",
+      "bytes": 15032,
+      "sha256": "e397654fcf0a354d13f6c43341297faf408e28fb056bb62c107f32e4da73d056",
+      "type": "lesson"
+    },
+    {
+      "path": "placeholder.wav",
+      "bytes": 40044,
+      "sha256": "8c1e2f6bbd55e21bdd08df924621a2c9f5f226d16494a574864ec7b80bcf3949",
+      "type": "audio"
+    }
+  ],
+  "clips": [
+    {
+      "id": "split-six-audio",
+      "version": "0.1.0",
+      "locale": "en-SG",
+      "file": "placeholder.wav",
+      "durationMs": 5000,
+      "transcript": "Count six counters in the tray. The whole is six. Move one counter from the tray to the bowl. Move one more counter to the bowl. The bowl is part A with two. The tray is part B with four. Both parts make six. Return both counters to the tray. The whole is still six. Our completed bond was six, two and four.",
+      "rights": {
+        "status": "fixturePlaceholder",
+        "provenance": "Generated silent PCM for DATA-001"
+      }
+    }
+  ]
+}
