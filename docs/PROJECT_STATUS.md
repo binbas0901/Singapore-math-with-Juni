@@ -6,7 +6,7 @@
 
 Target: one complete P1 learning unit, offline native iPad private beta, preceded by a reviewed vertical slice. D01--D13 and agent-driven delivery remain binding. This ledger is the operational state record, not an independent change to the roadmap or blueprint.
 
-**34 tasks: 3 review, 1 ready, 26 backlog, 0 in progress, 0 blocked, 4 accepted.** No milestone gate has been accepted. ENV-001 is integrated into main at `a2954204d7edacf8f05241e3af18bf210f12f6ef`. The Lead accepted ENV-002 after independent QA verified the native iPad scaffold in the simulator. PR #2 was integrated into main at `1206df736d6916c2da798aa35af10d1d1000f599`. CUR-001 is accepted after independent source QA; CUR-002 remains in Education review and CUR-004 is ready after integration. Physical-device readiness remains open.
+**34 tasks: 3 review, 1 ready, 26 backlog, 0 in progress, 0 blocked, 4 accepted.** No milestone gate has been accepted. ENV-001 is integrated into main at `a2954204d7edacf8f05241e3af18bf210f12f6ef`. The Lead accepted ENV-002 after independent QA verified the native iPad scaffold in the simulator. PR #2 was integrated into main at `1206df736d6916c2da798aa35af10d1d1000f599`. CUR-001 was accepted after independent source QA and integrated through PR #3 at `e546204882c4f8d12af0fca758bbf9b218d766b0`. CUR-002 remains in review following independent Education review. CUR-004 is ready. Physical-device readiness remains open.
 
 ## 2. Source baseline and evidence
 
@@ -45,13 +45,13 @@ States: backlog, ready, in progress, review, blocked, accepted. Ready means depe
   -----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
   Task       State      Owner / reviewer         Dependencies                  Target deliverable                                   Acceptance criteria                                                                                                                                       Next action
   ---------- ---------- ------------------------ ----------------------------- ---------------------------------------------------- --------------------------------------------------------------------------------------------------------------------------------------------------------- ---------------------------------------------------
-  CUR-001    accepted   Curriculum / QA          LEAD-001 (draft sufficient)   references/source-register.md                        Retrieve official MOE syllabus; verify edition and applicability, URL, date, page references, checksum if bytes available; flag missing sources.          Lead accepted independent QA; source-register findings resolved.
+  CUR-001    accepted   Curriculum / QA          LEAD-001 (draft sufficient)   references/source-register.md                        Retrieve official MOE syllabus; verify edition and applicability, URL, date, page references, checksum if bytes available; flag missing sources.          Lead accepted independent QA; integrated through PR #3 at e546204.
 
-  CUR-002    review     Curriculum / Education   CUR-001                       curriculum/p1/objectives.json; docs/coverage-p1.md   All P1 objectives mapped to stable IDs, source pages and strands; explicit gaps, prerequisites and core/enrichment distinctions; independent check.       Mapping corrected v1.1; independent Education review next after CUR-001 integration.
+  CUR-002    review     Curriculum / Education   CUR-001                       curriculum/p1/objectives.json; docs/coverage-p1.md   All P1 objectives mapped to stable IDs, source pages and strands; explicit gaps, prerequisites and core/enrichment distinctions; independent check.       Independent Education review completed; targeted corrections recommended before acceptance.
 
   CUR-003    review    Curriculum / Education   CUR-002                       docs/first-unit.md                                   Propose number-sense/number-bond unit with verified ranges and prerequisites; map each objective to teaching/practice/assessment; owner approves scope.   Draft first-unit.md produced; owner and Education approval pending.
 
-  CUR-004    ready      Curriculum / QA          CUR-001                       curriculum/p2--p6/; docs/CURRICULUM_MASTER.md        Map remaining levels with provenance and completeness report; may run alongside implementation; no requirement to finish before private beta.             Eligible after CUR-001 integration; prioritize P1 review.
+  CUR-004    ready      Curriculum / QA          CUR-001                       curriculum/p2--p6/; docs/CURRICULUM_MASTER.md        Map remaining levels with provenance and completeness report; may run alongside implementation; no requirement to finish before private beta.             Eligible following CUR-001 integration; prioritize P1 review.
   -----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 
 ### M2 / Sprint 2
@@ -165,7 +165,7 @@ ENV-002 ran in local Codex on `task/ENV-002-ipad-scaffold`. The [verification re
   -------------- -------------------- ------------------------------------------ ------------------------------------------------------------ ----------------------------------------------------------------------------------------------------
   1              LEAD-001             Owner review                               Four foundation artifacts available                          Recorded approval or findings
 
-  2              CUR-001              Accepted; integration pending              Independent QA and Lead acceptance recorded                  Integrate PR #3
+  2              CUR-001              Accepted; integrated                       Independent QA and Lead acceptance recorded                  PR #3 merged at e546204
 
   3              ENV-002              Integrated                                 PR #2 merged to main                                         Merge commit `1206df736d6916c2da798aa35af10d1d1000f599`
 
@@ -314,3 +314,7 @@ ENV-002 was integrated through [PR #2](https://github.com/binbas0901/Singapore-m
 ## 21. CUR-001 Lead acceptance (v1.12) — 2026-11-19
 
 Lead inspected the independent QA report at `752930402b87eb139e674e0d72b4311512d8ec5f` and PR #3 diff. Accepted source verification: official index and media downloads match the previously recorded fingerprint, 50 pages, 806,004 bytes; edition, applicability, pathways, printed anchors and rights notice verified by independent QA. Lead did not repeat the Mac download. Both low findings corrected in source register v1.4 at `fcb134d7dbcd87a2a09c6d7f27798cb534aaf3a5`. CUR-002 remains review pending independent Education review; CUR-004 moves backlog to ready after integration, not a beta prerequisite. CUR-003 and IOS-001 remain review. Commercial rights clearance, scope of Foundation mapping and device gates remain open. No application changes or PDF committed. Counts: 4 accepted, 3 review, 1 ready, 26 backlog. Next prioritize CUR-002 independent review after PR #3 integration.
+
+## 22. CUR-001 integration and CUR-002 independent Education review — 2026-11-19
+
+CUR-001 was integrated into main through [PR #3](https://github.com/binbas0901/Singapore-math-with-Juni/pull/3) at [e546204](https://github.com/binbas0901/Singapore-math-with-Juni/commit/e546204882c4f8d12af0fca758bbf9b218d766b0). The [CUR-002 independent Education review](qa/cur-002-independent-review.md) independently downloaded the official PDF, matched its registered SHA-256 and reconciled all 32 numbered P1 objectives. It verified 59 core and six enrichment concepts and acyclic prerequisite graphs. CUR-002 stays in review pending Lead disposition of active-use evidence, grid-format mastery and prerequisite findings. Task counts are unchanged. No dependent work was started.
