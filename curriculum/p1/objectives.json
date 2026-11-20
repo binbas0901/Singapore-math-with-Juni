@@ -2357,7 +2357,7 @@
     }
   ],
   "first_unit": {
-    "status": "owner approved scope; CUR-003 Education approval pending",
+    "status": "owner approved scope; CUR-003 specification accepted; owner sample-slice approval pending",
     "range": "0–10 for introductory evidence",
     "note": "Use bounded readiness and independent evidence for counting, numeral work, comparison, ordering and part-whole bonds. Full-range objective mastery requires later evidence.",
     "specification": "first-unit.md",
