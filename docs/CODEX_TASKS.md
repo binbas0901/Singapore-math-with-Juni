@@ -1,8 +1,9 @@
 # Codex dispatch packets
 Read AGENTS.md, docs/PROJECT_BLUEPRINT.md, docs/PROJECT_STATUS.md and docs/ARCHITECTURE.md before work. No child data, paid provisioning or remote changes beyond authorized repo. Return task ID, branch, commit, commands/results, changed paths, blockers and review request.
 
-## First task: ENV-001 remote capability verification
-Inspect repository permissions without destructive operations; record OS, swift --version, python3 --version, git --version and xcodebuild availability. Run `swift test --package-path app/JuniCore`. Report actual results and whether Mac/device signing path exists. Do not claim iPad build success on Linux. Update evidence in docs/environment.md on a dedicated branch, submit review. Do not start ENV-002 until ENV-001 accepted.
+## ENV-001 local environment verification
+
+Use the dedicated task branch. Record macOS and tool versions, Xcode SDKs, read-only GitHub access and repository status, simulator runtime and device inventories, and signing readiness. Run `swift test --package-path app/JuniCore` and report the host test results. Update [environment evidence](environment.md) and [project status](PROJECT_STATUS.md) for Lead review. ENV-002 requires ENV-001 acceptance.
 
 ## IOS-001 review task
 Review docs/ARCHITECTURE.md against blueprint, first-unit and actual curriculum inventory. Find contradictions in state transitions, range-specific mastery, offline threat model, module boundaries and acceptance criteria. Return findings with line references. No canonical schema or mastery thresholds until DATA-001 and MATH-000 reconciliation; LEAD-002 freezes contracts.

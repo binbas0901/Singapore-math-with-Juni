@@ -1,12 +1,12 @@
 # Singapore Math with Juni --- Project Status
 
-**Version:** 1.5 \| **Baseline:** 2026-11-17 \| **Maintainer:** Lead agent \| **Current milestone:** M0 / Sprint 0
+**Version:** 1.8 \| **Baseline:** 2026-11-17 \| **Maintainer:** Lead agent \| **Current milestone:** M0 / Sprint 0
 
 ## 1. Executive status
 
 Target: one complete P1 learning unit, offline native iPad private beta, preceded by a reviewed vertical slice. D01--D13 and agent-driven delivery remain binding. This ledger is the operational state record, not an independent change to the roadmap or blueprint.
 
-**34 tasks: 4 review, 0 ready, 28 backlog, 0 in progress, 1 blocked, 1 accepted.** Five of six planned foundation documents now exist; none of the eight milestone gates is accepted. Document production is not task acceptance. Local bootstrap repository and portable Swift smoke test prepared; no external agent, remote repository, native build or paid service provisioned.
+**34 tasks: 4 review, 1 ready, 27 backlog, 0 in progress, 0 blocked, 2 accepted.** No milestone gate has been accepted. The Lead accepted ENV-001. Verification covered the local Mac toolchain, access to the existing private GitHub repository, successful iPad (A16) simulator startup, and two passing JuniCore tests. ENV-002 is ready for dispatch once integration into main is confirmed. Native iPad build and device readiness remain open.
 
 ## 2. Source baseline and evidence
 
@@ -35,9 +35,9 @@ States: backlog, ready, in progress, review, blocked, accepted. Ready means depe
   ---------- ---------- ------------------ ----------------------------- ---------------------------------------------- ----------------------------------------------------------------------------------------------------------------------------------------------------------------- ----------------------------------------------------------------
   LEAD-001   accepted   Lead / Owner       None                          docs/ --- blueprint, AGENTS, roadmap, status   All 13 decisions present; references consistent; status ledger initialized; owner review recorded.                                                                Owner approved baseline in current conversation.
 
-  ENV-001    blocked      Release / Lead     LEAD-001 (draft sufficient)   docs/environment.md; repository setup plan     Check actual Codex access, Git permissions, Mac/Xcode and iPad; record versions, costs, blockers and signing path; obtain authorization before remote creation.   Inspect actual agent/repo/build access; document alternatives.
+  ENV-001    accepted   Release / Lead     LEAD-001 (draft sufficient)   docs/environment.md; repository setup plan     Check actual Codex access, Git permissions, Mac/Xcode and iPad; record versions, costs, blockers and signing path; obtain authorization before remote creation.   Lead independently reviewed and accepted the evidence. Integration into main is pending.
 
-  ENV-002    backlog    Release / QA       ENV-001                       app/ build skeleton; CI configuration          Authorized repo initialized; clean checkout builds and runs a smoke test on macOS; exact commands and logs recorded; no secrets committed.                        Wait for listed dependencies; then dispatch.
+  ENV-002    ready      Release / QA       ENV-001                       app/ build skeleton; CI configuration          Authorized repo initialized; clean checkout builds and runs a smoke test on macOS; exact commands and logs recorded; no secrets committed.                        Dispatch after integration into main is confirmed.
   --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 
 ### M1 / Sprint 1
@@ -153,7 +153,7 @@ States: backlog, ready, in progress, review, blocked, accepted. Ready means depe
 
   CUR-001     Current ChatGPT research turn                                                source-register.md; official indexed PDF pp. 4 and 30   Original acquired via owner upload; 50 pages; SHA-256 recorded                                                         QA; pending              Independent QA review
 
-  ENV-001     Unassigned                                                None                                                                            None                                                                         Lead; pending            Inspect capabilities and permissions
+  ENV-001     Local Codex / task/ENV-001-environment                    environment.md                                                                  Toolchain, GitHub read access, two passing XCTest cases, iPad (A16) boot, physical-device and signing inventories       Lead; accepted after independent review    Integrate the acceptance changes into main
   -----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 
 ## 5. Immediate dispatch queue
@@ -165,7 +165,7 @@ States: backlog, ready, in progress, review, blocked, accepted. Ready means depe
 
   2              CUR-001              Research; parallel eligible                LEAD-001 draft exists                                        Source register, verified official URL, edition, page references, checksum if available, QA review
 
-  3              ENV-001              Capability inspection; parallel eligible   LEAD-001 draft exists                                        Environment report, actual access, costs and authorization needs
+  3              ENV-002              Native build skeleton and CI               ENV-001 accepted and integration into main confirmed       Clean checkout build and smoke-test evidence
 
   4              IOS-001              Architecture                               LEAD-001 accepted                                            Architecture draft and interface boundaries
 
@@ -174,7 +174,7 @@ States: backlog, ready, in progress, review, blocked, accepted. Ready means depe
   6              CUR-003 / DATA-001   Design                                     Their respective dependencies accepted or draft sufficient   Approved unit / schema fixtures
   ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 
-Suggested next executable action: separate QA/Education review of CUR-001/002 and owner review of CUR-003 draft; ENV-001 and IOS-001 are ready. ENV-001 can proceed separately if an additional session is available; otherwise execute sequentially. Neither requires owner to write code. Do not commission paid assets or provision remote services without authorization.
+ENV-002 is ready and awaits confirmed integration of ENV-001 into main before dispatch. The curriculum and architecture reviews retain their existing dependencies.
 
 ### Dispatch brief template
 
@@ -229,9 +229,9 @@ Report: outputs, actual checks, missing checks, findings, blockers, next action.
   ----------------- ------------------------------------------------------------- -------------------------------------------------------------------- ----------------------------------------
   R01               Official PDF acquired; independent QA pending                 Blocks accepted curriculum mapping                                   Curriculum: CUR-001
 
-  R02               Codex, GitHub access and repository permissions unverified    Blocks external engineering workflow setup                           Release: ENV-001; obtain authorization
+  R02               Local Codex and authenticated GitHub read access verified   Main branch protection behavior untested                         Release verification in environment.md
 
-  R03               Mac/Xcode, signing and physical iPad test access unverified   Blocks native build/device acceptance if unavailable; not research   Release: ENV-001/002
+  R03               Mac/Xcode and simulator startup verified. Physical iPad and development signing unavailable in this check   Blocks physical-device acceptance   Release: ENV-001/002
 
   R04               First unit sequence provisional                               Blocks lesson scope approval                                         Curriculum: CUR-003
 
@@ -276,3 +276,21 @@ CUR-001 and CUR-002 second-pass audit completed in same session; see CUR-QA-AUDI
 
 ## 14. Execution update — 2026-11-17 (v1.5)
 Owner approved CUR-003 unit scope; remains review pending Education and upstream acceptance. ENV-001 ready → blocked: local tools confirmed; no authenticated remote Codex/GitHub or macOS build host available. environment.md and CODEX_TASKS.md produced. IOS-001 ready → review: architecture v1.1 records owner approval, draft module boundaries, offline threat model and verification gates; Lead review and later schema/mastery reconciliation outstanding. Local bootstrap only, no external agent launched. Current totals: 1 accepted, 4 review (CUR-001/002/003, IOS-001), 1 blocked (ENV-001), 28 backlog, 0 ready/in progress. This section supersedes historic queues. Next: owner connects GitHub/Codex, separate QA/Education reviewers, then dispatch eligible tasks. Do not waive gates.
+
+## 15. Execution update — 2026-11-18 (v1.6)
+
+ENV-001 moved from blocked to review on `task/ENV-001-environment` at base commit `f1fc6b1`. Verified the local Codex CLI and session, macOS and Xcode with device and simulator SDKs, and Git, Python and Node.js. Authenticated GitHub read access succeeded against the existing private origin, and GitHub reported ADMIN viewer permission. The macOS JuniCore suite passed both XCTest cases.
+
+Xcode reported no installed simulator runtime or available simulator devices. No physical device or valid signing identity was detected. The repository contains a Swift package and has no native app target. Native app build, signing and physical iPad/stylus verification remain open. See [environment evidence](environment.md) for commands and results. Lead review is pending. ENV-002 remains backlog, gated on ENV-001 acceptance.
+
+## 16. ENV-001 follow-up — 2026-11-19 (v1.7)
+
+CoreSimulator listed six available iPads on iOS 26.3 (runtime build version 26.3.1, build 23D8133). The iPad (A16) completed startup in 1 minute 21 seconds and appeared as Booted. Both JuniCore XCTest cases passed again on macOS. The physical-device inventory was empty and the signing check found zero valid identities. The native app target, development signing and provisioning, and physical iPad and stylus verification remain outstanding.
+
+Release Engineering recommends accepting ENV-001 as an environment verification once the Lead reviews the evidence in [environment.md](environment.md). The task stays in review and ENV-002 stays in backlog pending that decision.
+
+## 17. ENV-001 Lead acceptance (v1.8)
+
+The Lead independently reviewed GitHub commit [`c244cb3f205e19c1a2a94cd65b1afb5ee45bfcff`](https://github.com/binbas0901/Singapore-math-with-Juni/commit/c244cb3f205e19c1a2a94cd65b1afb5ee45bfcff) and accepted ENV-001. ENV-002 moved from backlog to ready. Dispatch awaits confirmation that ENV-001 is integrated into main.
+
+The native app build and install, authorized Apple development team, valid signing identity and matching provisioning profile remain downstream requirements. Physical iPad, iPadOS and stylus compatibility and device testing remain open.
