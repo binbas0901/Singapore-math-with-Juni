@@ -1,14 +1,43 @@
 # ENV-001 — Development environment and evidence
-Version 1.0 | 2026-11-17 | Blocked on external access
 
-Observed in current execution: Linux x86_64, Swift 6.2.1, Git 2.47.3, Python 3.13.5. No codex, gh or xcodebuild executable on PATH. No authenticated GitHub repository or Codex task access exposed. Local Git initialization and Swift package smoke test are separately recorded in bootstrap-evidence.txt. This is not a native iPad build.
+Verified 2026-11-18 on the local Mac, with simulator and test follow-up on 2026-11-19. Release Engineering completed the verification pass on `task/ENV-001-environment`. Lead review is pending. The relevant blueprint decisions are D08, D11 and D12.
 
-## Workflow
-1. Owner connects GitHub to Codex, authorizes a private repository named singapore-math-with-juni. Import the supplied bootstrap tree; never publish the official PDF or child data. Review access scope. Do not purchase services.
-2. On web/desktop, open https://chatgpt.com/codex, select Cloud, create environment, select repository, let Codex inspect and prepare tools, review and publish. Mobile may use a published environment. See https://learn.chatgpt.com/docs/environments/cloud-environments and https://help.openai.com/en/articles/20001545-using-codex-cloud (checked 2026-11-17).
-3. Run the first task in CODEX_TASKS.md; require tool versions, swift test, git status, branch and evidence. Separate tasks use separate branches/workspaces; reviewed PRs merge to main. No force push or automatic merge.
-4. Use a Mac with compatible Xcode for native builds, simulator and signing. A private macOS CI runner is an alternative for unsigned simulator builds, subject to owner authorization and budget. Physical iPad/Pencil tests still necessary. Record xcodebuild -version, xcrun simctl list devices available, iPadOS version and stylus compatibility. Do not collect device serials.
-5. ENV-002 creates Xcode project and CI, verifies clean checkout build and smoke test; use automatic development signing with authorized Apple account for direct device install, or separately approved TestFlight membership/distribution. No signing keys in Git.
+## Local toolchain
 
-## Costs and blockers
-No spending incurred here. Codex limits depend on account; inspect actual allowance. GitHub hosting/CI quotas, Mac access and Apple program fees require owner verification before commitment. No runtime AI expense. Remote access, repository permissions, native build host, device OS and signing remain unverified. Proposed iPadOS 17 minimum subject to device check. ENV-001 cannot be accepted until actual access evidence is available.
+| Check | Observed result |
+| --- | --- |
+| `sw_vers`, `uname -m` | macOS 15.7.9 (24G830), x86_64 |
+| `xcode-select -p`, `xcodebuild -version` | `/Applications/Xcode.app/Contents/Developer`, Xcode 26.3 (17C529) |
+| `xcodebuild -checkFirstLaunchStatus` | Exit 0 |
+| `xcodebuild -showsdks` | iOS 26.2 device and simulator SDKs, macOS 26.2 SDK |
+| `swift --version` | Apple Swift 6.2.4, x86_64 macOS host target |
+| `git --version` | 2.50.1 (Apple Git-155) |
+| `python3 --version` | 3.9.6 |
+| `node --version` | 24.14.0 |
+| `codex --version` | Codex CLI 0.170.0. It reported a sandbox warning while creating PATH aliases. The local Codex session inspected and edited the checkout. |
+| `gh --version` | GitHub CLI 2.102.0 |
+
+## Repository and automated tests
+
+- On 2026-11-18, the starting working tree was clean. The task branch had no upstream. Its HEAD, local `main`, and `origin/main` pointed to `f1fc6b11ab15a8c13f7a24e95ae6f49c908495dc`.
+- `git ls-remote --symref origin HEAD refs/heads/main refs/heads/task/ENV-001-environment` confirmed that GitHub's default branch was `main` at the same commit. No remote ref for the task branch was advertised.
+- `gh repo view binbas0901/Singapore-math-with-Juni --json visibility,viewerPermission,defaultBranchRef,isArchived` reported an active private repository and `ADMIN` access for the authenticated viewer. That initial pass exercised read access only. The initial sandboxed remote query failed DNS resolution and succeeded with approved network access.
+- `swift test --package-path app/JuniCore` passed on macOS. XCTest ran two tests, `testAllValidPairs` and `testInvalidPairs`, with zero failures. The initial sandboxed attempt could not write the compiler module cache. The approved rerun used normal cache access. A second run with `--scratch-path /private/tmp/juni-env001-b46be7` compiled from an empty build directory and passed both tests again. The 2026-11-19 rerun of the standard command again passed both XCTest cases with zero failures on macOS. The package is a portable smoke test.
+
+## Native iPad readiness
+
+| Check | Observed result and implication |
+| --- | --- |
+| `xcrun simctl list runtimes`, `xcrun simctl list devices available` | On 2026-11-19, CoreSimulator listed iOS 26.3 (runtime build version 26.3.1, build 23D8133) and six available iPad simulators. The 2026-11-18 inventory had been empty. |
+| `xcrun simctl bootstatus 4CBC892C-A385-46ED-982F-ACB16937C6F3 -b`, `xcrun simctl list devices booted` | iPad (A16) reached terminal status `Finished` in 1 minute 21 seconds (exit 0). The device listing independently reported `Booted` under iOS 26.3. |
+| `xcrun devicectl list devices --hide-headers` | On 2026-11-19, no devices found. Target iPad model, iPadOS version and stylus compatibility remain unverified. |
+| `security find-identity -v -p codesigning` | On 2026-11-19, zero valid code-signing identities in the queried keychains. Team and provisioning readiness remain unverified. |
+| Tracked project files | `app/JuniCore` is a Swift package. The checkout has no Xcode app project or workspace, so there is no app target to build, sign or install. |
+
+Available iPad models were iPad (A16), iPad mini (A17 Pro), iPad Air 11-inch and 13-inch (M3), and iPad Pro 11-inch and 13-inch (M5).
+
+Xcode and both iOS SDKs are available for the later app skeleton. An unsigned simulator build can check compilation once there is an app target. A physical install requires the target iPad, an authorized Apple signing team, a development signing identity and a matching provisioning profile. The proposed iPadOS 17 minimum is pending device review. Native app compilation, installation, signing, provisioning and physical-device tests remain unverified.
+
+The runtime was installed before the follow-up. The verification incurred no costs. Existing local tools and GitHub read access supported this verification. Codex and GitHub allowances, CI costs and any Apple distribution costs were not assessed. Any spending or distribution requires owner authorization.
+
+Lead review is pending for ENV-001. ENV-002 is gated on ENV-001 acceptance. Native app and physical-device verification remain open.
