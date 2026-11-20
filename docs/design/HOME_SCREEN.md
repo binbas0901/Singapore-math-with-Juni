@@ -1,5 +1,5 @@
 # Home screen — visual implementation brief
-Version 0.1 | 2026-11-19 | First concept positively received by owner; production layout and assets pending review.
+Version 0.2 | 2026-11-19 | First concept positively received by owner; production layout and assets pending review.
 
 Companion to [PRODUCT_DESIGN.md](PRODUCT_DESIGN.md), PD-03, PD-05, PD-13, PD-18 and PD-20. Design-only; not authorization to start downstream implementation or waive curriculum/architecture gates.
 
@@ -27,3 +27,7 @@ App state drives home: loading; no learner plan; resume interrupted lesson; reco
 - Review final mascot, assets, product copy and home screen mockup with owner before code; complete lesson storyboard and component designs, independent review and roadmap/contract reconciliation before production UI work.
 
 Open: final character model, asset export pipeline, exact typefaces and color tokens, portrait layout, availability treatment for future features, final microcopy, verified target device dimensions/performance. No application code, paid assets, external audio or new task counts are authorized by this brief.
+
+## Character refinement
+
+The owner approved full-moon Juni after the original home screen mockup. Replace the crescent mascot in that illustration with the approved warm golden full moon; retain the layout, Montessori materials and navigation. The older reference is useful for layout only, not the final mascot silhouette. Do not replace the live native interface with the generated reference image. Separate character art from programmatic mathematical objects and native controls. Production character assets and actual device screenshots remain outstanding.
