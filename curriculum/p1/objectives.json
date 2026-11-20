@@ -2278,7 +2278,7 @@
         "engagement",
         "mastery"
       ],
-      "assessment": "Explain a valid solution."
+      "assessment": "Explain a valid solution; accept alternative correct strategies."
     },
     {
       "id": "P1-E02",
@@ -2293,7 +2293,7 @@
         "engagement",
         "mastery"
       ],
-      "assessment": "Explain a valid solution."
+      "assessment": "Explain a valid solution; accept alternative correct strategies."
     },
     {
       "id": "P1-E03",
@@ -2308,7 +2308,7 @@
         "engagement",
         "mastery"
       ],
-      "assessment": "Explain a valid solution."
+      "assessment": "Explain a valid solution; accept alternative correct strategies."
     },
     {
       "id": "P1-E04",
@@ -2323,7 +2323,7 @@
         "engagement",
         "mastery"
       ],
-      "assessment": "Explain a valid solution."
+      "assessment": "Explain a valid solution; accept alternative correct strategies."
     },
     {
       "id": "P1-E05",
@@ -2338,7 +2338,7 @@
         "engagement",
         "mastery"
       ],
-      "assessment": "Explain a valid solution."
+      "assessment": "Explain a valid solution; accept alternative correct strategies."
     },
     {
       "id": "P1-E06",
@@ -2353,7 +2353,7 @@
         "engagement",
         "mastery"
       ],
-      "assessment": "Explain a valid solution."
+      "assessment": "Explain a valid solution; accept alternative correct strategies."
     }
   ],
   "first_unit": {
