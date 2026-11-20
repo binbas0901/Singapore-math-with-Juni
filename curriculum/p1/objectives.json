@@ -1,8 +1,8 @@
 {
-  "version": "1.1-draft",
+  "version": "1.2",
   "source": "MOE-MATH-2021-2025-10",
   "sha256": "e8f77fe10d768e2ad5266dfc39a8821674be7eb1c81bc545ba4b841b12ae70e1",
-  "review": "second-pass audit in same session; independent reviewer pending",
+  "review": "Lead accepted CUR-002 inventory following independent Education re-review; authored lessons and runtime validation pending",
   "objectives": [
     {
       "id": "P1-NUM-01",
@@ -12,7 +12,7 @@
       "source_item": "1.1",
       "objective": "Determine set size by counting",
       "classification": "core",
-      "review": "second-pass source audit; separate Education approval pending",
+      "review": "source reconciled; independent Education re-review passed; inventory accepted",
       "prerequisites": [],
       "source": {
         "id": "MOE-MATH-2021-2025-10",
@@ -34,10 +34,8 @@
       "source_item": "1.2",
       "objective": "Represent numbers through 100 using tens and ones, including the endpoint 100",
       "classification": "core",
-      "review": "second-pass source audit; separate Education approval pending",
-      "prerequisites": [
-        "P1-NUM-01"
-      ],
+      "review": "source reconciled; independent Education re-review passed; inventory accepted",
+      "prerequisites": [],
       "source": {
         "id": "MOE-MATH-2021-2025-10",
         "page": 31,
@@ -59,10 +57,8 @@
       "source_item": "1.3",
       "objective": "Read and write numerals and number words",
       "classification": "core",
-      "review": "second-pass source audit; separate Education approval pending",
-      "prerequisites": [
-        "P1-NUM-02"
-      ],
+      "review": "source reconciled; independent Education re-review passed; inventory accepted",
+      "prerequisites": [],
       "source": {
         "id": "MOE-MATH-2021-2025-10",
         "page": 31,
@@ -83,10 +79,8 @@
       "source_item": "1.4",
       "objective": "Compare amounts across sets",
       "classification": "core",
-      "review": "second-pass source audit; separate Education approval pending",
-      "prerequisites": [
-        "P1-NUM-01"
-      ],
+      "review": "source reconciled; independent Education re-review passed; inventory accepted",
+      "prerequisites": [],
       "source": {
         "id": "MOE-MATH-2021-2025-10",
         "page": 31,
@@ -107,11 +101,8 @@
       "source_item": "1.5",
       "objective": "Sequence and compare numbers",
       "classification": "core",
-      "review": "second-pass source audit; separate Education approval pending",
-      "prerequisites": [
-        "P1-NUM-02",
-        "P1-NUM-04"
-      ],
+      "review": "source reconciled; independent Education re-review passed; inventory accepted",
+      "prerequisites": [],
       "source": {
         "id": "MOE-MATH-2021-2025-10",
         "page": 31,
@@ -132,10 +123,8 @@
       "source_item": "1.6",
       "objective": "Extend numerical patterns",
       "classification": "core",
-      "review": "second-pass source audit; separate Education approval pending",
-      "prerequisites": [
-        "P1-NUM-05"
-      ],
+      "review": "source reconciled; independent Education re-review passed; inventory accepted",
+      "prerequisites": [],
       "source": {
         "id": "MOE-MATH-2021-2025-10",
         "page": 31,
@@ -156,10 +145,8 @@
       "source_item": "1.7",
       "objective": "Use ordinal positions through tenth, including written symbols",
       "classification": "core",
-      "review": "second-pass source audit; separate Education approval pending",
-      "prerequisites": [
-        "P1-NUM-01"
-      ],
+      "review": "source reconciled; independent Education re-review passed; inventory accepted",
+      "prerequisites": [],
       "source": {
         "id": "MOE-MATH-2021-2025-10",
         "page": 31,
@@ -180,10 +167,8 @@
       "source_item": "2.1",
       "objective": "Explain joining and taking away",
       "classification": "core",
-      "review": "second-pass source audit; separate Education approval pending",
-      "prerequisites": [
-        "P1-NUM-01"
-      ],
+      "review": "source reconciled; independent Education re-review passed; inventory accepted",
+      "prerequisites": [],
       "source": {
         "id": "MOE-MATH-2021-2025-10",
         "page": 31,
@@ -203,12 +188,10 @@
       "topic": "Addition and Subtraction",
       "page": 31,
       "source_item": "2.2",
-      "objective": "Interpret addition, subtraction and equality symbols",
+      "objective": "Use addition, subtraction and equality signs in equations",
       "classification": "core",
-      "review": "second-pass source audit; separate Education approval pending",
-      "prerequisites": [
-        "P1-ADD-01"
-      ],
+      "review": "source reconciled; independent Education re-review passed; inventory accepted",
+      "prerequisites": [],
       "source": {
         "id": "MOE-MATH-2021-2025-10",
         "page": 31,
@@ -229,10 +212,8 @@
       "source_item": "2.3",
       "objective": "Connect inverse addition and subtraction facts",
       "classification": "core",
-      "review": "second-pass source audit; separate Education approval pending",
-      "prerequisites": [
-        "P1-ADD-02"
-      ],
+      "review": "source reconciled; independent Education re-review passed; inventory accepted",
+      "prerequisites": [],
       "source": {
         "id": "MOE-MATH-2021-2025-10",
         "page": 31,
@@ -253,10 +234,8 @@
       "source_item": "2.4",
       "objective": "Sum three or more single-digit values",
       "classification": "core",
-      "review": "second-pass source audit; separate Education approval pending",
-      "prerequisites": [
-        "P1-ADD-02"
-      ],
+      "review": "source reconciled; independent Education re-review passed; inventory accepted",
+      "prerequisites": [],
       "source": {
         "id": "MOE-MATH-2021-2025-10",
         "page": 31,
@@ -276,11 +255,8 @@
       "source_item": "2.5",
       "objective": "Compute sums and differences within 100",
       "classification": "core",
-      "review": "second-pass source audit; separate Education approval pending",
-      "prerequisites": [
-        "P1-ADD-03",
-        "P1-NUM-02"
-      ],
+      "review": "source reconciled; independent Education re-review passed; inventory accepted",
+      "prerequisites": [],
       "source": {
         "id": "MOE-MATH-2021-2025-10",
         "page": 31,
@@ -300,12 +276,10 @@
       "topic": "Addition and Subtraction",
       "page": 31,
       "source_item": "2.6",
-      "objective": "Use written computation procedures",
+      "objective": "Carry out written addition and subtraction algorithms",
       "classification": "core",
-      "review": "second-pass source audit; separate Education approval pending",
-      "prerequisites": [
-        "P1-ADD-05"
-      ],
+      "review": "source reconciled; independent Education re-review passed; inventory accepted",
+      "prerequisites": [],
       "source": {
         "id": "MOE-MATH-2021-2025-10",
         "page": 31,
@@ -326,11 +300,8 @@
       "source_item": "2.7",
       "objective": "Mental arithmetic within 20; two-digit plus/minus ones without regrouping; two-digit plus/minus tens",
       "classification": "core",
-      "review": "second-pass source audit; separate Education approval pending",
-      "prerequisites": [
-        "P1-ADD-03",
-        "P1-NUM-02"
-      ],
+      "review": "source reconciled; independent Education re-review passed; inventory accepted",
+      "prerequisites": [],
       "source": {
         "id": "MOE-MATH-2021-2025-10",
         "page": 31,
@@ -352,10 +323,8 @@
       "source_item": "3.1",
       "objective": "Model equal groups and sharing",
       "classification": "core",
-      "review": "second-pass source audit; separate Education approval pending",
-      "prerequisites": [
-        "P1-ADD-01"
-      ],
+      "review": "source reconciled; independent Education re-review passed; inventory accepted",
+      "prerequisites": [],
       "source": {
         "id": "MOE-MATH-2021-2025-10",
         "page": 31,
@@ -376,10 +345,8 @@
       "source_item": "3.2",
       "objective": "Interpret multiplication notation",
       "classification": "core",
-      "review": "second-pass source audit; separate Education approval pending",
-      "prerequisites": [
-        "P1-MUL-01"
-      ],
+      "review": "source reconciled; independent Education re-review passed; inventory accepted",
+      "prerequisites": [],
       "source": {
         "id": "MOE-MATH-2021-2025-10",
         "page": 31,
@@ -399,10 +366,8 @@
       "source_item": "3.3",
       "objective": "Multiply within 40",
       "classification": "core",
-      "review": "second-pass source audit; separate Education approval pending",
-      "prerequisites": [
-        "P1-MUL-02"
-      ],
+      "review": "source reconciled; independent Education re-review passed; inventory accepted",
+      "prerequisites": [],
       "source": {
         "id": "MOE-MATH-2021-2025-10",
         "page": 31,
@@ -422,10 +387,8 @@
       "source_item": "3.4",
       "objective": "Divide within 20",
       "classification": "core",
-      "review": "second-pass source audit; separate Education approval pending",
-      "prerequisites": [
-        "P1-MUL-01"
-      ],
+      "review": "source reconciled; independent Education re-review passed; inventory accepted",
+      "prerequisites": [],
       "source": {
         "id": "MOE-MATH-2021-2025-10",
         "page": 31,
@@ -445,11 +408,8 @@
       "source_item": "1.1",
       "objective": "Count cents through 100 cents and whole dollars through 100 dollars",
       "classification": "core",
-      "review": "second-pass source audit; separate Education approval pending",
-      "prerequisites": [
-        "P1-NUM-05",
-        "P1-ADD-05"
-      ],
+      "review": "source reconciled; independent Education re-review passed; inventory accepted",
+      "prerequisites": [],
       "source": {
         "id": "MOE-MATH-2021-2025-10",
         "page": 31,
@@ -470,10 +430,8 @@
       "source_item": "1.1",
       "objective": "Measure in centimetres",
       "classification": "core",
-      "review": "second-pass source audit; separate Education approval pending",
-      "prerequisites": [
-        "P1-NUM-01"
-      ],
+      "review": "source reconciled; independent Education re-review passed; inventory accepted",
+      "prerequisites": [],
       "source": {
         "id": "MOE-MATH-2021-2025-10",
         "page": 32,
@@ -493,10 +451,8 @@
       "source_item": "1.2",
       "objective": "Use cm to record length",
       "classification": "core",
-      "review": "second-pass source audit; separate Education approval pending",
-      "prerequisites": [
-        "P1-LEN-01"
-      ],
+      "review": "source reconciled; independent Education re-review passed; inventory accepted",
+      "prerequisites": [],
       "source": {
         "id": "MOE-MATH-2021-2025-10",
         "page": 32,
@@ -516,11 +472,8 @@
       "source_item": "1.3",
       "objective": "Rank and compare centimetre measurements",
       "classification": "core",
-      "review": "second-pass source audit; separate Education approval pending",
-      "prerequisites": [
-        "P1-LEN-02",
-        "P1-NUM-05"
-      ],
+      "review": "source reconciled; independent Education re-review passed; inventory accepted",
+      "prerequisites": [],
       "source": {
         "id": "MOE-MATH-2021-2025-10",
         "page": 32,
@@ -540,9 +493,9 @@
       "source_item": "1.4",
       "objective": "Measure and construct segments to nearest centimetre",
       "classification": "core",
-      "review": "second-pass source audit; separate Education approval pending",
+      "review": "source reconciled; independent Education re-review passed; inventory accepted",
       "prerequisites": [
-        "P1-LEN-02"
+        "P1-LEN-01"
       ],
       "source": {
         "id": "MOE-MATH-2021-2025-10",
@@ -564,10 +517,8 @@
       "source_item": "2.1",
       "objective": "Read clocks at five-minute intervals",
       "classification": "core",
-      "review": "second-pass source audit; separate Education approval pending",
-      "prerequisites": [
-        "P1-NUM-06"
-      ],
+      "review": "source reconciled; independent Education re-review passed; inventory accepted",
+      "prerequisites": [],
       "source": {
         "id": "MOE-MATH-2021-2025-10",
         "page": 32,
@@ -586,12 +537,10 @@
       "topic": "Time",
       "page": 32,
       "source_item": "2.2",
-      "objective": "Use am and pm, including noon and midnight",
+      "objective": "Use am and pm in familiar contexts",
       "classification": "core",
-      "review": "second-pass source audit; separate Education approval pending",
-      "prerequisites": [
-        "P1-TIM-01"
-      ],
+      "review": "source reconciled; independent Education re-review passed; inventory accepted",
+      "prerequisites": [],
       "source": {
         "id": "MOE-MATH-2021-2025-10",
         "page": 32,
@@ -609,12 +558,10 @@
       "topic": "Time",
       "page": 32,
       "source_item": "2.3",
-      "objective": "Interpret h and min",
+      "objective": "Use h and min to label durations",
       "classification": "core",
-      "review": "second-pass source audit; separate Education approval pending",
-      "prerequisites": [
-        "P1-TIM-01"
-      ],
+      "review": "source reconciled; independent Education re-review passed; inventory accepted",
+      "prerequisites": [],
       "source": {
         "id": "MOE-MATH-2021-2025-10",
         "page": 32,
@@ -634,10 +581,8 @@
       "source_item": "2.4",
       "objective": "Understand half-hour and one-hour durations",
       "classification": "core",
-      "review": "second-pass source audit; separate Education approval pending",
-      "prerequisites": [
-        "P1-TIM-03"
-      ],
+      "review": "source reconciled; independent Education re-review passed; inventory accepted",
+      "prerequisites": [],
       "source": {
         "id": "MOE-MATH-2021-2025-10",
         "page": 32,
@@ -656,9 +601,9 @@
       "topic": "2D Shapes",
       "page": 32,
       "source_item": "1.1",
-      "objective": "Recognize, name, describe and sort rectangles, squares, triangles, circles, semicircles and quarter circles",
+      "objective": "Recognize, name, describe and sort rectangles, squares, triangles, circles, half circles (semicircles) and quarter circles",
       "classification": "core",
-      "review": "second-pass source audit; separate Education approval pending",
+      "review": "source reconciled; independent Education re-review passed; inventory accepted",
       "prerequisites": [],
       "source": {
         "id": "MOE-MATH-2021-2025-10",
@@ -679,12 +624,10 @@
       "topic": "2D Shapes",
       "page": 32,
       "source_item": "1.2",
-      "objective": "Compose figures from rectangles, squares, triangles, semicircles and quarter circles",
+      "objective": "Compose figures from rectangles, squares, triangles, half circles and quarter circles",
       "classification": "core",
-      "review": "second-pass source audit; separate Education approval pending",
-      "prerequisites": [
-        "P1-GEO-01"
-      ],
+      "review": "source reconciled; independent Education re-review passed; inventory accepted",
+      "prerequisites": [],
       "source": {
         "id": "MOE-MATH-2021-2025-10",
         "page": 32,
@@ -703,13 +646,10 @@
       "topic": "2D Shapes",
       "page": 32,
       "source_item": "1.3",
-      "objective": "Decompose figures into constituent shapes",
+      "objective": "Identify the shapes that make up a given figure",
       "classification": "core",
-      "review": "second-pass source audit; separate Education approval pending",
-      "prerequisites": [
-        "P1-GEO-01",
-        "P1-GEO-02"
-      ],
+      "review": "source reconciled; independent Education re-review passed; inventory accepted",
+      "prerequisites": [],
       "source": {
         "id": "MOE-MATH-2021-2025-10",
         "page": 32,
@@ -729,10 +669,8 @@
       "source_item": "1.4",
       "objective": "Reproduce figures using dot or square grids",
       "classification": "core",
-      "review": "second-pass source audit; separate Education approval pending",
-      "prerequisites": [
-        "P1-GEO-01"
-      ],
+      "review": "source reconciled; independent Education re-review passed; inventory accepted",
+      "prerequisites": [],
       "source": {
         "id": "MOE-MATH-2021-2025-10",
         "page": 32,
@@ -743,7 +681,9 @@
         "P1-GEO-04-C01",
         "P1-GEO-04-C02"
       ],
-      "scope_constraint": "both dot and square grids"
+      "scope_constraint": "dot grid or square grid",
+      "evidence_rule": "any_linked_concept",
+      "instructional_extension": "Offer practice in both grid formats. Independent performance in either format satisfies official objective coverage."
     },
     {
       "id": "P1-PIC-01",
@@ -753,10 +693,8 @@
       "source_item": "1.1",
       "objective": "Extract and interpret information shown in pictographs",
       "classification": "core",
-      "review": "second-pass source audit; separate Education approval pending",
-      "prerequisites": [
-        "P1-NUM-04"
-      ],
+      "review": "source reconciled; independent Education re-review passed; inventory accepted",
+      "prerequisites": [],
       "source": {
         "id": "MOE-MATH-2021-2025-10",
         "page": 32,
@@ -785,169 +723,130 @@
       "objective_id": "P1-NUM-01",
       "classification": "core",
       "skill": "Count larger sets through 100 using organised groups",
-      "prerequisites": [
-        "P1-NUM-01-C01"
-      ],
+      "prerequisites": [],
       "lesson_id": "P1-L002",
-      "assessment": "Independently demonstrate: count larger sets through 100 using organised groups; use a fresh example and explain or show a strategy where appropriate."
+      "assessment": "Independently demonstrate: count larger sets through 100 using organised groups; use a fresh example and explain or show a strategy where appropriate.",
+      "readiness_check": "Count a small set one object at a time and say how many there are."
     },
     {
       "id": "P1-NUM-02-C01",
       "objective_id": "P1-NUM-02",
       "classification": "core",
       "skill": "Match quantities to numeral and picture",
-      "prerequisites": [
-        "P1-NUM-01-C01",
-        "P1-NUM-01-C02"
-      ],
+      "prerequisites": [],
       "lesson_id": "P1-L003",
-      "assessment": "Independently demonstrate: match quantities to numeral and picture; use a fresh example and explain or show a strategy where appropriate."
+      "assessment": "Independently demonstrate: match quantities to numeral and picture; use a fresh example and explain or show a strategy where appropriate.",
+      "readiness_check": "Count the small sets used for matching and recognize the corresponding numerals."
     },
     {
       "id": "P1-NUM-02-C02",
       "objective_id": "P1-NUM-02",
       "classification": "core",
       "skill": "Bundle tens and identify leftover ones",
-      "prerequisites": [
-        "P1-NUM-01-C01",
-        "P1-NUM-01-C02",
-        "P1-NUM-02-C01"
-      ],
+      "prerequisites": [],
       "lesson_id": "P1-L004",
-      "assessment": "Independently demonstrate: bundle tens and identify leftover ones; use a fresh example and explain or show a strategy where appropriate."
+      "assessment": "Independently demonstrate: bundle tens and identify leftover ones; use a fresh example and explain or show a strategy where appropriate.",
+      "readiness_check": "Count ten objects and see that a bundle still contains ten."
     },
     {
       "id": "P1-NUM-02-C03",
       "objective_id": "P1-NUM-02",
       "classification": "core",
       "skill": "Build and decompose numbers through 100; represent 100 as ten tens and one hundred",
-      "prerequisites": [
-        "P1-NUM-01-C01",
-        "P1-NUM-01-C02",
-        "P1-NUM-02-C02"
-      ],
+      "prerequisites": [],
       "lesson_id": "P1-L005",
-      "assessment": "Independently demonstrate: Build and decompose numbers through 100; represent 100 as ten tens and one hundred. Use a fresh example and show reasoning when appropriate."
+      "assessment": "Independently demonstrate: Build and decompose numbers through 100; represent 100 as ten tens and one hundred. Use a fresh example and show reasoning when appropriate.",
+      "readiness_check": "Build one ten and count the loose ones before extending the range."
     },
     {
       "id": "P1-NUM-03-C01",
       "objective_id": "P1-NUM-03",
       "classification": "core",
       "skill": "Read and write numerals through 100",
-      "prerequisites": [
-        "P1-NUM-02-C01",
-        "P1-NUM-02-C02",
-        "P1-NUM-02-C03"
-      ],
+      "prerequisites": [],
       "lesson_id": "P1-L006",
-      "assessment": "Independently demonstrate: Read and write numerals through 100. Use a fresh example and show reasoning when appropriate."
+      "assessment": "Independently demonstrate: Read and write numerals through 100. Use a fresh example and show reasoning when appropriate.",
+      "readiness_check": "Match numerals and quantities in the range being taught."
     },
     {
       "id": "P1-NUM-03-C02",
       "objective_id": "P1-NUM-03",
       "classification": "core",
       "skill": "Read and write number names through 100",
-      "prerequisites": [
-        "P1-NUM-02-C01",
-        "P1-NUM-02-C02",
-        "P1-NUM-02-C03",
-        "P1-NUM-03-C01"
-      ],
+      "prerequisites": [],
       "lesson_id": "P1-L007",
-      "assessment": "Independently demonstrate: Read and write number names through 100. Use a fresh example and show reasoning when appropriate."
+      "assessment": "Independently demonstrate: Read and write number names through 100. Use a fresh example and show reasoning when appropriate.",
+      "readiness_check": "Say and recognize the number names in the range being taught."
     },
     {
       "id": "P1-NUM-04-C01",
       "objective_id": "P1-NUM-04",
       "classification": "core",
       "skill": "Pair objects across sets to compare quantities",
-      "prerequisites": [
-        "P1-NUM-01-C01",
-        "P1-NUM-01-C02"
-      ],
+      "prerequisites": [],
       "lesson_id": "P1-L008",
-      "assessment": "Independently demonstrate: pair objects across sets to compare quantities; use a fresh example and explain or show a strategy where appropriate."
+      "assessment": "Independently demonstrate: pair objects across sets to compare quantities; use a fresh example and explain or show a strategy where appropriate.",
+      "readiness_check": "Pair objects one to one in the two small sets being compared."
     },
     {
       "id": "P1-NUM-04-C02",
       "objective_id": "P1-NUM-04",
       "classification": "core",
       "skill": "Compare three sets using counts",
-      "prerequisites": [
-        "P1-NUM-01-C01",
-        "P1-NUM-01-C02",
-        "P1-NUM-04-C01"
-      ],
+      "prerequisites": [],
       "lesson_id": "P1-L009",
-      "assessment": "Independently demonstrate: compare three sets using counts; use a fresh example and explain or show a strategy where appropriate."
+      "assessment": "Independently demonstrate: compare three sets using counts; use a fresh example and explain or show a strategy where appropriate.",
+      "readiness_check": "Count each of the sets in the task and compare the counts."
     },
     {
       "id": "P1-NUM-05-C01",
       "objective_id": "P1-NUM-05",
       "classification": "core",
       "skill": "Compare two numerals using place value",
-      "prerequisites": [
-        "P1-NUM-02-C01",
-        "P1-NUM-02-C02",
-        "P1-NUM-02-C03",
-        "P1-NUM-04-C01",
-        "P1-NUM-04-C02"
-      ],
+      "prerequisites": [],
       "lesson_id": "P1-L010",
-      "assessment": "Independently demonstrate: compare two numerals using place value; use a fresh example and explain or show a strategy where appropriate."
+      "assessment": "Independently demonstrate: compare two numerals using place value; use a fresh example and explain or show a strategy where appropriate.",
+      "readiness_check": "Match quantities and numerals in the current range. Use tens and ones as two-digit examples are introduced."
     },
     {
       "id": "P1-NUM-05-C02",
       "objective_id": "P1-NUM-05",
       "classification": "core",
       "skill": "Arrange several numbers in increasing and decreasing order",
-      "prerequisites": [
-        "P1-NUM-02-C01",
-        "P1-NUM-02-C02",
-        "P1-NUM-02-C03",
-        "P1-NUM-04-C01",
-        "P1-NUM-04-C02",
-        "P1-NUM-05-C01"
-      ],
+      "prerequisites": [],
       "lesson_id": "P1-L011",
-      "assessment": "Independently demonstrate: arrange several numbers in increasing and decreasing order; use a fresh example and explain or show a strategy where appropriate."
+      "assessment": "Independently demonstrate: arrange several numbers in increasing and decreasing order; use a fresh example and explain or show a strategy where appropriate.",
+      "readiness_check": "Compare two numbers in the current range before arranging several."
     },
     {
       "id": "P1-NUM-06-C01",
       "objective_id": "P1-NUM-06",
       "classification": "core",
       "skill": "Find counting-sequence rules, including steps of five",
-      "prerequisites": [
-        "P1-NUM-05-C01",
-        "P1-NUM-05-C02"
-      ],
+      "prerequisites": [],
       "lesson_id": "P1-L012",
-      "assessment": "Independently demonstrate: Find counting-sequence rules, including steps of five. Use a fresh example and show reasoning when appropriate."
+      "assessment": "Independently demonstrate: Find counting-sequence rules, including steps of five. Use a fresh example and show reasoning when appropriate.",
+      "readiness_check": "Count and order terms in the selected span and direction."
     },
     {
       "id": "P1-NUM-06-C02",
       "objective_id": "P1-NUM-06",
       "classification": "core",
       "skill": "Complete missing terms in increasing or decreasing sequences",
-      "prerequisites": [
-        "P1-NUM-05-C01",
-        "P1-NUM-05-C02",
-        "P1-NUM-06-C01"
-      ],
+      "prerequisites": [],
       "lesson_id": "P1-L013",
-      "assessment": "Independently demonstrate: complete missing terms in increasing or decreasing sequences; use a fresh example and explain or show a strategy where appropriate."
+      "assessment": "Independently demonstrate: complete missing terms in increasing or decreasing sequences; use a fresh example and explain or show a strategy where appropriate.",
+      "readiness_check": "Continue a short example of the pattern used in the task."
     },
     {
       "id": "P1-NUM-07-C01",
       "objective_id": "P1-NUM-07",
       "classification": "core",
       "skill": "Identify positions from first through tenth",
-      "prerequisites": [
-        "P1-NUM-01-C01",
-        "P1-NUM-01-C02"
-      ],
+      "prerequisites": [],
       "lesson_id": "P1-L014",
-      "assessment": "Independently demonstrate: identify positions from first through tenth; use a fresh example and explain or show a strategy where appropriate."
+      "assessment": "Independently demonstrate: identify positions from first through tenth; use a fresh example and explain or show a strategy where appropriate.",
+      "readiness_check": "Count positions in a short line from a stated starting end, extending through tenth."
     },
     {
       "id": "P1-NUM-07-C02",
@@ -955,8 +854,6 @@
       "classification": "core",
       "skill": "Read, write and match ordinal words and symbols to positions",
       "prerequisites": [
-        "P1-NUM-01-C01",
-        "P1-NUM-01-C02",
         "P1-NUM-07-C01"
       ],
       "lesson_id": "P1-L015",
@@ -967,363 +864,271 @@
       "objective_id": "P1-ADD-01",
       "classification": "core",
       "skill": "Split and recombine small quantities using number bonds",
-      "prerequisites": [
-        "P1-NUM-01-C01",
-        "P1-NUM-01-C02"
-      ],
+      "prerequisites": [],
       "lesson_id": "P1-L016",
-      "assessment": "Independently demonstrate: split and recombine small quantities using number bonds; use a fresh example and explain or show a strategy where appropriate."
+      "assessment": "Independently demonstrate: split and recombine small quantities using number bonds; use a fresh example and explain or show a strategy where appropriate.",
+      "readiness_check": "Count and recount the small sets being split and recombined. For the introductory unit, use quantities through 10."
     },
     {
       "id": "P1-ADD-01-C02",
       "objective_id": "P1-ADD-01",
       "classification": "core",
       "skill": "Model joining and part-whole addition",
-      "prerequisites": [
-        "P1-NUM-01-C01",
-        "P1-NUM-01-C02",
-        "P1-ADD-01-C01"
-      ],
+      "prerequisites": [],
       "lesson_id": "P1-L017",
-      "assessment": "Independently demonstrate: model joining and part-whole addition; use a fresh example and explain or show a strategy where appropriate."
+      "assessment": "Independently demonstrate: model joining and part-whole addition; use a fresh example and explain or show a strategy where appropriate.",
+      "readiness_check": "Combine two small groups and count the total."
     },
     {
       "id": "P1-ADD-01-C03",
       "objective_id": "P1-ADD-01",
       "classification": "core",
       "skill": "Model removal and comparison subtraction",
-      "prerequisites": [
-        "P1-NUM-01-C01",
-        "P1-NUM-01-C02",
-        "P1-ADD-01-C02"
-      ],
+      "prerequisites": [],
       "lesson_id": "P1-L018",
-      "assessment": "Independently demonstrate: model removal and comparison subtraction; use a fresh example and explain or show a strategy where appropriate."
+      "assessment": "Independently demonstrate: model removal and comparison subtraction; use a fresh example and explain or show a strategy where appropriate.",
+      "readiness_check": "Count the small sets used in the removal or comparison."
     },
     {
       "id": "P1-ADD-02-C01",
       "objective_id": "P1-ADD-02",
       "classification": "core",
-      "skill": "Match addition and subtraction stories to symbols",
-      "prerequisites": [
-        "P1-ADD-01-C01",
-        "P1-ADD-01-C02",
-        "P1-ADD-01-C03"
-      ],
+      "skill": "Write or complete equations for addition and subtraction situations",
+      "prerequisites": [],
       "lesson_id": "P1-L019",
-      "assessment": "Independently demonstrate: match addition and subtraction stories to symbols; use a fresh example and explain or show a strategy where appropriate."
+      "assessment": "Independently write or complete equations for a joining situation and a subtraction situation, using +, − and = correctly. Match each equation to the quantities in the situation.",
+      "readiness_check": "Show the joining or subtraction action in the situation before recording it."
     },
     {
       "id": "P1-ADD-02-C02",
       "objective_id": "P1-ADD-02",
       "classification": "core",
-      "skill": "Interpret equality as balance",
-      "prerequisites": [
-        "P1-ADD-01-C01",
-        "P1-ADD-01-C02",
-        "P1-ADD-01-C03",
-        "P1-ADD-02-C01"
-      ],
+      "skill": "Use the equals sign to show that two quantities have the same value",
+      "prerequisites": [],
       "lesson_id": "P1-L020",
-      "assessment": "Independently demonstrate: interpret equality as balance; use a fresh example and explain or show a strategy where appropriate."
+      "assessment": "Independently complete a true equation with an expression on each side and explain or show why the sides have equal value.",
+      "readiness_check": "Compare the values of the two sides using small quantities or concrete models."
     },
     {
       "id": "P1-ADD-03-C01",
       "objective_id": "P1-ADD-03",
       "classification": "core",
       "skill": "Build related addition and subtraction equations",
-      "prerequisites": [
-        "P1-ADD-02-C01",
-        "P1-ADD-02-C02"
-      ],
+      "prerequisites": [],
       "lesson_id": "P1-L021",
-      "assessment": "Independently demonstrate: build related addition and subtraction equations; use a fresh example and explain or show a strategy where appropriate."
+      "assessment": "Independently demonstrate: build related addition and subtraction equations; use a fresh example and explain or show a strategy where appropriate.",
+      "readiness_check": "Read or build one related addition and subtraction equation using the quantities in the task."
     },
     {
       "id": "P1-ADD-03-C02",
       "objective_id": "P1-ADD-03",
       "classification": "core",
       "skill": "Find a missing part using inverse relationships",
-      "prerequisites": [
-        "P1-ADD-02-C01",
-        "P1-ADD-02-C02",
-        "P1-ADD-03-C01"
-      ],
+      "prerequisites": [],
       "lesson_id": "P1-L022",
-      "assessment": "Independently demonstrate: find a missing part using inverse relationships; use a fresh example and explain or show a strategy where appropriate."
+      "assessment": "Independently demonstrate: find a missing part using inverse relationships; use a fresh example and explain or show a strategy where appropriate.",
+      "readiness_check": "Show how joining the parts and removing one part relate in a small example."
     },
     {
       "id": "P1-ADD-04-C01",
       "objective_id": "P1-ADD-04",
       "classification": "core",
       "skill": "Combine three or more single-digit addends using helpful groupings",
-      "prerequisites": [
-        "P1-ADD-02-C01",
-        "P1-ADD-02-C02"
-      ],
+      "prerequisites": [],
       "lesson_id": "P1-L023",
-      "assessment": "Independently demonstrate: combine three or more single-digit addends using helpful groupings; use a fresh example and explain or show a strategy where appropriate."
+      "assessment": "Independently demonstrate: combine three or more single-digit addends using helpful groupings; use a fresh example and explain or show a strategy where appropriate.",
+      "readiness_check": "Combine two small groups before adding a third."
     },
     {
       "id": "P1-ADD-05-C01",
       "objective_id": "P1-ADD-05",
       "classification": "core",
       "skill": "Add and subtract within 20",
-      "prerequisites": [
-        "P1-ADD-03-C01",
-        "P1-ADD-03-C02",
-        "P1-NUM-02-C01",
-        "P1-NUM-02-C02",
-        "P1-NUM-02-C03"
-      ],
+      "prerequisites": [],
       "lesson_id": "P1-L024",
-      "assessment": "Independently demonstrate: add and subtract within 20; use a fresh example and explain or show a strategy where appropriate."
+      "assessment": "Independently demonstrate: add and subtract within 20; use a fresh example and explain or show a strategy where appropriate.",
+      "readiness_check": "Represent the task quantities through 20 and demonstrate joining or removal with smaller numbers."
     },
     {
       "id": "P1-ADD-05-C02",
       "objective_id": "P1-ADD-05",
       "classification": "core",
       "skill": "Add and subtract within 100 without regrouping, including zero",
-      "prerequisites": [
-        "P1-ADD-03-C01",
-        "P1-ADD-03-C02",
-        "P1-NUM-02-C01",
-        "P1-NUM-02-C02",
-        "P1-NUM-02-C03",
-        "P1-ADD-05-C01"
-      ],
+      "prerequisites": [],
       "lesson_id": "P1-L025",
-      "assessment": "Independently demonstrate: Add and subtract within 100 without regrouping, including zero. Use a fresh example and show reasoning when appropriate."
+      "assessment": "Independently demonstrate: Add and subtract within 100 without regrouping, including zero. Use a fresh example and show reasoning when appropriate.",
+      "readiness_check": "Find the tens and ones in the operands used in the task."
     },
     {
       "id": "P1-ADD-05-C03",
       "objective_id": "P1-ADD-05",
       "classification": "core",
       "skill": "Add and subtract within 100 with regrouping",
-      "prerequisites": [
-        "P1-ADD-03-C01",
-        "P1-ADD-03-C02",
-        "P1-NUM-02-C01",
-        "P1-NUM-02-C02",
-        "P1-NUM-02-C03",
-        "P1-ADD-05-C02"
-      ],
+      "prerequisites": [],
       "lesson_id": "P1-L026",
-      "assessment": "Independently demonstrate: add and subtract within 100 with regrouping; use a fresh example and explain or show a strategy where appropriate."
+      "assessment": "Independently demonstrate: add and subtract within 100 with regrouping; use a fresh example and explain or show a strategy where appropriate.",
+      "readiness_check": "Trade ten ones for a ten or a ten for ten ones using the quantities in the task."
     },
     {
       "id": "P1-ADD-06-C01",
       "objective_id": "P1-ADD-06",
       "classification": "core",
-      "skill": "Record place-value addition with and without regrouping",
-      "prerequisites": [
-        "P1-ADD-05-C01",
-        "P1-ADD-05-C02",
-        "P1-ADD-05-C03"
-      ],
+      "skill": "Carry out the written place-value addition algorithm with and without regrouping",
+      "prerequisites": [],
       "lesson_id": "P1-L027",
-      "assessment": "Independently demonstrate: record place-value addition with and without regrouping; use a fresh example and explain or show a strategy where appropriate."
+      "assessment": "Independently add within 100 using the written place-value algorithm in one example with regrouping and one without. Show aligned places, any exchange and the resulting sum.",
+      "readiness_check": "Represent the addends as tens and ones and show an exchange for a regrouping example."
     },
     {
       "id": "P1-ADD-06-C02",
       "objective_id": "P1-ADD-06",
       "classification": "core",
-      "skill": "Record place-value subtraction with and without regrouping",
-      "prerequisites": [
-        "P1-ADD-05-C01",
-        "P1-ADD-05-C02",
-        "P1-ADD-05-C03",
-        "P1-ADD-06-C01"
-      ],
+      "skill": "Carry out the written place-value subtraction algorithm with and without regrouping",
+      "prerequisites": [],
       "lesson_id": "P1-L028",
-      "assessment": "Independently demonstrate: record place-value subtraction with and without regrouping; use a fresh example and explain or show a strategy where appropriate."
+      "assessment": "Independently subtract within 100 using the written place-value algorithm in one example with regrouping and one without. Show aligned places, any exchange and the nonnegative difference.",
+      "readiness_check": "Represent the starting number as tens and ones and show an exchange for a regrouping example."
     },
     {
       "id": "P1-ADD-07-C01",
       "objective_id": "P1-ADD-07",
       "classification": "core",
       "skill": "Calculate mentally within 20",
-      "prerequisites": [
-        "P1-ADD-03-C01",
-        "P1-ADD-03-C02",
-        "P1-NUM-02-C01",
-        "P1-NUM-02-C02",
-        "P1-NUM-02-C03"
-      ],
+      "prerequisites": [],
       "lesson_id": "P1-L029",
-      "assessment": "Independently demonstrate: calculate mentally within 20; use a fresh example and explain or show a strategy where appropriate."
+      "assessment": "Independently demonstrate: calculate mentally within 20; use a fresh example and explain or show a strategy where appropriate.",
+      "readiness_check": "Show a strategy such as splitting a small quantity or making ten with a model."
     },
     {
       "id": "P1-ADD-07-C02",
       "objective_id": "P1-ADD-07",
       "classification": "core",
       "skill": "Add and subtract ones from two-digit numbers without regrouping",
-      "prerequisites": [
-        "P1-ADD-03-C01",
-        "P1-ADD-03-C02",
-        "P1-NUM-02-C01",
-        "P1-NUM-02-C02",
-        "P1-NUM-02-C03",
-        "P1-ADD-07-C01"
-      ],
+      "prerequisites": [],
       "lesson_id": "P1-L030",
-      "assessment": "Independently demonstrate: add and subtract ones from two-digit numbers without regrouping; use a fresh example and explain or show a strategy where appropriate."
+      "assessment": "Independently demonstrate: add and subtract ones from two-digit numbers without regrouping; use a fresh example and explain or show a strategy where appropriate.",
+      "readiness_check": "Identify the ones in the two-digit number and change them without regrouping."
     },
     {
       "id": "P1-ADD-07-C03",
       "objective_id": "P1-ADD-07",
       "classification": "core",
       "skill": "Add and subtract tens from two-digit numbers mentally",
-      "prerequisites": [
-        "P1-ADD-03-C01",
-        "P1-ADD-03-C02",
-        "P1-NUM-02-C01",
-        "P1-NUM-02-C02",
-        "P1-NUM-02-C03",
-        "P1-ADD-07-C02"
-      ],
+      "prerequisites": [],
       "lesson_id": "P1-L031",
-      "assessment": "Independently demonstrate: add and subtract tens from two-digit numbers mentally; use a fresh example and explain or show a strategy where appropriate."
+      "assessment": "Independently demonstrate: add and subtract tens from two-digit numbers mentally; use a fresh example and explain or show a strategy where appropriate.",
+      "readiness_check": "Identify the tens and ones in the two-digit numbers used in the task."
     },
     {
       "id": "P1-MUL-01-C01",
       "objective_id": "P1-MUL-01",
       "classification": "core",
       "skill": "Build equal groups and repeated sums",
-      "prerequisites": [
-        "P1-ADD-01-C01",
-        "P1-ADD-01-C02",
-        "P1-ADD-01-C03"
-      ],
+      "prerequisites": [],
       "lesson_id": "P1-L032",
-      "assessment": "Independently demonstrate: build equal groups and repeated sums; use a fresh example and explain or show a strategy where appropriate."
+      "assessment": "Independently demonstrate: build equal groups and repeated sums; use a fresh example and explain or show a strategy where appropriate.",
+      "readiness_check": "Build and count a few small equal groups."
     },
     {
       "id": "P1-MUL-01-C02",
       "objective_id": "P1-MUL-01",
       "classification": "core",
       "skill": "Share equally and make groups of a given size",
-      "prerequisites": [
-        "P1-ADD-01-C01",
-        "P1-ADD-01-C02",
-        "P1-ADD-01-C03",
-        "P1-MUL-01-C01"
-      ],
+      "prerequisites": [],
       "lesson_id": "P1-L033",
-      "assessment": "Independently demonstrate: share equally and make groups of a given size; use a fresh example and explain or show a strategy where appropriate."
+      "assessment": "Independently demonstrate: share equally and make groups of a given size; use a fresh example and explain or show a strategy where appropriate.",
+      "readiness_check": "Count the small collection to be shared or grouped."
     },
     {
       "id": "P1-MUL-02-C01",
       "objective_id": "P1-MUL-02",
       "classification": "core",
       "skill": "Represent equal groups with multiplication notation",
-      "prerequisites": [
-        "P1-MUL-01-C01",
-        "P1-MUL-01-C02"
-      ],
+      "prerequisites": [],
       "lesson_id": "P1-L034",
-      "assessment": "Independently demonstrate: represent equal groups with multiplication notation; use a fresh example and explain or show a strategy where appropriate."
+      "assessment": "Independently demonstrate: represent equal groups with multiplication notation; use a fresh example and explain or show a strategy where appropriate.",
+      "readiness_check": "Identify the number of groups and the number in each group in the example."
     },
     {
       "id": "P1-MUL-03-C01",
       "objective_id": "P1-MUL-03",
       "classification": "core",
       "skill": "Solve multiplication situations with products at most 40",
-      "prerequisites": [
-        "P1-MUL-02-C01"
-      ],
+      "prerequisites": [],
       "lesson_id": "P1-L035",
-      "assessment": "Independently demonstrate: solve multiplication situations with products at most 40; use a fresh example and explain or show a strategy where appropriate."
+      "assessment": "Independently demonstrate: solve multiplication situations with products at most 40; use a fresh example and explain or show a strategy where appropriate.",
+      "readiness_check": "Build a small example of equal groups and record it with multiplication notation."
     },
     {
       "id": "P1-MUL-04-C01",
       "objective_id": "P1-MUL-04",
       "classification": "core",
       "skill": "Solve equal sharing and grouping situations with dividends at most 20",
-      "prerequisites": [
-        "P1-MUL-01-C01",
-        "P1-MUL-01-C02"
-      ],
+      "prerequisites": [],
       "lesson_id": "P1-L036",
-      "assessment": "Independently demonstrate: solve equal sharing and grouping situations with dividends at most 20; use a fresh example and explain or show a strategy where appropriate."
+      "assessment": "Independently demonstrate: solve equal sharing and grouping situations with dividends at most 20; use a fresh example and explain or show a strategy where appropriate.",
+      "readiness_check": "Share or group a small collection evenly before extending the dividend range."
     },
     {
       "id": "P1-MON-01-C01",
       "objective_id": "P1-MON-01",
       "classification": "core",
       "skill": "Count Singapore cent denominations to one dollar",
-      "prerequisites": [
-        "P1-NUM-05-C01",
-        "P1-NUM-05-C02",
-        "P1-ADD-05-C01",
-        "P1-ADD-05-C02",
-        "P1-ADD-05-C03"
-      ],
+      "prerequisites": [],
       "lesson_id": "P1-L037",
-      "assessment": "Independently demonstrate: count Singapore cent denominations to one dollar; use a fresh example and explain or show a strategy where appropriate."
+      "assessment": "Independently demonstrate: count Singapore cent denominations to one dollar; use a fresh example and explain or show a strategy where appropriate.",
+      "readiness_check": "Recognize and tally the cent denominations in the collection being counted."
     },
     {
       "id": "P1-MON-01-C02",
       "objective_id": "P1-MON-01",
       "classification": "core",
       "skill": "Count whole-dollar denominations to 100 dollars",
-      "prerequisites": [
-        "P1-NUM-05-C01",
-        "P1-NUM-05-C02",
-        "P1-ADD-05-C01",
-        "P1-ADD-05-C02",
-        "P1-ADD-05-C03",
-        "P1-MON-01-C01"
-      ],
+      "prerequisites": [],
       "lesson_id": "P1-L038",
-      "assessment": "Independently demonstrate: count whole-dollar denominations to 100 dollars; use a fresh example and explain or show a strategy where appropriate."
+      "assessment": "Independently demonstrate: count whole-dollar denominations to 100 dollars; use a fresh example and explain or show a strategy where appropriate.",
+      "readiness_check": "Recognize and tally the whole-dollar denominations in the collection being counted."
     },
     {
       "id": "P1-LEN-01-C01",
       "objective_id": "P1-LEN-01",
       "classification": "core",
       "skill": "Align a ruler at zero and measure in centimetres",
-      "prerequisites": [
-        "P1-NUM-01-C01",
-        "P1-NUM-01-C02"
-      ],
+      "prerequisites": [],
       "lesson_id": "P1-L039",
-      "assessment": "Independently demonstrate: align a ruler at zero and measure in centimetres; use a fresh example and explain or show a strategy where appropriate."
+      "assessment": "Independently demonstrate: align a ruler at zero and measure in centimetres; use a fresh example and explain or show a strategy where appropriate.",
+      "readiness_check": "Count equal intervals on a short strip, starting at zero."
     },
     {
       "id": "P1-LEN-02-C01",
       "objective_id": "P1-LEN-02",
       "classification": "core",
       "skill": "Use cm when recording a length",
-      "prerequisites": [
-        "P1-LEN-01-C01"
-      ],
+      "prerequisites": [],
       "lesson_id": "P1-L040",
-      "assessment": "Independently demonstrate: Use cm when recording a length. Use a fresh example and show reasoning when appropriate."
+      "assessment": "Independently demonstrate: Use cm when recording a length. Use a fresh example and show reasoning when appropriate.",
+      "readiness_check": "Recognize a length measurement made in centimetres."
     },
     {
       "id": "P1-LEN-03-C01",
       "objective_id": "P1-LEN-03",
       "classification": "core",
       "skill": "Compare and order lengths recorded in centimetres",
-      "prerequisites": [
-        "P1-LEN-02-C01",
-        "P1-NUM-05-C01",
-        "P1-NUM-05-C02"
-      ],
+      "prerequisites": [],
       "lesson_id": "P1-L041",
-      "assessment": "Independently demonstrate: compare and order lengths recorded in centimetres; use a fresh example and explain or show a strategy where appropriate."
+      "assessment": "Independently demonstrate: compare and order lengths recorded in centimetres; use a fresh example and explain or show a strategy where appropriate.",
+      "readiness_check": "Compare the numerals on the provided centimetre measurements."
     },
     {
       "id": "P1-LEN-04-C01",
       "objective_id": "P1-LEN-04",
       "classification": "core",
-      "skill": "Measure a segment rounded to the nearest centimetre",
+      "skill": "Use a ruler to read a line segment’s length to the nearest centimetre",
       "prerequisites": [
-        "P1-LEN-02-C01"
+        "P1-LEN-01-C01"
       ],
       "lesson_id": "P1-L042",
-      "assessment": "Independently demonstrate: measure a segment rounded to the nearest centimetre; use a fresh example and explain or show a strategy where appropriate."
+      "assessment": "Independently align a ruler and record the length of a fresh segment to the nearest cm. Use an unambiguous endpoint and no formal rounding procedure."
     },
     {
       "id": "P1-LEN-04-C02",
@@ -1331,8 +1136,7 @@
       "classification": "core",
       "skill": "Draw a segment to a specified whole centimetre using a ruler",
       "prerequisites": [
-        "P1-LEN-02-C01",
-        "P1-LEN-04-C01"
+        "P1-LEN-01-C01"
       ],
       "lesson_id": "P1-L043",
       "assessment": "Independently demonstrate: draw a segment to a specified whole centimetre using a ruler; use a fresh example and explain or show a strategy where appropriate."
@@ -1342,10 +1146,7 @@
       "objective_id": "P1-TIM-01",
       "classification": "core",
       "skill": "Read hour and minute hands",
-      "prerequisites": [
-        "P1-NUM-06-C01",
-        "P1-NUM-06-C02"
-      ],
+      "prerequisites": [],
       "lesson_id": "P1-L044",
       "assessment": "Independently demonstrate: read hour and minute hands; use a fresh example and explain or show a strategy where appropriate."
     },
@@ -1355,59 +1156,51 @@
       "classification": "core",
       "skill": "Read clock times in five-minute increments",
       "prerequisites": [
-        "P1-NUM-06-C01",
-        "P1-NUM-06-C02",
         "P1-TIM-01-C01"
       ],
       "lesson_id": "P1-L045",
-      "assessment": "Independently demonstrate: read clock times in five-minute increments; use a fresh example and explain or show a strategy where appropriate."
+      "assessment": "Independently demonstrate: read clock times in five-minute increments; use a fresh example and explain or show a strategy where appropriate.",
+      "readiness_check": "Count by fives around a clock face from 0 to 60."
     },
     {
       "id": "P1-TIM-02-C01",
       "objective_id": "P1-TIM-02",
       "classification": "core",
-      "skill": "Distinguish am and pm, including noon and midnight",
-      "prerequisites": [
-        "P1-TIM-01-C01",
-        "P1-TIM-01-C02"
-      ],
+      "skill": "Choose and use am or pm for familiar times of day",
+      "prerequisites": [],
       "lesson_id": "P1-L046",
-      "assessment": "Independently demonstrate: Distinguish am and pm, including noon and midnight. Use a fresh example and show reasoning when appropriate."
+      "assessment": "Independently label two familiar times, such as 7 in the morning and 7 in the evening, with am or pm. For exact boundaries use the labels 12 noon and 12 midnight, with the day identified if relevant.",
+      "readiness_check": "Connect familiar events to times before and after noon."
     },
     {
       "id": "P1-TIM-03-C01",
       "objective_id": "P1-TIM-03",
       "classification": "core",
       "skill": "Interpret and use h and min labels",
-      "prerequisites": [
-        "P1-TIM-01-C01",
-        "P1-TIM-01-C02"
-      ],
+      "prerequisites": [],
       "lesson_id": "P1-L047",
-      "assessment": "Independently demonstrate: interpret and use h and min labels; use a fresh example and explain or show a strategy where appropriate."
+      "assessment": "Independently demonstrate: interpret and use h and min labels; use a fresh example and explain or show a strategy where appropriate.",
+      "readiness_check": "Distinguish an hour from a minute using familiar durations."
     },
     {
       "id": "P1-TIM-04-C01",
       "objective_id": "P1-TIM-04",
       "classification": "core",
       "skill": "Determine a half-hour interval",
-      "prerequisites": [
-        "P1-TIM-03-C01"
-      ],
+      "prerequisites": [],
       "lesson_id": "P1-L048",
-      "assessment": "Independently demonstrate: determine a half-hour interval; use a fresh example and explain or show a strategy where appropriate."
+      "assessment": "Independently demonstrate: determine a half-hour interval; use a fresh example and explain or show a strategy where appropriate.",
+      "readiness_check": "Follow the movement of the hands during a half turn of the minute hand."
     },
     {
       "id": "P1-TIM-04-C02",
       "objective_id": "P1-TIM-04",
       "classification": "core",
       "skill": "Determine a one-hour interval",
-      "prerequisites": [
-        "P1-TIM-03-C01",
-        "P1-TIM-04-C01"
-      ],
+      "prerequisites": [],
       "lesson_id": "P1-L049",
-      "assessment": "Independently demonstrate: determine a one-hour interval; use a fresh example and explain or show a strategy where appropriate."
+      "assessment": "Independently demonstrate: determine a one-hour interval; use a fresh example and explain or show a strategy where appropriate.",
+      "readiness_check": "Follow the movement of the hands during one full turn of the minute hand."
     },
     {
       "id": "P1-GEO-01-C01",
@@ -1422,117 +1215,90 @@
       "id": "P1-GEO-01-C02",
       "objective_id": "P1-GEO-01",
       "classification": "core",
-      "skill": "Recognize semicircles and quarter circles",
-      "prerequisites": [
-        "P1-GEO-01-C01"
-      ],
+      "skill": "Recognize half circles (semicircles) and quarter circles",
+      "prerequisites": [],
       "lesson_id": "P1-L051",
-      "assessment": "Independently demonstrate: recognize semicircles and quarter circles; use a fresh example and explain or show a strategy where appropriate."
+      "assessment": "Independently identify half circles and quarter circles from fresh examples in different orientations."
     },
     {
       "id": "P1-GEO-01-C03",
       "objective_id": "P1-GEO-01",
       "classification": "core",
       "skill": "Name, describe and classify all six shapes, including rotated examples",
-      "prerequisites": [
-        "P1-GEO-01-C02"
-      ],
+      "prerequisites": [],
       "lesson_id": "P1-L052",
-      "assessment": "Independently demonstrate: Name, describe and classify all six shapes, including rotated examples. Use a fresh example and show reasoning when appropriate."
+      "assessment": "Independently demonstrate: Name, describe and classify all six shapes, including rotated examples. Use a fresh example and show reasoning when appropriate.",
+      "readiness_check": "Match the shapes used in the task, including rotated examples."
     },
     {
       "id": "P1-GEO-02-C01",
       "objective_id": "P1-GEO-02",
       "classification": "core",
       "skill": "Compose figures using rectangles squares and triangles",
-      "prerequisites": [
-        "P1-GEO-01-C01",
-        "P1-GEO-01-C02",
-        "P1-GEO-01-C03"
-      ],
+      "prerequisites": [],
       "lesson_id": "P1-L053",
-      "assessment": "Independently demonstrate: compose figures using rectangles squares and triangles; use a fresh example and explain or show a strategy where appropriate."
+      "assessment": "Independently demonstrate: compose figures using rectangles squares and triangles; use a fresh example and explain or show a strategy where appropriate.",
+      "readiness_check": "Recognize the shapes available for the construction."
     },
     {
       "id": "P1-GEO-02-C02",
       "objective_id": "P1-GEO-02",
       "classification": "core",
-      "skill": "Compose figures using semicircles and quarter circles alongside other allowed shapes",
-      "prerequisites": [
-        "P1-GEO-01-C01",
-        "P1-GEO-01-C02",
-        "P1-GEO-01-C03",
-        "P1-GEO-02-C01"
-      ],
+      "skill": "Compose figures using half circles and quarter circles alongside other allowed shapes",
+      "prerequisites": [],
       "lesson_id": "P1-L054",
-      "assessment": "Independently demonstrate: compose figures using semicircles and quarter circles alongside other allowed shapes; use a fresh example and explain or show a strategy where appropriate."
+      "assessment": "Independently compose a new figure using half circles and quarter circles with rectangles, squares or triangles as appropriate.",
+      "readiness_check": "Recognize half circles and quarter circles among the available pieces."
     },
     {
       "id": "P1-GEO-03-C01",
       "objective_id": "P1-GEO-03",
       "classification": "core",
       "skill": "Identify constituent shapes in composite pictures",
-      "prerequisites": [
-        "P1-GEO-01-C01",
-        "P1-GEO-01-C02",
-        "P1-GEO-01-C03",
-        "P1-GEO-02-C01",
-        "P1-GEO-02-C02"
-      ],
+      "prerequisites": [],
       "lesson_id": "P1-L055",
-      "assessment": "Independently demonstrate: identify constituent shapes in composite pictures; use a fresh example and explain or show a strategy where appropriate."
+      "assessment": "Independently demonstrate: identify constituent shapes in composite pictures; use a fresh example and explain or show a strategy where appropriate.",
+      "readiness_check": "Recognize the shape types visible in the figure."
     },
     {
       "id": "P1-GEO-04-C01",
       "objective_id": "P1-GEO-04",
       "classification": "core",
       "skill": "Copy figures on dot grids",
-      "prerequisites": [
-        "P1-GEO-01-C01",
-        "P1-GEO-01-C02",
-        "P1-GEO-01-C03"
-      ],
+      "prerequisites": [],
       "lesson_id": "P1-L056",
-      "assessment": "Independently demonstrate: copy figures on dot grids; use a fresh example and explain or show a strategy where appropriate."
+      "assessment": "Independently demonstrate: copy figures on dot grids; use a fresh example and explain or show a strategy where appropriate.",
+      "readiness_check": "Locate dots and trace a short segment between two of them."
     },
     {
       "id": "P1-GEO-04-C02",
       "objective_id": "P1-GEO-04",
       "classification": "core",
       "skill": "Copy figures on square grids",
-      "prerequisites": [
-        "P1-GEO-01-C01",
-        "P1-GEO-01-C02",
-        "P1-GEO-01-C03",
-        "P1-GEO-04-C01"
-      ],
+      "prerequisites": [],
       "lesson_id": "P1-L057",
-      "assessment": "Independently demonstrate: copy figures on square grids; use a fresh example and explain or show a strategy where appropriate."
+      "assessment": "Independently demonstrate: copy figures on square grids; use a fresh example and explain or show a strategy where appropriate.",
+      "readiness_check": "Locate intersections on a square grid and trace a short segment between two of them."
     },
     {
       "id": "P1-PIC-01-C01",
       "objective_id": "P1-PIC-01",
       "classification": "core",
       "skill": "Read labels and quantities in simple picture graphs",
-      "prerequisites": [
-        "P1-NUM-04-C01",
-        "P1-NUM-04-C02"
-      ],
+      "prerequisites": [],
       "lesson_id": "P1-L058",
-      "assessment": "Independently demonstrate: read labels and quantities in simple picture graphs; use a fresh example and explain or show a strategy where appropriate."
+      "assessment": "Independently demonstrate: read labels and quantities in simple picture graphs; use a fresh example and explain or show a strategy where appropriate.",
+      "readiness_check": "Use one-to-one counting for the icons in a category."
     },
     {
       "id": "P1-PIC-01-C02",
       "objective_id": "P1-PIC-01",
       "classification": "core",
       "skill": "Compare categories and answer questions from picture graphs",
-      "prerequisites": [
-        "P1-NUM-04-C01",
-        "P1-NUM-04-C02",
-        "P1-PIC-01-C01"
-      ],
+      "prerequisites": [],
       "lesson_id": "P1-L059",
-      "assessment": "Independently demonstrate: compare categories and answer questions from picture graphs; use a fresh example and explain or show a strategy where appropriate."
+      "assessment": "Independently demonstrate: compare categories and answer questions from picture graphs; use a fresh example and explain or show a strategy where appropriate.",
+      "readiness_check": "Find and count the icons in the categories being compared."
     },
     {
       "id": "P1-ENR-C01",
@@ -1542,13 +1308,10 @@
       ],
       "classification": "enrichment",
       "skill": "Find multiple ways to split a quantity and explain completeness",
-      "prerequisites": [
-        "P1-ADD-01-C01",
-        "P1-ADD-01-C02",
-        "P1-ADD-01-C03"
-      ],
+      "prerequisites": [],
       "lesson_id": "P1-E01",
-      "assessment": "Explain a valid solution; accept alternative correct strategies."
+      "assessment": "Explain a valid solution; accept alternative correct strategies.",
+      "readiness_check": "Show two different splits of a small quantity."
     },
     {
       "id": "P1-ENR-C02",
@@ -1558,12 +1321,10 @@
       ],
       "classification": "enrichment",
       "skill": "Find missing numerals in a multi-rule puzzle",
-      "prerequisites": [
-        "P1-NUM-06-C01",
-        "P1-NUM-06-C02"
-      ],
+      "prerequisites": [],
       "lesson_id": "P1-E02",
-      "assessment": "Explain a valid solution; accept alternative correct strategies."
+      "assessment": "Explain a valid solution; accept alternative correct strategies.",
+      "readiness_check": "Continue a short sequence using one of the rules."
     },
     {
       "id": "P1-ENR-C03",
@@ -1573,13 +1334,10 @@
       ],
       "classification": "enrichment",
       "skill": "Compare two strategies for a multi-step story",
-      "prerequisites": [
-        "P1-ADD-05-C01",
-        "P1-ADD-05-C02",
-        "P1-ADD-05-C03"
-      ],
+      "prerequisites": [],
       "lesson_id": "P1-E03",
-      "assessment": "Explain a valid solution; accept alternative correct strategies."
+      "assessment": "Explain a valid solution; accept alternative correct strategies.",
+      "readiness_check": "Solve a short one-step story using the operations and quantities in the puzzle."
     },
     {
       "id": "P1-ENR-C04",
@@ -1589,11 +1347,10 @@
       ],
       "classification": "enrichment",
       "skill": "Explore different arrangements of the same equal groups",
-      "prerequisites": [
-        "P1-MUL-03-C01"
-      ],
+      "prerequisites": [],
       "lesson_id": "P1-E04",
-      "assessment": "Explain a valid solution; accept alternative correct strategies."
+      "assessment": "Explain a valid solution; accept alternative correct strategies.",
+      "readiness_check": "Build two equal groups with the objects in the task."
     },
     {
       "id": "P1-ENR-C05",
@@ -1603,11 +1360,10 @@
       ],
       "classification": "enrichment",
       "skill": "Design a composite picture with a shape constraint",
-      "prerequisites": [
-        "P1-GEO-03-C01"
-      ],
+      "prerequisites": [],
       "lesson_id": "P1-E05",
-      "assessment": "Explain a valid solution; accept alternative correct strategies."
+      "assessment": "Explain a valid solution; accept alternative correct strategies.",
+      "readiness_check": "Identify component shapes in a simple figure."
     },
     {
       "id": "P1-ENR-C06",
@@ -1617,12 +1373,10 @@
       ],
       "classification": "enrichment",
       "skill": "Create a picture graph and ask a novel question",
-      "prerequisites": [
-        "P1-PIC-01-C01",
-        "P1-PIC-01-C02"
-      ],
+      "prerequisites": [],
       "lesson_id": "P1-E06",
-      "assessment": "Explain a valid solution; accept alternative correct strategies."
+      "assessment": "Explain a valid solution; accept alternative correct strategies.",
+      "readiness_check": "Read labels and counts in a simple picture graph."
     }
   ],
   "lessons": [
@@ -1903,13 +1657,13 @@
         "P1-ADD-02-C01"
       ],
       "classification": "core",
-      "title": "Match addition and subtraction stories to symbols",
+      "title": "Write or complete equations for addition and subtraction situations",
       "phases": [
         "readiness",
         "engagement",
         "mastery"
       ],
-      "assessment": "Independently demonstrate: match addition and subtraction stories to symbols; use a fresh example and explain or show a strategy where appropriate."
+      "assessment": "Independently write or complete equations for a joining situation and a subtraction situation, using +, − and = correctly. Match each equation to the quantities in the situation."
     },
     {
       "id": "P1-L020",
@@ -1918,13 +1672,13 @@
         "P1-ADD-02-C02"
       ],
       "classification": "core",
-      "title": "Interpret equality as balance",
+      "title": "Use the equals sign to show that two quantities have the same value",
       "phases": [
         "readiness",
         "engagement",
         "mastery"
       ],
-      "assessment": "Independently demonstrate: interpret equality as balance; use a fresh example and explain or show a strategy where appropriate."
+      "assessment": "Independently complete a true equation with an expression on each side and explain or show why the sides have equal value."
     },
     {
       "id": "P1-L021",
@@ -2023,13 +1777,13 @@
         "P1-ADD-06-C01"
       ],
       "classification": "core",
-      "title": "Record place-value addition with and without regrouping",
+      "title": "Carry out the written place-value addition algorithm with and without regrouping",
       "phases": [
         "readiness",
         "engagement",
         "mastery"
       ],
-      "assessment": "Independently demonstrate: record place-value addition with and without regrouping; use a fresh example and explain or show a strategy where appropriate."
+      "assessment": "Independently add within 100 using the written place-value algorithm in one example with regrouping and one without. Show aligned places, any exchange and the resulting sum."
     },
     {
       "id": "P1-L028",
@@ -2038,13 +1792,13 @@
         "P1-ADD-06-C02"
       ],
       "classification": "core",
-      "title": "Record place-value subtraction with and without regrouping",
+      "title": "Carry out the written place-value subtraction algorithm with and without regrouping",
       "phases": [
         "readiness",
         "engagement",
         "mastery"
       ],
-      "assessment": "Independently demonstrate: record place-value subtraction with and without regrouping; use a fresh example and explain or show a strategy where appropriate."
+      "assessment": "Independently subtract within 100 using the written place-value algorithm in one example with regrouping and one without. Show aligned places, any exchange and the nonnegative difference."
     },
     {
       "id": "P1-L029",
@@ -2248,13 +2002,13 @@
         "P1-LEN-04-C01"
       ],
       "classification": "core",
-      "title": "Measure a segment rounded to the nearest centimetre",
+      "title": "Use a ruler to read a line segment’s length to the nearest centimetre",
       "phases": [
         "readiness",
         "engagement",
         "mastery"
       ],
-      "assessment": "Independently demonstrate: measure a segment rounded to the nearest centimetre; use a fresh example and explain or show a strategy where appropriate."
+      "assessment": "Independently align a ruler and record the length of a fresh segment to the nearest cm. Use an unambiguous endpoint and no formal rounding procedure."
     },
     {
       "id": "P1-L043",
@@ -2308,13 +2062,13 @@
         "P1-TIM-02-C01"
       ],
       "classification": "core",
-      "title": "Distinguish am and pm, including noon and midnight",
+      "title": "Choose and use am or pm for familiar times of day",
       "phases": [
         "readiness",
         "engagement",
         "mastery"
       ],
-      "assessment": "Independently demonstrate: Distinguish am and pm, including noon and midnight. Use a fresh example and show reasoning when appropriate."
+      "assessment": "Independently label two familiar times, such as 7 in the morning and 7 in the evening, with am or pm. For exact boundaries use the labels 12 noon and 12 midnight, with the day identified if relevant."
     },
     {
       "id": "P1-L047",
@@ -2383,13 +2137,13 @@
         "P1-GEO-01-C02"
       ],
       "classification": "core",
-      "title": "Recognize semicircles and quarter circles",
+      "title": "Recognize half circles (semicircles) and quarter circles",
       "phases": [
         "readiness",
         "engagement",
         "mastery"
       ],
-      "assessment": "Independently demonstrate: recognize semicircles and quarter circles; use a fresh example and explain or show a strategy where appropriate."
+      "assessment": "Independently identify half circles and quarter circles from fresh examples in different orientations."
     },
     {
       "id": "P1-L052",
@@ -2428,13 +2182,13 @@
         "P1-GEO-02-C02"
       ],
       "classification": "core",
-      "title": "Compose figures using semicircles and quarter circles alongside other allowed shapes",
+      "title": "Compose figures using half circles and quarter circles alongside other allowed shapes",
       "phases": [
         "readiness",
         "engagement",
         "mastery"
       ],
-      "assessment": "Independently demonstrate: compose figures using semicircles and quarter circles alongside other allowed shapes; use a fresh example and explain or show a strategy where appropriate."
+      "assessment": "Independently compose a new figure using half circles and quarter circles with rectangles, squares or triangles as appropriate."
     },
     {
       "id": "P1-L055",
@@ -2524,7 +2278,7 @@
         "engagement",
         "mastery"
       ],
-      "assessment": "Explain a valid solution."
+      "assessment": "Explain a valid solution; accept alternative correct strategies."
     },
     {
       "id": "P1-E02",
@@ -2539,7 +2293,7 @@
         "engagement",
         "mastery"
       ],
-      "assessment": "Explain a valid solution."
+      "assessment": "Explain a valid solution; accept alternative correct strategies."
     },
     {
       "id": "P1-E03",
@@ -2554,7 +2308,7 @@
         "engagement",
         "mastery"
       ],
-      "assessment": "Explain a valid solution."
+      "assessment": "Explain a valid solution; accept alternative correct strategies."
     },
     {
       "id": "P1-E04",
@@ -2569,7 +2323,7 @@
         "engagement",
         "mastery"
       ],
-      "assessment": "Explain a valid solution."
+      "assessment": "Explain a valid solution; accept alternative correct strategies."
     },
     {
       "id": "P1-E05",
@@ -2584,7 +2338,7 @@
         "engagement",
         "mastery"
       ],
-      "assessment": "Explain a valid solution."
+      "assessment": "Explain a valid solution; accept alternative correct strategies."
     },
     {
       "id": "P1-E06",
@@ -2599,14 +2353,16 @@
         "engagement",
         "mastery"
       ],
-      "assessment": "Explain a valid solution."
+      "assessment": "Explain a valid solution; accept alternative correct strategies."
     }
   ],
   "first_unit": {
-    "status": "proposed; owner and Education approval pending",
-    "range": "initial quantities through 10, not full objective coverage",
-    "note": "Use bounded introductory activities for counting, numeral recognition, comparison, ordering and part-whole bonds; full-range objectives completed later. Do not mark objective mastered from subset.",
-    "specification": "first-unit.md"
+    "status": "owner approved scope; CUR-003 Education approval pending",
+    "range": "0–10 for introductory evidence",
+    "note": "Use bounded readiness and independent evidence for counting, numeral work, comparison, ordering and part-whole bonds. Full-range objective mastery requires later evidence.",
+    "specification": "first-unit.md",
+    "title": "Numbers and Number Bonds to 10",
+    "owner_scope_approved_on": "2026-11-17"
   },
   "counts": {
     "objectives": 32,
@@ -2614,5 +2370,11 @@
     "enrichment_concepts": 6,
     "core_lessons": 59,
     "enrichment_lessons": 6
-  }
+  },
+  "progression": {
+    "recommended_order": "Core lesson sequence is advisory.",
+    "readiness": "Use any concept readiness check with the quantities or representations in the intended task. Equivalent evidence is sufficient. Provide scaffolding when needed.",
+    "mastery_prerequisites": "Concept prerequisites identify component skills required for independent mastery of the dependent target. Verify them by prior or concurrent independent evidence. Exploration and teaching can proceed with support. Objective prerequisites summarize cross-objective concept links without requiring whole-objective mastery."
+  },
+  "objective_evidence_default": "all_linked_concepts"
 }

@@ -1,5 +1,5 @@
-# CUR-003 — First learning unit: Numbers and number bonds to 10
-Version 1.0 proposal | 2026-11-17 | Owner scope approved 2026-11-17; Education approval pending
+# CUR-003 — First learning unit: Numbers and Number Bonds to 10
+Version 1.0 proposal | 2026-11-17 | Owner scope approved 2026-11-17; CUR-003 Education approval pending
 
 ## Scope and sequence
 11 core sessions plus one optional enrichment session; suggested 8–12 minutes each, flexible. No formal entry requirement (MOE p4); diagnostic matching and counting only. This is an introductory slice of six numbered objectives on p31, not complete P1 coverage. Number bonds are our original instructional strategy. Zero is included as an instructional choice. Place value to 100, ordinals, patterns, formal operation notation and inverse equations remain later content. U01–U10 build in order, U11 requires independent attempts across all targets, U12 optional after U07–U10; placement can skip instruction only after equivalent evidence. Local unit prerequisites are bounded by range, not full-range concept completion.
