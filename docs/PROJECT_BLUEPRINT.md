@@ -58,7 +58,7 @@ Content lifecycle: source verification → mapping → instructional design → 
 
 ## 5. First release scope
 
-The owner approved **Primary 1 — Numbers and Number Bonds to 10** on 2026-11-17. CUR-003 Education approval remains pending. The proposed sequence starts with counting, recognizing, writing, comparing and ordering numbers, then moves to parts and wholes, making ten and applying number bonds. It closes with a mastery assessment and an optional number puzzle. The [unit specification](first-unit.md) gives the proposed sequence and learning targets.
+The owner approved **Primary 1 — Numbers and Number Bonds to 10** on 2026-11-17. CUR-003 specification is accepted; owner sample-slice approval remains pending. The proposed sequence starts with counting, recognizing, writing, comparing and ordering numbers, then moves to parts and wholes, making ten and applying number bonds. It closes with a mastery assessment and an optional number puzzle. The [unit specification](first-unit.md) gives the proposed sequence and learning targets.
 
 ### Required capabilities
 
