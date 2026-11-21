@@ -1,7 +1,7 @@
 # Singapore Math with Juni
 ## Master Project Blueprint
 
-**Version:** 1.0 | **Date:** 2026-11-17 | **Status:** Baseline for owner review  
+**Version:** 1.1 | **Date:** 2026-11-17 | **Status:** Baseline for owner review  
 **Owner:** Product owner | **Delivery model:** AI-agent-driven development  
 **First release:** One complete Primary 1 learning unit, private iPad beta
 
@@ -30,6 +30,8 @@ Build a complete, engaging, rigorous Singapore mathematics learning application 
 **Subsequent approved direction:** use AI agents to perform research, design, coding, content generation, testing and documentation, with the owner approving significant choices. This supersedes a manual-development-first workflow, not the offline product requirements.
 
 **Owner direction, 2026-11-21 — offline teaching first, conversational tutor later:** D03 and the first private-beta scope remain unchanged. Finish the offline-first app with one complete first unit, independently reviewed instructional content, local prerecorded narration, validated math tools, mastery evidence, parent controls and actual iPad testing. A natural voice-conversational AI teacher is an optional *later research and prototype phase*, not included in the initial release or in this 34-task roadmap. Preserve a clean boundary between verified lesson/math/evidence actions and replaceable instructor presentation so a future authorized AI tutor can request permitted actions without owning grading. Future cloud voice use, child-data handling, vendor contracts, security/privacy review and recurring payments require a separate explicit owner decision and testing. The owner's existing approximately $120/month live-tutor budget is comparison context, **not authorization to purchase or enable an AI service**. No microphone collection, cloud endpoint or real-time AI dependency is approved for the offline beta. Owner-approved Juni is a friendly golden **full moon** (not crescent); preserve moon-phase progress indicators as distinct pedagogy from mascot silhouette.
+
+**Owner-approved provisional beta learning rules, 2026-11-21 (MATH-000):** For synthetic implementation and trial, plan four eligible **complete independent first-response successes across at least two learning dates**, with essential facet/model coverage and a prespecified opportunity window (4 in up to 5 is a draft, with precise stopping details pending). Permit **spaced familiar-bond reuse for retention** after at least **48 elapsed hours since the latest applicable interaction**, including relevant practice, hint, example, answer disclosure or prior prompt; maintain permanent provenance and avoid recent-answer leakage, while distinguishing familiar retrieval from novel transfer. Trial **successive 2-, 7- and 21-day retention gaps** from qualifying completions. In a two-item retention check, a single incorrect result prompts a targeted later follow-up rather than loss of previously earned achievement. This approval is for *provisional development and measurement*, **not pedagogical validation, final policy acceptance, paid services, or interface freeze**. Independent Education/QA review, sufficiently diverse items and clear recovery/facet rules remain required; other debated policy and scoring details are not implicitly approved. No change to D03 offline-first scope.
 
 ## 3. Audience and experience
 
