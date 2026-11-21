@@ -1,6 +1,6 @@
 # Singapore Math with Juni --- Project Status
 
-**Version:** 1.16 \| **Baseline:** 2026-11-17 \| **Maintainer:** Lead agent \| **Current milestone:** M0 / Sprint 0
+**Version:** 1.17 \| **Baseline:** 2026-11-17 \| **Maintainer:** Lead agent \| **Current milestone:** M0 / Sprint 0
 
 ## 1. Executive status
 
@@ -351,3 +351,7 @@ CUR-003 specification accepted and integrated at `75f545c9f55ab1439f3e27137049fb
 ## 27. Final November 19 checkpoint (v1.16)
 
 Both assigned agents completed and pushed. DATA-001 draft at `e6246c2ebdf2de5a40e4ed303b2e87164f9e16aa` in open PR #9 adds 31 files (schema, portable U07 package, 23 negative cases and checker). Author reports both checker runs and whitespace check passed. Lead inspected the contract notes, catalog, lesson and checker outline; independent execution/review remains pending. CUR-003 is accepted on main even though PR #9 was authored against its prior review status. Next session: independent Data/QA review of exact draft, parallel MATH-000 draft, and subsequent joint IOS-001/DATA-001/MATH-000 reconciliation before LEAD-002. Check replacement-specific disclosure bindings, exposure equivalence, modelling and serialization. No interface freeze or runtime/device claim. Silent placeholder audio only. Design PR #5 records owner-approved full moon; home reference checksum unverified and removed at `3784e7190d5337157cdf104549ba4259d1d24802`; asset acquisition and independent design integration pending. No further agent work assigned tonight. CUR-004 remains ready. Counts: 6 accepted, 2 review, 2 ready, 24 backlog. No milestone gate accepted.
+
+## 28. Owner-approved sequencing decision — 2026-11-21 (v1.17)
+
+Owner confirmed **fully functional offline-first private beta before optional conversational AI tutor**. The initial unit, local prerecorded instruction, checked math/evidence and device test scope remain unchanged under D03; no runtime AI, speech upload, new cloud features or spending is authorized for the beta. The already-used roughly $120/month live tutoring budget is comparison context for later evaluation only. Preserve modular teaching/presentation interfaces at LEAD-002 without implementing AI. Future voice AI would require separate privacy, provider, parent-consent, learning-quality, cost and child-data approval gates. Full-moon Juni remains the approved mascot. DATA-001 PR #9 at `e6246c2` awaits independent Data/QA review. MATH-000 may draft against the provisional schema while separately declaring unresolved learning policy. Six accepted, two review, two ready, 24 backlog; no milestone gate accepted and no Codex agent is assumed running until user launches it.
