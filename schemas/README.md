@@ -43,7 +43,7 @@ For a distributable package, run the following command to emit the file allowlis
 /tmp/juni-data001-venv/bin/python tools/check_data001.py --package "$bundle_path" --education-review "$review_path" --bundle-file-list
 ```
 
-PCM WAV is the supported authoring format in this draft. The checker reads complete mono or stereo integer PCM frame data, rejects unsupported formats and incomplete frames, and verifies the declared duration from the decoded frame count and sample rate. Device playback and actual audio-to-script alignment remain downstream.
+The checker supports RIFF/WAVE format tag 1 with mono or stereo 8-, 16-, 24- or 32-bit integer PCM. It checks RIFF and chunk boundaries, word padding, positive sample rate, byte rate and block alignment. It verifies that the data chunk contains whole frames and that frame count and sample rate agree with the declared duration. Device playback and actual audio-to-script alignment remain downstream.
 
 ## Run checks
 
@@ -59,6 +59,10 @@ git diff --check
 
 The suite retains the 23 original negative mutations and adds candidate-delivery, question-signature, review-pin, readiness, worksheet, evidence, runtime-link and bundle probes. The runtime-link cases use synthetic records. The answer-bearing prose cases test stale approval, and the caption case tests drift from the transcript. The bundle case switches fixture metadata in a temporary directory to exercise the checker and confers no production rights or Education approval.
 
+U07 validation folds Try through move, link, clear and return. It checks that all counters return to the tray and that the completed 7 = 1 + 6 bond remains available. Try and Check require distinct worksheet IDs. Malformed PCM cases recompute the asset hash and synthetic manifest pin to exercise the media checks.
+
 ## Reconciliation before freeze
 
 MATH-000 and Education still own canonical cross-family equivalence, demand comparability, exposure propagation, retry and exhaustion rules, learning thresholds, retention intervals and mastery policy. IOS-001 and DATA-003 still own serialization alignment, durable exposure and attempt transactions, activation and recovery. Physical iPad, offline completion, recognition, accessibility and playback checks remain downstream. DATA-001 requires focused independent re-review before acceptance. LEAD-002 owns the interface freeze.
+
+Eligibility of the 9-with-4 replacement after the learner has been shown the answer 5 remains an open MATH-000 and Education decision.

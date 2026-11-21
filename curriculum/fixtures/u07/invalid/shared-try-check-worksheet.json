@@ -1,0 +1,83 @@
+{
+  "document": "lesson",
+  "expected": "worksheet",
+  "package": true,
+  "changes": [
+    {
+      "path": [
+        "worksheets",
+        0,
+        "items"
+      ],
+      "append": true,
+      "value": {
+        "id": "slot-check",
+        "itemId": "check",
+        "regions": [
+          {
+            "id": "answer",
+            "role": "answer",
+            "bounds": {
+              "x": 0,
+              "y": 0,
+              "width": 100,
+              "height": 80
+            }
+          },
+          {
+            "id": "working",
+            "role": "working",
+            "bounds": {
+              "x": 0,
+              "y": 80,
+              "width": 600,
+              "height": 300
+            }
+          }
+        ]
+      }
+    },
+    {
+      "path": [
+        "worksheets",
+        0,
+        "items"
+      ],
+      "append": true,
+      "value": {
+        "id": "slot-replacement",
+        "itemId": "replacement",
+        "regions": [
+          {
+            "id": "answer",
+            "role": "answer",
+            "bounds": {
+              "x": 0,
+              "y": 0,
+              "width": 100,
+              "height": 80
+            }
+          },
+          {
+            "id": "working",
+            "role": "working",
+            "bounds": {
+              "x": 0,
+              "y": 80,
+              "width": 600,
+              "height": 300
+            }
+          }
+        ]
+      }
+    },
+    {
+      "path": [
+        "activities",
+        3,
+        "worksheetId"
+      ],
+      "value": "try-sheet"
+    }
+  ]
+}

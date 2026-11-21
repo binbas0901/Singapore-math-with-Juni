@@ -8,9 +8,9 @@ from hashlib import sha256
 import json
 from pathlib import Path
 import shutil
+import struct
 import sys
 from tempfile import TemporaryDirectory
-import wave
 
 from jsonschema import Draft202012Validator
 
@@ -368,18 +368,34 @@ def validate_lesson(lesson, catalog, targets, clips):
 
 def validate_pcm_clip(path, duration_ms):
     require(path.suffix.lower() == ".wav", "media", f"unsupported audio: {path.name}")
-    try:
-        with wave.open(str(path), "rb") as wav:
-            frames = wav.getnframes()
-            frame_size = wav.getsampwidth() * wav.getnchannels()
-            require(wav.getcomptype() == "NONE" and wav.getnchannels() in {1, 2} and
-                    wav.getsampwidth() in {1, 2, 3, 4}, "media", path.name)
-            require(len(wav.readframes(frames + 1)) == frames * frame_size,
-                    "media", f"incomplete PCM frames: {path.name}")
-            require(1000 * frames == duration_ms * wav.getframerate(),
-                    "timeline", f"clip duration: {path.name}")
-    except (EOFError, wave.Error) as error:
-        raise ContractError(f"media: {path.name}: {error}") from error
+    wav = path.read_bytes()
+    require(len(wav) >= 12 and wav[:4] == b"RIFF" and wav[8:12] == b"WAVE" and
+            struct.unpack_from("<I", wav, 4)[0] == len(wav) - 8,
+            "media", f"invalid RIFF/WAVE header or size: {path.name}")
+
+    offset = 12
+    block_align = data_size = None
+    while offset < len(wav):
+        require(offset + 8 <= len(wav), "media", f"incomplete WAV chunk header: {path.name}")
+        chunk_id, size = struct.unpack_from("<4sI", wav, offset)
+        start = offset + 8
+        offset = start + size + (size % 2)
+        require(offset <= len(wav), "media", f"WAV chunk exceeds RIFF size: {path.name}")
+        if chunk_id == b"fmt ":
+            require(block_align is None and size >= 16, "media", f"invalid PCM format chunk: {path.name}")
+            encoding, channels, sample_rate, byte_rate, block_align, bits = struct.unpack_from(
+                "<HHIIHH", wav, start)
+            require(encoding == 1 and channels in {1, 2} and bits in {8, 16, 24, 32} and sample_rate > 0,
+                    "media", f"unsupported PCM format: {path.name}")
+            require(block_align == channels * (bits // 8) and byte_rate == sample_rate * block_align,
+                    "media", f"inconsistent PCM byte rate or block alignment: {path.name}")
+        elif chunk_id == b"data":
+            require(block_align is not None and data_size is None and size % block_align == 0,
+                    "media", f"invalid PCM data chunk or incomplete frames: {path.name}")
+            data_size = size
+    require(data_size is not None, "media", f"missing PCM data chunk: {path.name}")
+    frames = data_size // block_align
+    require(1000 * frames == duration_ms * sample_rate, "timeline", f"clip duration: {path.name}")
 
 
 def validate_package(schema, root, education_review=None):
@@ -514,6 +530,8 @@ def check_u07_projection(lesson):
             (observe["kind"], guided_activity["kind"], assessment["kind"]) ==
             ("observe", "guidedPractice", "assessment") and assessment["mode"] == "independent",
             "projection", "accepted U07 phase order and independent check")
+    require(guided_activity["worksheetId"] != assessment["worksheetId"],
+            "worksheet", "U07 Try and Check require distinct worksheet IDs")
     require(set(lesson["targetIds"]) == {"count-to-10", "match-to-10", "split-to-10"},
             "prerequisite", "U07 target mapping")
     workspace = lookup(index(lesson["workspaces"]), observe["workspaceId"])
@@ -541,15 +559,22 @@ def check_u07_projection(lesson):
         dict(kind="moveCounter", counterId="C1", fromRegionId="tray", toRegionId="bowl"),
         dict(kind="linkBond", partARegionId="bowl", partBRegionId="tray",
              whole=7, partA=1, partB=6),
+        dict(kind="clearBond"),
+        dict(kind="moveCounter", counterId="C1", fromRegionId="bowl", toRegionId="tray"),
     ]
     guided_cues = [dict(atMs=at, payload=dict(kind="math", action=action))
                    for at, action in enumerate(guided_actions)]
     guided_state = fold(guided, guided_cues, 1)
-    fold(workspace, cues, 5000)
     require(guided_state["active"] == guided_actions[1] and
-            Counter(guided_state["positions"].values()) == {"bowl": 1, "tray": 6} and
-            guided_state == fold(guided, guided_cues, 1),
+            Counter(guided_state["positions"].values()) == {"bowl": 1, "tray": 6},
             "projection", "separate guided 7–1–6 workspace")
+    cleared = fold(guided, guided_cues, 2)
+    returned = fold(guided, guided_cues, 3)
+    baseline = workspace_state(guided)
+    require(cleared == dict(positions=guided_state["positions"], active=None, completed=guided_actions[1]) and
+            returned == dict(positions=baseline, active=None, completed=guided_actions[1]) and
+            set(baseline.values()) == {"tray"},
+            "projection", "guided clear and return preserves the completed 7–1–6 bond")
 
     manual = [chapter["atMs"] for chapter in observe["timeline"]["chapters"]]
     require([Counter(fold(workspace, cues, at)["positions"].values())["bowl"] for at in manual]
@@ -581,15 +606,24 @@ def validate_package_case(schema, directory, case, documents):
         manifest["clips"][0]["rights"] = dict(status="cleared", provenance="Synthetic checker fixture only")
     path = root / "manifest.json"
     write_fixture_document(path, manifest)
-    review = {"manifestSha256": sha256(path.read_bytes()).hexdigest(),
-              "reviewRef": "synthetic-review-record-for-checker-only"} if case.get("asBundle") and not case.get("omitReview") else None
+    initial_digest = sha256(path.read_bytes()).hexdigest()
     for row in manifest["files"]:
         file = root / row["path"]
         if row["type"] in {"lesson", "catalog"} and case["document"] == row["type"]:
             write_fixture_document(file, documents[row["type"]])
         if row["path"] in case.get("replaceFiles", {}):
             file.write_text(case["replaceFiles"][row["path"]], encoding="utf-8")
-        if row["type"] == case["document"] or row["path"] in case.get("replaceFiles", {}):
+        byte_patches = case.get("patchFileBytes", {}).get(row["path"], [])
+        if byte_patches:
+            data = bytearray(file.read_bytes())
+            for patch in byte_patches:
+                start = patch["offset"]
+                replacement = bytes.fromhex(patch["hex"])
+                end = start + len(replacement)
+                require(0 <= start < end <= len(data), "fixture", f"invalid byte patch: {file.name}")
+                data[start:end] = replacement
+            file.write_bytes(data)
+        if row["type"] == case["document"] or row["path"] in case.get("replaceFiles", {}) or byte_patches:
             data = file.read_bytes()
             row.update(bytes=len(data), sha256=sha256(data).hexdigest())
     if "removeFile" in case:
@@ -597,6 +631,10 @@ def validate_package_case(schema, directory, case, documents):
     if "extraFile" in case:
         (root / case["extraFile"]).write_text("unlisted", encoding="utf-8")
     write_fixture_document(path, manifest)
+    review = None
+    if case.get("asBundle") and not case.get("omitReview"):
+        digest = sha256(path.read_bytes()).hexdigest() if case.get("repinReview") else initial_digest
+        review = dict(manifestSha256=digest, reviewRef="synthetic-review-record-for-checker-only")
     validate_package(schema, root, review)
 
 
@@ -727,7 +765,7 @@ def main():
                 print(f"PASS: {args.package}")
         else:
             run_fixtures(schema)
-    except (ContractError, OSError, ValueError, wave.Error) as error:
+    except (ContractError, OSError, ValueError) as error:
         print(f"FAIL: {error}", file=sys.stderr)
         return 1
     return 0

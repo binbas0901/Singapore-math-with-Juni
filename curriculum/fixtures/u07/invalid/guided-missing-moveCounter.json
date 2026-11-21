@@ -1,0 +1,14 @@
+{
+  "document": "lesson",
+  "expected": "action",
+  "package": true,
+  "path": [
+    "workspaces",
+    1,
+    "legalActions"
+  ],
+  "value": [
+    "linkBond",
+    "clearBond"
+  ]
+}
