@@ -1,0 +1,9 @@
+{
+  "document": "submission",
+  "expected": "evidence",
+  "path": [
+    "deliveryMode"
+  ],
+  "value": "practice",
+  "variant": "replacement"
+}

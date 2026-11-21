@@ -1,0 +1,8 @@
+{
+  "document": "manifest",
+  "expected": "media",
+  "asBundle": true,
+  "replaceFiles": {
+    "placeholder.wav": "not a WAV file"
+  }
+}

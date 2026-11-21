@@ -1,0 +1,10 @@
+{
+  "document": "lesson",
+  "expected": "assistance",
+  "path": [
+    "activities",
+    3,
+    "replacementDeliveries"
+  ],
+  "value": []
+}

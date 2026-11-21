@@ -1,0 +1,10 @@
+{
+  "document": "submission",
+  "expected": "runtimeLink",
+  "path": [
+    "itemOccurrenceId"
+  ],
+  "value": "arbitrary-occurrence",
+  "variant": "assisted",
+  "runtimeLinks": true
+}

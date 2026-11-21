@@ -832,6 +832,10 @@
           },
           "minItems": 0,
           "uniqueItems": true
+        },
+        "itemId": {
+          "type": "string",
+          "pattern": "^[A-Za-z0-9][A-Za-z0-9._-]*$"
         }
       },
       "required": [
@@ -839,7 +843,8 @@
         "stage",
         "text",
         "branch",
-        "disclosureIds"
+        "disclosureIds",
+        "itemId"
       ],
       "additionalProperties": false
     },
@@ -923,6 +928,10 @@
             "prompt": {
               "type": "string",
               "minLength": 1
+            },
+            "forTargetId": {
+              "type": "string",
+              "pattern": "^[A-Za-z0-9][A-Za-z0-9._-]*$"
             }
           },
           "required": [
@@ -930,7 +939,8 @@
             "kind",
             "targetIds",
             "quantities",
-            "prompt"
+            "prompt",
+            "forTargetId"
           ],
           "additionalProperties": false
         },
@@ -1078,6 +1088,42 @@
               },
               "minItems": 0,
               "uniqueItems": true
+            },
+            "replacementDeliveries": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "properties": {
+                  "itemId": {
+                    "type": "string",
+                    "pattern": "^[A-Za-z0-9][A-Za-z0-9._-]*$"
+                  },
+                  "assistanceIds": {
+                    "type": "array",
+                    "items": {
+                      "type": "string",
+                      "pattern": "^[A-Za-z0-9][A-Za-z0-9._-]*$"
+                    },
+                    "minItems": 0,
+                    "uniqueItems": true
+                  },
+                  "feedbackDisclosureIds": {
+                    "type": "array",
+                    "items": {
+                      "type": "string",
+                      "pattern": "^[A-Za-z0-9][A-Za-z0-9._-]*$"
+                    },
+                    "minItems": 0,
+                    "uniqueItems": true
+                  }
+                },
+                "required": [
+                  "itemId",
+                  "assistanceIds",
+                  "feedbackDisclosureIds"
+                ],
+                "additionalProperties": false
+              }
             }
           },
           "required": [
@@ -1088,7 +1134,8 @@
             "mode",
             "assistanceIds",
             "replacementItemIds",
-            "feedbackDisclosureIds"
+            "feedbackDisclosureIds",
+            "replacementDeliveries"
           ],
           "additionalProperties": false
         }
@@ -1679,6 +1726,34 @@
             "diagnostic",
             "retention"
           ]
+        },
+        "deliveredAssistanceIds": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "pattern": "^[A-Za-z0-9][A-Za-z0-9._-]*$"
+          },
+          "minItems": 0,
+          "uniqueItems": true
+        },
+        "deliveryMode": {
+          "enum": [
+            "scheduled",
+            "practice"
+          ]
+        },
+        "numericOutcome": {
+          "enum": [
+            "correct",
+            "incorrect"
+          ]
+        },
+        "modelOutcome": {
+          "enum": [
+            "pending",
+            "sufficient",
+            "incorrect"
+          ]
         }
       },
       "required": [
@@ -1702,7 +1777,11 @@
         "response",
         "model",
         "exposureAtSubmit",
-        "evidenceClass"
+        "evidenceClass",
+        "deliveredAssistanceIds",
+        "deliveryMode",
+        "numericOutcome",
+        "modelOutcome"
       ],
       "additionalProperties": false
     }

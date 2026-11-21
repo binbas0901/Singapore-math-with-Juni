@@ -1,0 +1,30 @@
+{
+  "document": "submission",
+  "variant": "replacement",
+  "changes": [
+    {
+      "path": [
+        "deliveryMode"
+      ],
+      "value": "practice"
+    },
+    {
+      "path": [
+        "evidenceClass"
+      ],
+      "value": "assisted"
+    }
+  ],
+  "lessonChanges": [
+    {
+      "path": [
+        "activities",
+        3,
+        "replacementDeliveries",
+        0,
+        "assistanceIds"
+      ],
+      "value": []
+    }
+  ]
+}

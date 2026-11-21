@@ -1,0 +1,6 @@
+{
+  "document": "manifest",
+  "expected": "review",
+  "asBundle": true,
+  "omitReview": true
+}

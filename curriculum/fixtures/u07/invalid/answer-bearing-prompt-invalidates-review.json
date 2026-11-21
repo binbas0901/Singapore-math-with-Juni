@@ -1,0 +1,11 @@
+{
+  "document": "lesson",
+  "expected": "review",
+  "path": [
+    "items",
+    2,
+    "prompt"
+  ],
+  "value": "Split 8. One part is 3 and the other is 5. Enter 5.",
+  "asBundle": true
+}

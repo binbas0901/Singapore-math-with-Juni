@@ -121,7 +121,8 @@
       "branch": {
         "kind": "generic"
       },
-      "disclosureIds": []
+      "disclosureIds": [],
+      "itemId": "check"
     },
     {
       "id": "hint",
@@ -132,18 +133,20 @@
       },
       "disclosureIds": [
         "check-hint"
-      ]
+      ],
+      "itemId": "check"
     },
     {
       "id": "guide",
       "stage": "guidedAction",
-      "text": "Move three counters to a bowl and count what is left.",
+      "text": "Move {knownPart} counters to a bowl and count what is left.",
       "branch": {
         "kind": "generic"
       },
       "disclosureIds": [
         "check-guide"
-      ]
+      ],
+      "itemId": "check"
     },
     {
       "id": "reteach",
@@ -155,7 +158,30 @@
       "disclosureIds": [
         "worked-example",
         "check-guide"
-      ]
+      ],
+      "itemId": "check"
+    },
+    {
+      "id": "guided-retry",
+      "stage": "neutralRetry",
+      "text": "Try the same question again.",
+      "branch": {
+        "kind": "generic"
+      },
+      "disclosureIds": [],
+      "itemId": "guided"
+    },
+    {
+      "id": "replacement-guide",
+      "stage": "guidedAction",
+      "text": "Move {knownPart} counters to a bowl and count what is left.",
+      "branch": {
+        "kind": "generic"
+      },
+      "disclosureIds": [
+        "replacement-guide"
+      ],
+      "itemId": "replacement"
     }
   ],
   "disclosures": [
@@ -206,6 +232,26 @@
       "id": "check-feedback",
       "exposureKeys": [
         "split-8-3-5"
+      ],
+      "reason": "solutionFeedback",
+      "channels": [
+        "feedback"
+      ]
+    },
+    {
+      "id": "replacement-guide",
+      "exposureKeys": [
+        "split-9-4-5"
+      ],
+      "reason": "guidedAction",
+      "channels": [
+        "visual"
+      ]
+    },
+    {
+      "id": "replacement-feedback",
+      "exposureKeys": [
+        "split-9-4-5"
       ],
       "reason": "solutionFeedback",
       "channels": [
@@ -424,7 +470,8 @@
         7,
         8
       ],
-      "prompt": "Count the counters and choose the matching numeral."
+      "prompt": "Count the counters and choose the matching numeral.",
+      "forTargetId": "split-to-10"
     },
     {
       "id": "observe",
@@ -634,7 +681,7 @@
       "workspaceId": "try",
       "worksheetId": "try-sheet",
       "assistanceIds": [
-        "retry"
+        "guided-retry"
       ],
       "disclosureIds": [
         "guided-example"
@@ -657,6 +704,17 @@
       ],
       "feedbackDisclosureIds": [
         "check-feedback"
+      ],
+      "replacementDeliveries": [
+        {
+          "itemId": "replacement",
+          "assistanceIds": [
+            "replacement-guide"
+          ],
+          "feedbackDisclosureIds": [
+            "replacement-feedback"
+          ]
+        }
       ]
     }
   ]

@@ -5,9 +5,9 @@
   "sessionId": "synthetic-session",
   "content": {
     "packageId": "p1-u07-fixture",
-    "contentVersion": "0.1.0",
+    "contentVersion": "0.1.1",
     "locale": "en-SG",
-    "manifestSha256": "acd63ee052aa48232015b6130954843dd1c33e7402f568089003c7f066d11ce9"
+    "manifestSha256": "ab92141e29baabcf0f9fdc4401d38f26a337d87bab50eb633a39c1f96817287d"
   },
   "lessonId": "U07",
   "activityId": "check",
@@ -57,5 +57,9 @@
     "partB": 5
   },
   "exposureAtSubmit": [],
-  "evidenceClass": "independent"
+  "evidenceClass": "independent",
+  "deliveredAssistanceIds": [],
+  "deliveryMode": "scheduled",
+  "numericOutcome": "correct",
+  "modelOutcome": "sufficient"
 }

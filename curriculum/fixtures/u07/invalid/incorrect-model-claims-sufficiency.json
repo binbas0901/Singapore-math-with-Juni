@@ -1,0 +1,9 @@
+{
+  "document": "submission",
+  "expected": "response",
+  "path": [
+    "model",
+    "partB"
+  ],
+  "value": 4
+}
