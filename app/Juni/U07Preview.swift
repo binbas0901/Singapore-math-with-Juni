@@ -41,6 +41,7 @@ struct U07Preview: View {
     private struct DemoFrame: Equatable {
         var time = 0
         var manual = true
+        var countIndex = 0
 
         var step: DemoStep { DemoStep.allCases.last { $0.start <= time } ?? .intro }
         var bowl: Set<Int> {
@@ -72,13 +73,24 @@ struct U07Preview: View {
         var indicatedCounter: Int? {
             if step == .first { return bowl.contains(1) ? 1 : nil }
             if step == .second { return bowl.contains(2) ? 2 : nil }
-            guard !manual else { return nil }
+            if manual {
+                return countOrder.indices.contains(countIndex) ? countOrder[countIndex] : nil
+            }
             switch time {
             case 5..<12: return min(time - 4, 6)
             case 32..<38: return min(time - 29, 6)
             case 52..<60: return min(time - 51, 6)
             default: return nil
             }
+        }
+
+        var canCountNext: Bool { manual && countIndex + 1 < countOrder.count }
+
+        var indicatedWord: String? {
+            guard let indicatedCounter, let index = countOrder.firstIndex(of: indicatedCounter) else {
+                return nil
+            }
+            return ["One", "Two", "Three", "Four", "Five", "Six"][index]
         }
 
         var linkedGroups: Set<CounterGroup> {
@@ -301,7 +313,13 @@ struct U07Preview: View {
                 playDemo()
             }
             .buttonStyle(PreviewButton())
-            Button("Next step") {
+            Button(demo.canCountNext ? "Count next" : "Next step") {
+                if demo.canCountNext {
+                    var frame = demo
+                    frame.countIndex += 1
+                    showDemo(frame, animate: false)
+                    return
+                }
                 pauseDemo()
                 if let next = DemoStep(rawValue: demo.step.rawValue + 1) {
                     elapsed = Double(next.start)
@@ -363,7 +381,13 @@ struct U07Preview: View {
             ? .easeInOut(duration: 0.38) : nil
         withAnimation(animation) { demo = frame }
         if announce && (frame.manual || narration == nil) {
-            AccessibilityNotification.Announcement(frame.step.caption).post()
+            var message = frame.step.caption
+            if frame.manual, let word = frame.indicatedWord {
+                message += " " + word
+            }
+            AccessibilityNotification.Announcement(message).post()
+        } else if frame.manual, let word = frame.indicatedWord {
+            AccessibilityNotification.Announcement(word).post()
         }
     }
 
@@ -651,10 +675,8 @@ struct U07Preview: View {
     }
 
     private func demoCounter(_ id: Int, group: CounterGroup) -> some View {
-        let order = demo.countOrder.firstIndex(of: id)
-        let word = order.map { ["One", "Two", "Three", "Four", "Five", "Six"][$0] }
         let indicated = demo.indicatedCounter == id
-        let shownWord = group == .tray && (demo.manual || indicated) ? word : nil
+        let shownWord = group == .tray && indicated ? demo.indicatedWord : nil
         return counter(false)
             .overlay {
                 if indicated {

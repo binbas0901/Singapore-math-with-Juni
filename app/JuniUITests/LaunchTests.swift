@@ -60,13 +60,8 @@ final class U07PreviewTests: XCTestCase {
             XCTAssertEqual(caption.label, text)
             assertObserveCounters(in: app, bowl: bowlCounts[index], stage: index)
             if index == 1 || index == 6 || index == 8 {
-                let ids = index == 6 ? Array(3...6) : Array(1...6)
-                let words = ["One", "Two", "Three", "Four", "Five", "Six"]
-                for (offset, id) in ids.enumerated() {
-                    XCTAssertEqual(part("observe-counter-\(id)", in: app).label, words[offset])
-                }
+                verifyManualCount(in: app, firstID: index == 6 ? 3 : 1, caption: text, stage: index)
             }
-            if index == 1 { capture("U07-Observe-Count") }
             if index == 3 { capture("U07-Observe-First-Move") }
             if index == 7 {
                 XCTAssertEqual(part("Part 1", in: app).label, "Bowl")
@@ -209,6 +204,48 @@ final class U07PreviewTests: XCTestCase {
         app.buttons["Next step"].tap()
         XCTAssertEqual(caption.label, firstCount)
         XCTAssertTrue(app.buttons["Play"].exists)
+        assertManualCue(in: app, id: 1, word: "One")
+        app.buttons["Count next"].tap()
+        assertManualCue(in: app, id: 2, word: "Two")
+    }
+
+    @MainActor
+    private func verifyManualCount(in app: XCUIApplication, firstID: Int, caption: String, stage: Int) {
+        let words = ["One", "Two", "Three", "Four", "Five", "Six"]
+        let countNext = app.buttons["Count next"]
+        for id in firstID...6 {
+            let word = words[id - firstID]
+            XCTAssertEqual(app.staticTexts["observe-caption"].label, caption)
+            assertManualCue(in: app, id: id, word: word)
+            if stage == 8 {
+                let fourth = part("observe-counter-4", in: app).frame
+                let fifth = part("observe-counter-5", in: app).frame
+                XCTAssertGreaterThan(fifth.midY, fourth.midY)
+                XCTAssertLessThan(fifth.midX, fourth.midX)
+            }
+            capture("U07-Manual-Stage-\(stage)-\(word)")
+            if id < 6 {
+                XCTAssertFalse(app.buttons["Next step"].exists)
+                XCTAssertTrue(countNext.isEnabled)
+                countNext.tap()
+            }
+        }
+        XCTAssertFalse(countNext.exists)
+        XCTAssertTrue(app.buttons["Next step"].isEnabled)
+    }
+
+    @MainActor
+    private func assertManualCue(in app: XCUIApplication, id: Int, word: String) {
+        for candidate in 1...6 {
+            let counter = part("observe-counter-\(candidate)", in: app)
+            XCTAssertEqual(counter.isSelected, candidate == id)
+            if candidate == id {
+                XCTAssertEqual(counter.label, word)
+                XCTAssertTrue(counter.isHittable)
+            } else {
+                XCTAssertTrue(["Counter in tray", "Counter in bowl"].contains(counter.label))
+            }
+        }
     }
 
     @MainActor
