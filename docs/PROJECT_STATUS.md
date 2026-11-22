@@ -1,6 +1,6 @@
 # Singapore Math with Juni --- Project Status
 
-**Version:** 1.30 \| **Baseline:** 2026-11-17 \| **Maintainer:** Lead agent \| **Current milestone:** M0 / Sprint 0
+**Version:** 1.31 \| **Baseline:** 2026-11-17 \| **Maintainer:** Lead agent \| **Current milestone:** M0 / Sprint 0
 
 ## 1. Executive status
 
@@ -431,3 +431,9 @@ Next gate: consolidate remaining owner beta operational decisions (zero/equal-pa
 Independent architecture/integration preparatory matrix `4cc44ee599b6ec890c83a0519393bc263130995e` was verified to add only `docs/spikes/u07-contract-reconciliation.md`; preserved in **draft PR #26**. The matrix compares pinned DATA-001 PR #9 (`d42bc0e`), MATH-000 PR #12 (`b4ac1ff`), accepted CUR-003/U07 and IOS-001 v1.3. Agent reports both DATA-001 checker modes passing (10 positive/65 negative). This is a source and fixture review, not Swift runtime/device validation, contract acceptance or LEAD-002 freeze.
 
 **Lead preview boundary:** isolated Observe/Try/Check states, structured counter modelling, manual cue progression, keypad answer, separate learner workspaces and local draft resume can proceed in an unmerged spike. Do not credit an immediate Check 8/3 → 5 and 9/4 → 5 substitute as fresh independent when feedback exposed 5. Separate preview completion from production grading and mastery. **Production boundary:** loader version mapping and validation; immutable learner-built model and ink provenance; exposure, retry and opportunity receipts and cross-task applicability; commit/restore and clock rules; educational comparability/parent reporting and retained review schedule; accessibility/audio/device proof all remain gated. Await running U07 preview and Education draft QA before deciding any prototype integration. State counts unchanged: 6 accepted, 3 review, 1 ready, 24 backlog.
+
+## 42. First running U07 SwiftUI preview delivered — 2026-11-22 (v1.31)
+
+**Exploratory, unmerged, not a roadmap task acceptance.** At exact `bf4fe83e57560867fcf4dab98d947361d3e5eab8`, Agent 1 pushed `spike/u07-interactive-preview`, verified by Lead to change only five Xcode/SwiftUI/UI-test paths. **Draft PR #28** retains source for targeted QA and owner hands-on review. A debug-only `U07 Preview` Xcode scheme launches an in-memory golden-moon Observe/Try/Check activity: 6-counter demonstration and recombination, guided 7/1 learner work, and an uncued 8/3 model/number keypad check with tap/drag counter controls. Default normal app remains its welcome scaffold; no production lesson, media, durable math history or parent reporting was integrated. Agent reported a clean iPad A16 iOS 26.3 simulator build, three UI tests and two core tests passing; Lead verified code and test scope but could not independently execute Xcode or inspect the uncommitted screenshot/log. No physical iPad or VoiceOver evidence.
+
+Lead review comment on PR #28 requests focused iOS/Education QA for (1) child-facing `6 = 2 + 4` formal notation versus U07 education draft's bond-first presentation; (2) unexpected in-memory work retention when using Home then Start Lesson again without explicit Resume/New intent; (3) neutral feedback and model-role equivalence (no mastery credit); and (4) accessibility/device, restart persistence and remaining test gaps. PRs #25 (preparatory Education draft) and #26 (cross-contract audit) remain separately gated. **Keep PR #28 draft/unmerged**, await hands-on screenshot and focused QA before prototype approval; production LEAD-002 freeze remains deferred. Ledger states unchanged: 6 accepted, 3 review, 1 ready, 24 backlog. 
