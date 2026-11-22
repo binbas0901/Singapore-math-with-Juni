@@ -6,6 +6,7 @@
 	objects = {
 
 /* Begin PBXFileReference section */
+		000000000000000000000031 /* U07Preview.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = U07Preview.swift; sourceTree = "<group>"; };
 		000000000000000000000001 /* AppSource */ = {
 			isa = PBXFileReference;
 			lastKnownFileType = sourcecode.swift;
@@ -39,7 +40,7 @@
 		};
 		000000000000000000000006 /* AppGroup */ = {
 			isa = PBXGroup;
-			children = (000000000000000000000001 /* AppSource */,);
+			children = (000000000000000000000001 /* AppSource */, 000000000000000000000031 /* U07Preview.swift */,);
 			path = Juni;
 			sourceTree = "<group>";
 		};
@@ -73,6 +74,7 @@
 /* End XCSwiftPackageProductDependency section */
 
 /* Begin PBXBuildFile section */
+		000000000000000000000032 /* U07Preview.swift in Sources */ = {isa = PBXBuildFile; fileRef = 000000000000000000000031 /* U07Preview.swift */; };
 		00000000000000000000000B /* AppBuildFile */ = {
 			isa = PBXBuildFile;
 			fileRef = 000000000000000000000001 /* AppSource */;
@@ -91,7 +93,7 @@
 		00000000000000000000000E /* AppSources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
-			files = (00000000000000000000000B /* AppBuildFile */,);
+			files = (00000000000000000000000B /* AppBuildFile */, 000000000000000000000032 /* U07Preview.swift in Sources */,);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 		00000000000000000000000F /* TestSources */ = {
@@ -234,6 +236,7 @@
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				CURRENT_PROJECT_VERSION = 1;
 				MARKETING_VERSION = 0.1.0;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "DEBUG $(inherited)";
 			};
 			name = Debug;
 		};
