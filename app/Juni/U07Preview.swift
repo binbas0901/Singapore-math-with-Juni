@@ -1,4 +1,5 @@
 #if DEBUG
+import AVFoundation
 import JuniCore
 import SwiftUI
 
@@ -9,24 +10,86 @@ struct U07Preview: View {
         case check = "Check"
     }
 
+    // en-SG Observe draft, PR #25 at 29213ce. Times are offsets in the future local clip.
     private enum DemoStep: Int, CaseIterable {
-        case whole, first, second, bond, together
+        case intro, count, whole, first, second, otherGroup, countTray, bond, recombine, ready
 
-        var bowl: Set<Int> {
-            switch self {
-            case .whole, .together: []
-            case .first: [1]
-            case .second, .bond: [1, 2]
-            }
-        }
+        var start: Int { [0, 5, 12, 19, 22, 26, 32, 38, 49, 60][rawValue] }
 
         var caption: String {
             switch self {
-            case .whole: "Count the counters in the tray. There are six altogether."
-            case .first: "Move one counter into the bowl."
-            case .second: "Move one more. Now there are two in the bowl."
-            case .bond: "The bowl has two. The tray is the other part, with four. Both parts make six."
-            case .together: "Bring both counters back. The same six counters are together again."
+            case .intro: "Let’s count the counters in this tray."
+            case .count: "One, two, three, four, five, six."
+            case .whole: "Six is the whole. That means all the counters. Watch me split them into two groups."
+            case .first: "One into the bowl."
+            case .second: "One more into the bowl. Two in the bowl."
+            case .otherGroup: "The tray is our other group. How many are there?"
+            case .countTray: "One, two, three, four. Four in the tray."
+            case .bond: "Two in the bowl. Four in the tray. Two and four make six. This picture is a number bond."
+            case .recombine: "Let’s put the two back. One, two, three, four, five, six. We still have six!"
+            case .ready: "Ready to make your own split? Tap Try."
+            }
+        }
+
+        static let end = 64
+        static let cues = (
+            allCases.map(\.start) + Array(6...10) + [20, 23, 33, 34, 35, 40, 42, 51]
+            + Array(52...57) + [end]
+        ).sorted()
+    }
+
+    private struct DemoFrame: Equatable {
+        var time = 0
+        var manual = true
+
+        var step: DemoStep { DemoStep.allCases.last { $0.start <= time } ?? .intro }
+        var bowl: Set<Int> {
+            if manual {
+                switch step {
+                case .first: return [1]
+                case .second, .otherGroup, .countTray, .bond: return [1, 2]
+                default: return []
+                }
+            }
+            switch time {
+            case 20..<23: return [1]
+            case 23..<51: return [1, 2]
+            default: return []
+            }
+        }
+
+        var historical: Bool { manual ? step.rawValue >= DemoStep.recombine.rawValue : time >= 51 }
+        var canTry: Bool { manual ? step == .ready : time == DemoStep.end }
+
+        var countOrder: [Int] {
+            switch step {
+            case .count, .recombine: Array(1...6)
+            case .countTray: Array(3...6)
+            default: []
+            }
+        }
+
+        var indicatedCounter: Int? {
+            if step == .first { return bowl.contains(1) ? 1 : nil }
+            if step == .second { return bowl.contains(2) ? 2 : nil }
+            guard !manual else { return nil }
+            switch time {
+            case 5..<12: return min(time - 4, 6)
+            case 32..<38: return min(time - 29, 6)
+            case 52..<60: return min(time - 51, 6)
+            default: return nil
+            }
+        }
+
+        var linkedGroups: Set<CounterGroup> {
+            switch step {
+            case .whole: [.tray]
+            case .otherGroup: [.tray]
+            case .bond where manual: [.tray, .bowl]
+            case .bond:
+                time < 40 ? [.bowl] : time < 42 ? [.tray] : [.tray, .bowl]
+            case .recombine where !historical: [.tray, .bowl]
+            default: []
             }
         }
     }
@@ -38,7 +101,13 @@ struct U07Preview: View {
     @Environment(\.accessibilityReduceMotion) private var reduceMotion
     @State private var page: Page?
     @State private var resumePage: Page?
-    @State private var demo = DemoStep.whole
+    @Environment(\.scenePhase) private var scenePhase
+    @State private var demo = DemoFrame()
+    @State private var elapsed: TimeInterval = 0
+    @State private var startedAt: ContinuousClock.Instant?
+    @State private var narration: AVAudioPlayer?
+
+    private var playing: Bool { startedAt != nil }
     @State private var guided = Working(isGuided: true)
     @State private var independent = Working()
     @State private var trayFrame = CGRect.zero
@@ -82,6 +151,9 @@ struct U07Preview: View {
         .foregroundStyle(ink)
         .tint(teal)
         .preferredColorScheme(.light)
+        .onChange(of: scenePhase) { _, phase in
+            if phase != .active { pauseDemo() }
+        }
     }
 
     private var welcome: some View {
@@ -113,7 +185,7 @@ struct U07Preview: View {
     }
 
     private func startOver() {
-        demo = .whole
+        resetDemo()
         guided = Working(isGuided: true)
         independent = Working()
         resumePage = nil
@@ -124,10 +196,11 @@ struct U07Preview: View {
         HStack(spacing: 14) {
             VStack(alignment: .leading, spacing: 3) {
                 Text("Split a whole").font(.title2.bold()).accessibilityAddTraits(.isHeader)
-                Text("U07 lesson preview · Captions only").font(.subheadline)
+                Text(narration == nil ? "U07 lesson preview · Captions only" : "U07 lesson preview").font(.subheadline)
             }
             Spacer()
             Button("Home") {
+                pauseDemo()
                 resumePage = page
                 page = nil
             }
@@ -146,7 +219,10 @@ struct U07Preview: View {
 
     private func pageButtons(_ current: Page) -> some View {
         ForEach(Page.allCases, id: \.self) { stage in
-            Button(stage.rawValue) { page = stage }
+            Button(stage.rawValue) {
+                if stage != .observe { pauseDemo() }
+                page = stage
+            }
                 .buttonStyle(PreviewButton(prominent: current == stage))
                 .accessibilityAddTraits(current == stage ? .isSelected : [])
         }
@@ -154,56 +230,148 @@ struct U07Preview: View {
 
     private var observe: some View {
         VStack(alignment: .leading, spacing: 16) {
-            teachingPrompt(demo.caption, identifier: "observe-caption")
+            teachingPrompt(demo.step.caption, identifier: "observe-caption", reaction: demoReaction)
+            ViewThatFits(in: .horizontal) {
+                HStack { demoButtons }
+                VStack(alignment: .leading) { demoButtons }
+            }
             AdaptiveColumns {
-                regions(
-                    whole: 6, bowl: demo.bowl, showCounts: true, work: nil
-                )
-                .frame(maxWidth: .infinity)
+                regions(whole: 6, bowl: demo.bowl,
+                        showCounts: demo.step.rawValue >= DemoStep.whole.rawValue,
+                        hideTrayCount: (DemoStep.first.rawValue...DemoStep.countTray.rawValue).contains(demo.step.rawValue)
+                            || (demo.step == .recombine && !demo.manual && demo.time < 57),
+                        work: nil)
+                    .frame(maxWidth: .infinity)
             } side: {
                 VStack(spacing: 12) {
-                    let showsParts = demo == .bond || demo == .together
-                    bond(6, showsParts ? 2 : nil, showsParts ? 4 : nil,
-                         title: demo == .together ? "Completed example" : "Number bond",
-                         knownGroup: showsParts ? .bowl : nil, showParts: showsParts)
+                    let showsParts = demo.step.rawValue >= DemoStep.bond.rawValue
+                    if demo.step.rawValue >= DemoStep.whole.rawValue {
+                        bond(6, showsParts ? 2 : nil, showsParts ? 4 : nil,
+                             title: demo.historical ? "Our split" : "Number bond",
+                             knownGroup: showsParts ? .bowl : nil, showParts: showsParts,
+                             teaching: !demo.historical)
+                    } else {
+                        Color.clear.frame(height: 1).accessibilityHidden(true)
+                    }
                 }
                 .frame(maxWidth: .infinity)
                 .padding(20)
                 .background(.white, in: RoundedRectangle(cornerRadius: 22))
             }
-            ViewThatFits(in: .horizontal) {
-                HStack { demoButtons }
-                VStack(alignment: .leading) { demoButtons }
+        }
+        .task(id: startedAt) {
+            guard playing, let startedAt else { return }
+            let clock = ContinuousClock()
+            do {
+                for cue in DemoStep.cues where Double(cue) > elapsed {
+                    try await clock.sleep(until: startedAt.advanced(by: .seconds(Double(cue))))
+                    try Task.checkCancellation()
+                    guard playing, self.startedAt == startedAt, page == .observe else { return }
+                    showDemo(DemoFrame(time: cue, manual: false))
+                }
+                pauseDemo()
+                elapsed = Double(DemoStep.end)
+            } catch is CancellationError {
+                // Leaving Observe or pausing cancels the current schedule.
+            } catch {
+                pauseDemo()
             }
+        }
+    }
+
+    private var demoReaction: JuniMoon.Reaction {
+        switch demo.step {
+        case .otherGroup: .thinking
+        case .first, .second, .count, .countTray: .focused
+        case .recombine where demo.historical: .delighted
+        case .ready: .delighted
+        default: .smiling
         }
     }
 
     private var demoButtons: some View {
         Group {
-            Button("Replay") { go(to: .whole) }
-                .buttonStyle(PreviewButton())
-            Button("Previous step") { go(to: DemoStep(rawValue: demo.rawValue - 1)) }
-                .buttonStyle(PreviewButton())
-                .disabled(demo == .whole)
-            Button("Next step") { go(to: DemoStep(rawValue: demo.rawValue + 1)) }
-                .buttonStyle(PreviewButton(prominent: true))
-                .disabled(demo == .together)
-            if demo == .together {
+            Button(playing ? "Pause" : "Play") {
+                if playing { pauseDemo() } else { playDemo() }
+            }
+            .buttonStyle(PreviewButton(prominent: true))
+            .disabled(!playing && elapsed >= Double(DemoStep.end))
+            Button("Replay") {
+                resetDemo()
+                playDemo()
+            }
+            .buttonStyle(PreviewButton())
+            Button("Next step") {
+                pauseDemo()
+                if let next = DemoStep(rawValue: demo.step.rawValue + 1) {
+                    elapsed = Double(next.start)
+                    showDemo(DemoFrame(time: next.start), animate: false)
+                } else {
+                    elapsed = Double(DemoStep.end)
+                    showDemo(DemoFrame(time: DemoStep.end), animate: false)
+                }
+            }
+            .buttonStyle(PreviewButton())
+            .disabled(demo.canTry)
+            if demo.canTry {
                 Button("Try together") { page = .tryIt }
                     .buttonStyle(PreviewButton(prominent: true))
             }
         }
     }
 
-    private func go(to step: DemoStep?) {
-        guard let step else { return }
-        withAnimation(reduceMotion ? nil : .easeInOut(duration: 0.38)) { demo = step }
-        AccessibilityNotification.Announcement(step.caption).post()
+    private func resetDemo() {
+        pauseDemo()
+        elapsed = 0
+        showDemo(DemoFrame(), animate: false)
     }
 
-    private func teachingPrompt(_ prompt: String, identifier: String) -> some View {
+    private func playDemo() {
+        if demo.manual {
+            switch demo.step {
+            case .first: elapsed = 20
+            case .second: elapsed = 23
+            case .recombine: elapsed = 51
+            default: break
+            }
+        }
+        // A single bundled clip uses the same timebase as the authored cues.
+        // The caption timeline also runs when the clip is absent or unreadable.
+        if narration == nil, let clip = Bundle.main.url(forResource: "u07-observe-en-SG", withExtension: "m4a") {
+            narration = try? AVAudioPlayer(contentsOf: clip)
+        }
+        if let narration, elapsed < narration.duration {
+            narration.currentTime = elapsed
+            narration.play()
+        }
+        let time = Int(elapsed)
+        showDemo(DemoFrame(time: time, manual: false), animate: false)
+        startedAt = ContinuousClock().now.advanced(by: .seconds(-elapsed))
+    }
+
+    private func pauseDemo() {
+        guard playing, let startedAt else { return }
+        let duration = startedAt.duration(to: ContinuousClock().now).components
+        elapsed = min(Double(DemoStep.end), Double(duration.seconds) + Double(duration.attoseconds) / 1e18)
+        narration?.pause()
+        self.startedAt = nil
+    }
+
+    private func showDemo(_ frame: DemoFrame, animate: Bool = true) {
+        let announce = frame.step != demo.step
+        let animation: Animation? = animate && !reduceMotion && frame.bowl != demo.bowl
+            ? .easeInOut(duration: 0.38) : nil
+        withAnimation(animation) { demo = frame }
+        if announce && (frame.manual || narration == nil) {
+            AccessibilityNotification.Announcement(frame.step.caption).post()
+        }
+    }
+
+    private func teachingPrompt(
+        _ prompt: String, identifier: String, reaction: JuniMoon.Reaction = .smiling
+    ) -> some View {
         HStack(spacing: 18) {
-            JuniMoon().frame(width: 84, height: 84)
+            JuniMoon(reaction: reaction).frame(width: 84, height: 84)
             Text(prompt)
                 .font(.system(.title2, design: .rounded, weight: .semibold))
                 .frame(maxWidth: .infinity, alignment: .leading)
@@ -418,11 +586,18 @@ struct U07Preview: View {
         work: Binding<Working>?
     ) -> some View {
         let intoBowl = group == .bowl
-        let title = showCount ? "\(group.title) · \(ids.count)" : group.title
+        let isOtherGroup = work == nil && group == .tray
+            && (demo.step == .otherGroup || demo.step == .countTray)
+        let title = isOtherGroup ? "Tray · Other group"
+            : showCount ? "\(group.title) · \(ids.count)" : group.title
         return VStack(alignment: .leading, spacing: 8) {
             HStack(spacing: 7) {
                 Image(systemName: group.symbol).accessibilityHidden(true)
                 Text(title)
+                if work == nil, !demo.manual, !reduceMotion,
+                   let indicated = demo.indicatedCounter, ids.contains(indicated) {
+                    Image(systemName: "hand.point.down.fill").accessibilityHidden(true)
+                }
             }
             .font(.title3.bold())
             .foregroundStyle(group.tint)
@@ -440,15 +615,14 @@ struct U07Preview: View {
                             counter(selected)
                         }
                         .buttonStyle(.plain)
-                        .accessibilityLabel("Counter \(id) in \(intoBowl ? "bowl" : "tray")")
+                        .accessibilityLabel("Counter in \(intoBowl ? "bowl" : "tray")")
                         .accessibilityHint("Select to move this counter")
                         .accessibilityAddTraits(selected ? .isSelected : [])
                         .accessibilityIdentifier("counter-\(id)")
                         .highPriorityGesture(counterDrag(id, work: work))
                     } else {
-                        counter(false)
+                        demoCounter(id, group: group)
                             .matchedGeometryEffect(id: id, in: demoCounters)
-                            .accessibilityHidden(true)
                     }
                 }
             }
@@ -459,7 +633,8 @@ struct U07Preview: View {
         .background(group.fill, in: RoundedRectangle(cornerRadius: intoBowl ? 32 : 16))
         .overlay {
             RoundedRectangle(cornerRadius: intoBowl ? 32 : 16)
-                .strokeBorder(group.tint.opacity(0.35), lineWidth: 2)
+                .strokeBorder(group.tint.opacity(work == nil && demo.linkedGroups.contains(group) ? 1 : 0.35),
+                              lineWidth: work == nil && demo.linkedGroups.contains(group) ? 4 : 2)
                 .allowsHitTesting(false)
         }
         .contentShape(Rectangle())
@@ -473,6 +648,31 @@ struct U07Preview: View {
                 trayFrame = frame
             }
         }
+    }
+
+    private func demoCounter(_ id: Int, group: CounterGroup) -> some View {
+        let order = demo.countOrder.firstIndex(of: id)
+        let word = order.map { ["One", "Two", "Three", "Four", "Five", "Six"][$0] }
+        let indicated = demo.indicatedCounter == id
+        let shownWord = group == .tray && (demo.manual || indicated) ? word : nil
+        return counter(false)
+            .overlay {
+                if indicated {
+                    Circle().inset(by: 2).strokeBorder(group.tint, lineWidth: 3)
+                }
+            }
+            .overlay(alignment: .bottom) {
+                if let shownWord {
+                    Text(shownWord)
+                        .font(.caption.bold())
+                        .padding(.horizontal, 5)
+                        .background(.white, in: Capsule())
+                }
+            }
+            .accessibilityElement(children: .ignore)
+            .accessibilityLabel(shownWord ?? "Counter in \(group.title.lowercased())")
+            .accessibilityAddTraits(indicated ? .isSelected : [])
+            .accessibilityIdentifier("observe-counter-\(id)")
     }
 
     private func counterDrag(_ id: Int, work: Binding<Working>) -> some Gesture {
@@ -512,11 +712,12 @@ struct U07Preview: View {
 
     private func bond(
         _ whole: Int?, _ known: Int?, _ missing: Int?, title: String,
-        knownGroup: CounterGroup?, showParts: Bool = true
+        knownGroup: CounterGroup?, showParts: Bool = true, teaching: Bool = false
     ) -> some View {
         VStack(spacing: 8) {
             Text(title).font(.headline)
-            bondNode("Whole", value: whole)
+            bondNode("Whole", value: whole,
+                     linked: teaching && (demo.step == .whole || demo.linkedGroups.count == 2))
             if showParts {
                 Canvas { context, size in
                     var branches = Path()
@@ -529,9 +730,11 @@ struct U07Preview: View {
                 .frame(height: 20)
                 .accessibilityHidden(true)
                 HStack(spacing: 8) {
-                    bondNode("Part 1", value: known, group: knownGroup)
+                    bondNode("Part 1", value: known, group: knownGroup,
+                             linked: teaching && demo.linkedGroups.contains(.bowl))
                         .frame(maxWidth: .infinity)
-                    bondNode("Part 2", value: missing, group: knownGroup?.opposite)
+                    bondNode("Part 2", value: missing, group: knownGroup?.opposite,
+                             linked: teaching && demo.linkedGroups.contains(.tray))
                         .frame(maxWidth: .infinity)
                 }
             }
@@ -539,7 +742,7 @@ struct U07Preview: View {
         .frame(maxWidth: 340)
     }
 
-    private func bondNode(_ label: String, value: Int?, group: CounterGroup? = nil) -> some View {
+    private func bondNode(_ label: String, value: Int?, group: CounterGroup? = nil, linked: Bool = false) -> some View {
         let title = group?.title ?? label
         return VStack(spacing: 2) {
             if let group {
@@ -555,6 +758,11 @@ struct U07Preview: View {
         .frame(minWidth: 100)
         .foregroundStyle(group?.tint ?? ink)
         .background(group?.fill ?? paper, in: RoundedRectangle(cornerRadius: 14))
+        .overlay {
+            if linked {
+                RoundedRectangle(cornerRadius: 14).strokeBorder(group?.tint ?? teal, lineWidth: 3)
+            }
+        }
         .accessibilityElement(children: .ignore)
         .accessibilityLabel(title)
         .accessibilityValue(value.map(String.init) ?? "Blank")
@@ -633,6 +841,12 @@ private struct PreviewButton: ButtonStyle {
 }
 
 private struct JuniMoon: View {
+    enum Reaction: String {
+        case smiling, focused, thinking, delighted
+    }
+
+    var reaction: Reaction = .smiling
+
     var body: some View {
         ZStack {
             Circle().fill(.radialGradient(
@@ -650,10 +864,17 @@ private struct JuniMoon: View {
                     context.fill(oval(x, y, radius, radius * 0.88), with: .color(tan.opacity(0.19)))
                 }
                 for x in [0.32, 0.60] {
-                    context.fill(oval(x, 0.43, 0.08, 0.10), with: .color(brown))
+                    let y = reaction == .thinking && x > 0.5 ? 0.40 : 0.43
+                    let height = reaction == .focused ? 0.07 : 0.10
+                    context.fill(oval(x, y, 0.08, height), with: .color(brown))
                 }
                 for x in [0.19, 0.69] {
                     context.fill(oval(x, 0.55, 0.12, 0.06), with: .color(.orange.opacity(0.6)))
+                }
+                if reaction == .delighted || reaction == .thinking {
+                    let width = reaction == .delighted ? 0.16 : 0.07
+                    context.fill(oval(0.5 - width / 2, 0.56, width, 0.10), with: .color(brown))
+                    return
                 }
                 var smile = Path()
                 smile.move(to: CGPoint(x: 0.43 * edge, y: 0.55 * edge))
@@ -664,7 +885,7 @@ private struct JuniMoon: View {
         }
         .shadow(color: .orange.opacity(0.23), radius: 15, y: 5)
         .accessibilityElement(children: .ignore)
-        .accessibilityLabel("Juni, a smiling golden full moon")
+        .accessibilityLabel("Juni, a \(reaction.rawValue) golden full moon")
         .accessibilityAddTraits(.isImage)
     }
 }

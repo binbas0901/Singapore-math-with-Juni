@@ -41,27 +41,52 @@ final class U07PreviewTests: XCTestCase {
         let bowl = app.staticTexts["bowl-label"]
         let next = app.buttons["Next step"]
 
-        XCTAssertEqual(tray.label, "Tray · 6")
-        next.tap()
-        XCTAssertEqual(bowl.label, "Bowl · 1")
-        next.tap()
-        XCTAssertEqual(bowl.label, "Bowl · 2")
-        next.tap()
-        XCTAssertEqual(tray.label, "Tray · 4")
-        XCTAssertEqual(part("Part 1", in: app).label, "Bowl")
-        XCTAssertEqual(part("Part 1", in: app).value as? String, "2")
-        XCTAssertEqual(missingPart(in: app).label, "Tray")
-        XCTAssertEqual(missingPart(in: app).value as? String, "4")
-
-        XCUIDevice.shared.orientation = .portrait
-        expectOrientation(.portrait, in: app)
-        XCTAssertTrue(missingPart(in: app).isHittable)
-        capture("U07-Observe")
-
-        next.tap()
-        XCTAssertEqual(tray.label, "Tray · 6")
-        XCTAssertEqual(bowl.label, "Bowl · 0")
-        XCTAssertTrue(app.staticTexts["Completed example"].exists)
+        let caption = app.staticTexts["observe-caption"]
+        let expected = [
+            "Let’s count the counters in this tray.",
+            "One, two, three, four, five, six.",
+            "Six is the whole. That means all the counters. Watch me split them into two groups.",
+            "One into the bowl.",
+            "One more into the bowl. Two in the bowl.",
+            "The tray is our other group. How many are there?",
+            "One, two, three, four. Four in the tray.",
+            "Two in the bowl. Four in the tray. Two and four make six. This picture is a number bond.",
+            "Let’s put the two back. One, two, three, four, five, six. We still have six!",
+            "Ready to make your own split? Tap Try."
+        ]
+        let bowlCounts = [0, 0, 0, 1, 2, 2, 2, 2, 0, 0]
+        for (index, text) in expected.enumerated() {
+            if index > 0 { next.tap() }
+            XCTAssertEqual(caption.label, text)
+            assertObserveCounters(in: app, bowl: bowlCounts[index], stage: index)
+            if index == 1 || index == 6 || index == 8 {
+                let ids = index == 6 ? Array(3...6) : Array(1...6)
+                let words = ["One", "Two", "Three", "Four", "Five", "Six"]
+                for (offset, id) in ids.enumerated() {
+                    XCTAssertEqual(part("observe-counter-\(id)", in: app).label, words[offset])
+                }
+            }
+            if index == 1 { capture("U07-Observe-Count") }
+            if index == 3 { capture("U07-Observe-First-Move") }
+            if index == 7 {
+                XCTAssertEqual(part("Part 1", in: app).label, "Bowl")
+                XCTAssertEqual(part("Part 1", in: app).value as? String, "2")
+                XCTAssertEqual(missingPart(in: app).label, "Tray")
+                XCTAssertEqual(missingPart(in: app).value as? String, "4")
+                XCUIDevice.shared.orientation = .portrait
+                expectOrientation(.portrait, in: app)
+                XCTAssertTrue(missingPart(in: app).isHittable)
+                capture("U07-Observe-Bond")
+            }
+            if index == 8 {
+                XCTAssertEqual(tray.label, "Tray · 6")
+                XCTAssertEqual(bowl.label, "Bowl · 0")
+                XCTAssertTrue(app.staticTexts["Our split"].exists)
+                capture("U07-Observe-Recombined")
+            }
+            XCTAssertEqual(app.buttons["Try together"].exists, index == 9)
+        }
+        XCTAssertFalse(next.isEnabled)
 
         app.buttons["Try together"].tap()
         XCTAssertEqual(tray.label, "Tray · 7")
@@ -82,11 +107,12 @@ final class U07PreviewTests: XCTestCase {
 
         app.buttons["Observe"].tap()
         app.buttons["Replay"].tap()
-        XCTAssertEqual(tray.label, "Tray · 6")
+        XCTAssertEqual(tray.label, "Tray")
+        XCTAssertEqual(caption.label, expected[0])
         XCTAssertFalse(missingPart(in: app).exists)
         app.buttons["Try"].tap()
 
-        XCTAssertEqual(app.buttons["counter-1"].label, "Counter 1 in bowl")
+        XCTAssertEqual(app.buttons["counter-1"].label, "Counter in bowl")
         XCTAssertEqual(tray.label, "Tray")
         XCTAssertEqual(missingPart(in: app).value as? String, "6")
         app.buttons["Check my answer"].tap()
@@ -106,7 +132,7 @@ final class U07PreviewTests: XCTestCase {
         capture("U07-Try-Completed-Split")
         app.buttons["Continue to Check"].tap()
         XCTAssertEqual(missingPart(in: app).value as? String, "Blank")
-        XCTAssertEqual(app.buttons["counter-1"].label, "Counter 1 in tray")
+        XCTAssertEqual(app.buttons["counter-1"].label, "Counter in tray")
         XCTAssertTrue(app.buttons["counter-8"].exists)
     }
 
@@ -146,6 +172,67 @@ final class U07PreviewTests: XCTestCase {
     }
 
     @MainActor
+    func testObserveTimedPlaybackPausesResumesAndSwitchesToManual() throws {
+        let app = try launchPreview(orientation: .landscapeLeft)
+        defer { app.terminate() }
+        let caption = app.staticTexts["observe-caption"]
+        let firstCount = "One, two, three, four, five, six."
+        app.buttons["Play"].tap()
+        expectLabel(firstCount, on: caption, within: 8)
+        app.buttons["Pause"].tap()
+        let heldCaption = XCTNSPredicateExpectation(predicate: NSPredicate(format: "label != %@", firstCount),
+                                                    object: caption)
+        heldCaption.isInverted = true
+        XCTAssertEqual(XCTWaiter.wait(for: [heldCaption], timeout: 8), .completed)
+        app.buttons["Play"].tap()
+        expectLabel("Six is the whole. That means all the counters. Watch me split them into two groups.",
+                    on: caption, within: 9)
+        expectLabel("One into the bowl.", on: caption, within: 9)
+        expectLabel("Bowl · 1", on: app.staticTexts["bowl-label"], within: 3)
+        expectLabel("One more into the bowl. Two in the bowl.", on: caption, within: 5)
+        expectLabel("Bowl · 2", on: app.staticTexts["bowl-label"], within: 3)
+        expectLabel("The tray is our other group. How many are there?", on: caption, within: 6)
+        expectLabel("One, two, three, four. Four in the tray.", on: caption, within: 8)
+        expectLabel("Two in the bowl. Four in the tray. Two and four make six. This picture is a number bond.",
+                    on: caption, within: 8)
+        expectLabel("Let’s put the two back. One, two, three, four, five, six. We still have six!",
+                    on: caption, within: 13)
+        expectLabel("Bowl · 0", on: app.staticTexts["bowl-label"], within: 4)
+        XCTAssertTrue(app.staticTexts["Our split"].exists)
+        assertObserveCounters(in: app, bowl: 0, stage: 8)
+        expectLabel("Ready to make your own split? Tap Try.", on: caption, within: 12)
+        XCTAssertTrue(app.buttons["Try together"].waitForExistence(timeout: 6))
+        app.buttons["Replay"].tap()
+        XCTAssertEqual(caption.label, "Let’s count the counters in this tray.")
+        assertObserveCounters(in: app, bowl: 0, stage: 0)
+        XCTAssertTrue(app.buttons["Pause"].exists)
+        app.buttons["Next step"].tap()
+        XCTAssertEqual(caption.label, firstCount)
+        XCTAssertTrue(app.buttons["Play"].exists)
+    }
+
+    @MainActor
+    private func expectLabel(_ label: String, on element: XCUIElement, within timeout: TimeInterval) {
+        let predicate = NSPredicate(format: "label == %@", label)
+        let expectation = XCTNSPredicateExpectation(predicate: predicate, object: element)
+        XCTAssertEqual(XCTWaiter.wait(for: [expectation], timeout: timeout), .completed)
+    }
+
+    @MainActor
+    private func assertObserveCounters(in app: XCUIApplication, bowl: Int, stage: Int) {
+        let counters = app.descendants(matching: .any)
+            .matching(NSPredicate(format: "identifier BEGINSWITH %@", "observe-counter-"))
+        XCTAssertEqual(counters.count, 6, "Stage \(stage)")
+        let bowlCounters = counters.allElementsBoundByIndex.filter { $0.label == "Counter in bowl" }
+        XCTAssertEqual(bowlCounters.count, bowl, "Stage \(stage)")
+        for id in 1...6 {
+            let match = counters.matching(identifier: "observe-counter-\(id)")
+            XCTAssertEqual(match.count, 1)
+            XCTAssertEqual(match.firstMatch.label == "Counter in bowl", id <= bowl)
+        }
+    }
+
+    @MainActor
     private func assertAwaitingWholeCount(in app: XCUIApplication) {
         XCTAssertEqual(app.staticTexts["workspace-prompt"].label,
                        "How many counters are together in the tray? Count them and enter the number.")
@@ -153,7 +240,7 @@ final class U07PreviewTests: XCTestCase {
         XCTAssertEqual(app.staticTexts["bowl-label"].label, "Bowl · 0")
         let counters = app.buttons.matching(NSPredicate(format: "identifier BEGINSWITH %@", "counter-"))
         XCTAssertEqual(counters.count, 7)
-        XCTAssertTrue(counters.allElementsBoundByIndex.allSatisfy { $0.label.hasSuffix("in tray") })
+        XCTAssertTrue(counters.allElementsBoundByIndex.allSatisfy { $0.label == "Counter in tray" })
         XCTAssertTrue(app.staticTexts["Completed split"].exists)
         XCTAssertFalse(app.staticTexts["Number bond"].exists)
         XCTAssertEqual(part("Whole", in: app).value as? String, "Blank")
@@ -190,7 +277,9 @@ final class U07PreviewTests: XCTestCase {
         XCTAssertEqual(missingPart(in: app).value as? String, "Blank")
         XCTAssertEqual(app.staticTexts["tray-label"].label, "Tray")
         XCTAssertEqual(app.staticTexts["bowl-label"].label, "Bowl")
-        XCTAssertEqual(app.buttons.matching(NSPredicate(format: "identifier BEGINSWITH %@", "counter-")).count, 8)
+        let counters = app.buttons.matching(NSPredicate(format: "identifier BEGINSWITH %@", "counter-"))
+        XCTAssertEqual(counters.count, 8)
+        XCTAssertTrue(counters.allElementsBoundByIndex.allSatisfy { $0.label == "Counter in tray" })
         let submit = app.buttons["Check my answer"]
         XCTAssertFalse(submit.isEnabled)
         let prompt = app.staticTexts["workspace-prompt"].label
@@ -210,9 +299,11 @@ final class U07PreviewTests: XCTestCase {
             .withOffset(CGVector(dx: 0, dy: 82))
         third.coordinate(withNormalizedOffset: CGVector(dx: 0.5, dy: 0.5))
             .press(forDuration: 0.6, thenDragTo: dropPoint)
-        XCTAssertEqual(third.label, "Counter 3 in bowl")
-        XCTAssertEqual(app.buttons["counter-4"].label, "Counter 4 in tray")
+        XCTAssertEqual(third.label, "Counter in bowl")
+        XCTAssertEqual(app.buttons["counter-4"].label, "Counter in tray")
         XCTAssertEqual(app.staticTexts["workspace-prompt"].label, prompt)
+        XCTAssertEqual(app.staticTexts["tray-label"].label, "Tray")
+        XCTAssertEqual(app.staticTexts["bowl-label"].label, "Bowl")
         XCTAssertEqual(missingPart(in: app).label, "Part 2")
 
         app.buttons["key-4"].tap()
@@ -244,19 +335,19 @@ final class U07PreviewTests: XCTestCase {
         app.buttons["Home"].tap()
         app.buttons["Resume"].tap()
         XCTAssertEqual(missingPart(in: app).value as? String, "5")
-        XCTAssertEqual(app.buttons["counter-5"].label, "Counter 5 in bowl")
+        XCTAssertEqual(app.buttons["counter-5"].label, "Counter in bowl")
         app.buttons["Check my answer"].tap()
         XCTAssertEqual(part("Part 1", in: app).label, "Tray")
         XCTAssertEqual(missingPart(in: app).label, "Bowl")
 
         app.buttons["Home"].tap()
         app.buttons["Start Over"].tap()
-        XCTAssertEqual(app.staticTexts["bowl-label"].label, "Bowl · 0")
+        XCTAssertEqual(app.staticTexts["bowl-label"].label, "Bowl")
         app.buttons["Try"].tap()
         XCTAssertEqual(missingPart(in: app).value as? String, "Blank")
         app.buttons["Check"].tap()
         XCTAssertEqual(missingPart(in: app).value as? String, "Blank")
-        XCTAssertEqual(app.buttons["counter-5"].label, "Counter 5 in tray")
+        XCTAssertEqual(app.buttons["counter-5"].label, "Counter in tray")
     }
 
     @MainActor
