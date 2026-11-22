@@ -1,0 +1,5 @@
+{
+  "document": "manifest",
+  "expected": "file",
+  "extraFile": "unlisted.txt"
+}

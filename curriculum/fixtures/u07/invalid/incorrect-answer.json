@@ -1,0 +1,10 @@
+{
+  "document": "lesson",
+  "path": [
+    "items",
+    2,
+    "expectedAnswer"
+  ],
+  "value": 4,
+  "expected": "answer"
+}

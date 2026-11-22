@@ -1,0 +1,128 @@
+{
+  "schemaVersion": 1,
+  "kind": "catalog",
+  "unitId": "p1-numbers-to-10",
+  "level": 1,
+  "track": "common",
+  "lessonSlots": [
+    "U06",
+    "U07",
+    "U08"
+  ],
+  "objectives": [
+    {
+      "id": "P1-NUM-01",
+      "sourceId": "MOE-MATH-2021-2025-10",
+      "page": 31,
+      "item": "1.1",
+      "strand": "Number and Algebra",
+      "topic": "Numbers up to 100",
+      "description": "Determine set size by counting"
+    },
+    {
+      "id": "P1-NUM-02",
+      "sourceId": "MOE-MATH-2021-2025-10",
+      "page": 31,
+      "item": "1.2",
+      "strand": "Number and Algebra",
+      "topic": "Numbers up to 100",
+      "description": "Represent numbers through 100 using tens and ones, including the endpoint 100"
+    },
+    {
+      "id": "P1-ADD-01",
+      "sourceId": "MOE-MATH-2021-2025-10",
+      "page": 31,
+      "item": "2.1",
+      "strand": "Number and Algebra",
+      "topic": "Addition and Subtraction",
+      "description": "Explain joining and taking away"
+    }
+  ],
+  "targets": [
+    {
+      "id": "count-to-10",
+      "objectiveId": "P1-NUM-01",
+      "conceptId": "P1-NUM-01-C01",
+      "description": "Count a small set",
+      "classification": "core",
+      "bounds": {
+        "min": 0,
+        "max": 10
+      },
+      "representations": [
+        "counters"
+      ]
+    },
+    {
+      "id": "match-to-10",
+      "objectiveId": "P1-NUM-02",
+      "conceptId": "P1-NUM-02-C01",
+      "description": "Match a set to a numeral",
+      "classification": "core",
+      "bounds": {
+        "min": 0,
+        "max": 10
+      },
+      "representations": [
+        "counters",
+        "numeral"
+      ]
+    },
+    {
+      "id": "split-to-10",
+      "objectiveId": "P1-ADD-01",
+      "conceptId": "P1-ADD-01-C01",
+      "description": "Split and recombine a whole",
+      "classification": "core",
+      "bounds": {
+        "min": 0,
+        "max": 10
+      },
+      "representations": [
+        "counters",
+        "numberBond",
+        "drawing",
+        "accessibleMarking"
+      ]
+    }
+  ],
+  "dependencies": [
+    {
+      "kind": "advisory",
+      "beforeLessonId": "U06",
+      "afterLessonId": "U07"
+    },
+    {
+      "kind": "advisory",
+      "beforeLessonId": "U07",
+      "afterLessonId": "U08"
+    },
+    {
+      "kind": "readiness",
+      "forTargetId": "split-to-10",
+      "probeTargetId": "count-to-10",
+      "quantities": [
+        6,
+        7,
+        8
+      ],
+      "representations": [
+        "counters"
+      ]
+    },
+    {
+      "kind": "readiness",
+      "forTargetId": "split-to-10",
+      "probeTargetId": "match-to-10",
+      "quantities": [
+        6,
+        7,
+        8
+      ],
+      "representations": [
+        "counters",
+        "numeral"
+      ]
+    }
+  ]
+}

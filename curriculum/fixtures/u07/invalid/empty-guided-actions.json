@@ -1,0 +1,11 @@
+{
+  "document": "lesson",
+  "expected": "action",
+  "path": [
+    "workspaces",
+    1,
+    "legalActions"
+  ],
+  "value": [],
+  "package": true
+}

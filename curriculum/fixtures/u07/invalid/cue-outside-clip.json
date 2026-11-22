@@ -1,0 +1,13 @@
+{
+  "document": "lesson",
+  "path": [
+    "activities",
+    1,
+    "timeline",
+    "cues",
+    11,
+    "atMs"
+  ],
+  "value": 5001,
+  "expected": "timeline"
+}

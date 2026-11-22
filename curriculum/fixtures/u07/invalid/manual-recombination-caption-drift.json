@@ -1,0 +1,14 @@
+{
+  "document": "lesson",
+  "expected": "timeline",
+  "path": [
+    "activities",
+    1,
+    "timeline",
+    "chapters",
+    4,
+    "text"
+  ],
+  "value": "Return both counters. The whole is now five.",
+  "package": true
+}

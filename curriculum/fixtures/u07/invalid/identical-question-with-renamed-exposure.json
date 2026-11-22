@@ -1,0 +1,38 @@
+{
+  "document": "lesson",
+  "expected": "freshness",
+  "changes": [
+    {
+      "path": [
+        "items",
+        3,
+        "whole"
+      ],
+      "value": 8
+    },
+    {
+      "path": [
+        "items",
+        3,
+        "knownPart"
+      ],
+      "value": 3
+    },
+    {
+      "path": [
+        "items",
+        3,
+        "prompt"
+      ],
+      "value": "Split 8 into two parts. One part is 3. What is the other part? Show both parts."
+    },
+    {
+      "path": [
+        "items",
+        3,
+        "explanation"
+      ],
+      "value": "3 and 5 make 8."
+    }
+  ]
+}

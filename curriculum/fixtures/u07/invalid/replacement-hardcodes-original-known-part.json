@@ -1,0 +1,10 @@
+{
+  "document": "lesson",
+  "expected": "assistance",
+  "path": [
+    "assistance",
+    5,
+    "text"
+  ],
+  "value": "Move three counters to a bowl and count what is left."
+}

@@ -1,0 +1,9 @@
+{
+  "document": "manifest",
+  "path": [
+    "minEngineVersion"
+  ],
+  "value": 1,
+  "expected": "file",
+  "removeFile": "placeholder.wav"
+}

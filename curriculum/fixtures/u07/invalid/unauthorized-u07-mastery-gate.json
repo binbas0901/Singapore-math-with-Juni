@@ -1,0 +1,14 @@
+{
+  "document": "catalog",
+  "expected": "prerequisite",
+  "path": [
+    "dependencies"
+  ],
+  "value": {
+    "kind": "componentMastery",
+    "forTargetId": "split-to-10",
+    "componentTargetId": "count-to-10",
+    "evidence": "priorOrConcurrentIndependent"
+  },
+  "append": true
+}

@@ -1,0 +1,11 @@
+{
+  "document": "lesson",
+  "expected": "review",
+  "path": [
+    "assistance",
+    0,
+    "text"
+  ],
+  "value": "Try again. The other part is five.",
+  "asBundle": true
+}

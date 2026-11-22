@@ -1,0 +1,19 @@
+{
+  "document": "submission",
+  "changes": [
+    {
+      "path": [
+        "model"
+      ],
+      "value": {
+        "status": "pending"
+      }
+    },
+    {
+      "path": [
+        "modelOutcome"
+      ],
+      "value": "pending"
+    }
+  ]
+}

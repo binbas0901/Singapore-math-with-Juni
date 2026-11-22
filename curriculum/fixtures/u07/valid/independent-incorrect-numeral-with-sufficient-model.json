@@ -1,0 +1,18 @@
+{
+  "document": "submission",
+  "changes": [
+    {
+      "path": [
+        "response",
+        "confirmedValue"
+      ],
+      "value": 4
+    },
+    {
+      "path": [
+        "numericOutcome"
+      ],
+      "value": "incorrect"
+    }
+  ]
+}

@@ -1,0 +1,22 @@
+{
+  "document": "manifest",
+  "expected": "media",
+  "asBundle": true,
+  "repinReview": true,
+  "patchFileBytes": {
+    "placeholder.wav": [
+      {
+        "offset": 28,
+        "hex": "c05d0000"
+      },
+      {
+        "offset": 32,
+        "hex": "0300"
+      },
+      {
+        "offset": 34,
+        "hex": "1800"
+      }
+    ]
+  }
+}

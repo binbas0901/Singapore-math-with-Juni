@@ -1,0 +1,11 @@
+{
+  "document": "catalog",
+  "expected": "source",
+  "package": true,
+  "path": [
+    "objectives",
+    0,
+    "page"
+  ],
+  "value": 32
+}

@@ -1,0 +1,14 @@
+{
+  "document": "lesson",
+  "expected": "exposure",
+  "path": [
+    "activities",
+    3,
+    "replacementDeliveries",
+    0,
+    "feedbackDisclosureIds"
+  ],
+  "value": [
+    "check-feedback"
+  ]
+}

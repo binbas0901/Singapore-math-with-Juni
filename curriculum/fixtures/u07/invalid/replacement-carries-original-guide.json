@@ -1,0 +1,11 @@
+{
+  "document": "submission",
+  "expected": "assistance",
+  "path": [
+    "deliveredAssistanceIds"
+  ],
+  "value": [
+    "guide"
+  ],
+  "variant": "replacement"
+}

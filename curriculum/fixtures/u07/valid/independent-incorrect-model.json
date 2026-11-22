@@ -1,0 +1,18 @@
+{
+  "document": "submission",
+  "changes": [
+    {
+      "path": [
+        "model",
+        "partB"
+      ],
+      "value": 4
+    },
+    {
+      "path": [
+        "modelOutcome"
+      ],
+      "value": "incorrect"
+    }
+  ]
+}

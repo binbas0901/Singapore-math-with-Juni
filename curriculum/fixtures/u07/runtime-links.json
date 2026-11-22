@@ -1,0 +1,31 @@
+[
+  {
+    "sessionId": "synthetic-session",
+    "itemOccurrenceId": "synthetic-check-1",
+    "content.packageId": "p1-u07-fixture",
+    "content.contentVersion": "0.1.1",
+    "lessonId": "U07",
+    "activityId": "check",
+    "worksheetId": "check-sheet",
+    "worksheetVersion": "0.1.0",
+    "worksheetItemId": "slot-check",
+    "itemSnapshot.id": "check",
+    "itemSnapshot.version": "0.1.0",
+    "content.manifestSha256": "ab92141e29baabcf0f9fdc4401d38f26a337d87bab50eb633a39c1f96817287d",
+    "content.locale": "en-SG"
+  },
+  {
+    "sessionId": "synthetic-session",
+    "itemOccurrenceId": "synthetic-check-1",
+    "attemptOrdinal": 1,
+    "answerRegionId": "answer",
+    "response.inkRevisionId": "synthetic-ink-1",
+    "response.confirmedValue": 5,
+    "deliveredAssistanceIds": [
+      "hint"
+    ],
+    "exposureAtSubmit": [
+      "check-hint"
+    ]
+  }
+]

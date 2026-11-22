@@ -1,0 +1,12 @@
+{
+  "document": "catalog",
+  "expected": "prerequisite",
+  "path": [
+    "dependencies",
+    2,
+    "quantities"
+  ],
+  "value": [
+    10
+  ]
+}

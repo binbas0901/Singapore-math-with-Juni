@@ -1,0 +1,11 @@
+{
+  "document": "submission",
+  "expected": "runtimeLink",
+  "path": [
+    "response",
+    "inkRevisionId"
+  ],
+  "value": "arbitrary-ink",
+  "variant": "assisted",
+  "runtimeLinks": true
+}

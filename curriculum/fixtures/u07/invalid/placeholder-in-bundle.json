@@ -1,0 +1,8 @@
+{
+  "document": "manifest",
+  "path": [
+    "usage"
+  ],
+  "value": "bundled",
+  "expected": "rights"
+}

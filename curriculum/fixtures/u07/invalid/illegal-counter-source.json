@@ -1,0 +1,15 @@
+{
+  "document": "lesson",
+  "path": [
+    "activities",
+    1,
+    "timeline",
+    "cues",
+    2,
+    "payload",
+    "action",
+    "fromRegionId"
+  ],
+  "value": "bowl",
+  "expected": "action"
+}

@@ -1,0 +1,14 @@
+{
+  "document": "manifest",
+  "expected": "media",
+  "asBundle": true,
+  "repinReview": true,
+  "patchFileBytes": {
+    "placeholder.wav": [
+      {
+        "offset": 34,
+        "hex": "0700"
+      }
+    ]
+  }
+}

@@ -1,0 +1,29 @@
+{
+  "document": "submission",
+  "variant": "replacement",
+  "changes": [
+    {
+      "path": [
+        "deliveredAssistanceIds"
+      ],
+      "value": [
+        "replacement-guide"
+      ]
+    },
+    {
+      "path": [
+        "exposureAtSubmit"
+      ],
+      "value": [
+        "check-guide",
+        "replacement-guide"
+      ]
+    },
+    {
+      "path": [
+        "evidenceClass"
+      ],
+      "value": "assisted"
+    }
+  ]
+}

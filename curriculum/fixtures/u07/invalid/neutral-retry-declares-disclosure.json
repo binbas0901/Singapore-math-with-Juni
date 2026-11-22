@@ -1,0 +1,12 @@
+{
+  "document": "lesson",
+  "expected": "exposure",
+  "path": [
+    "assistance",
+    0,
+    "disclosureIds"
+  ],
+  "value": [
+    "check-hint"
+  ]
+}

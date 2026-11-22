@@ -1,0 +1,9 @@
+{
+  "document": "submission",
+  "expected": "response",
+  "path": [
+    "response",
+    "confirmedValue"
+  ],
+  "value": 4
+}

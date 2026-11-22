@@ -1,0 +1,6 @@
+{
+  "document": "lesson",
+  "path": ["disclosures", 0, "exposureKeys"],
+  "value": ["split-6-2-4", "split-8-3-5"],
+  "expected": "freshness"
+}

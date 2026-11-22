@@ -1,0 +1,11 @@
+{
+  "document": "manifest",
+  "expected": "timeline",
+  "asBundle": true,
+  "path": [
+    "clips",
+    0,
+    "durationMs"
+  ],
+  "value": 4999
+}

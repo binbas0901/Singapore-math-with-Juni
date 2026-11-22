@@ -1,0 +1,8 @@
+{
+  "document": "submission",
+  "path": [
+    "answerRegionId"
+  ],
+  "value": "absent",
+  "expected": "reference"
+}

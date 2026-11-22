@@ -1,0 +1,11 @@
+{
+  "document": "submission",
+  "path": [
+    "response"
+  ],
+  "value": {
+    "method": "ocrCandidate",
+    "confirmedValue": 5
+  },
+  "expected": "schema"
+}

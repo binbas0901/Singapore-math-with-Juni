@@ -1,0 +1,13 @@
+{
+  "document": "catalog",
+  "path": [
+    "dependencies"
+  ],
+  "value": {
+    "kind": "advisory",
+    "beforeLessonId": "U08",
+    "afterLessonId": "U06"
+  },
+  "expected": "cycle",
+  "append": true
+}
