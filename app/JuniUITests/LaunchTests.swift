@@ -9,6 +9,7 @@ final class LaunchTests: XCTestCase {
         device.orientation = .portrait
         let app = XCUIApplication()
         app.launch()
+        defer { app.terminate() }
 
         let title = app.staticTexts["Singapore Math with Juni"]
         let window = app.windows.firstMatch
@@ -33,8 +34,9 @@ final class LaunchTests: XCTestCase {
 
 final class U07PreviewTests: XCTestCase {
     @MainActor
-    func testObserveRecombinesAndReplayPreservesTryWork() {
-        let app = launchPreview(orientation: .landscapeLeft)
+    func testObserveRecombinesAndReplayPreservesTryWork() throws {
+        let app = try launchPreview(orientation: .landscapeLeft)
+        defer { app.terminate() }
         let tray = app.staticTexts["tray-label"]
         let bowl = app.staticTexts["bowl-label"]
         let next = app.buttons["Next step"]
@@ -91,13 +93,98 @@ final class U07PreviewTests: XCTestCase {
         XCTAssertTrue(app.staticTexts["Your counters and number bond match."].exists)
         XCTAssertEqual(prompt.label, "Now put the two groups back together in the tray.")
         app.buttons["Recombine counters"].tap()
-        XCTAssertEqual(tray.label, "Tray · 7")
-        XCTAssertTrue(prompt.label.hasPrefix("You made the whole again."))
+        assertAwaitingWholeCount(in: app)
+        capture("U07-Try-Count-Whole")
+
+        app.buttons["key-6"].tap()
+        app.buttons["Check my count"].tap()
+        XCTAssertTrue(app.staticTexts["Count the counters in the tray again."].exists)
+        XCTAssertFalse(app.buttons["Check my answer"].exists)
+        XCTAssertFalse(app.buttons["Continue to Check"].exists)
+
+        verifyWhole(in: app)
+        capture("U07-Try-Completed-Split")
+        app.buttons["Continue to Check"].tap()
+        XCTAssertEqual(missingPart(in: app).value as? String, "Blank")
+        XCTAssertEqual(app.buttons["counter-1"].label, "Counter 1 in tray")
+        XCTAssertTrue(app.buttons["counter-8"].exists)
     }
 
     @MainActor
-    func testCheckStartsBlankAndUsesBothModelAndNumber() {
-        let app = launchPreview(orientation: .portrait)
+    func testTryManuallyRecombinesByDragAndTapAndResetsWhenEdited() throws {
+        let app = try launchPreview(orientation: .landscapeLeft)
+        defer { app.terminate() }
+        app.buttons["Try"].tap()
+        let counter = app.buttons["counter-1"]
+        let tray = app.staticTexts["tray-label"]
+
+        counter.tap()
+        app.buttons["put-in-bowl"].tap()
+        app.buttons["key-6"].tap()
+        app.buttons["Check my answer"].tap()
+
+        let dropPoint = tray.coordinate(withNormalizedOffset: CGVector(dx: 0.5, dy: 1))
+            .withOffset(CGVector(dx: 0, dy: 82))
+        counter.coordinate(withNormalizedOffset: CGVector(dx: 0.5, dy: 0.5))
+            .press(forDuration: 0.6, thenDragTo: dropPoint)
+        assertAwaitingWholeCount(in: app)
+        verifyWhole(in: app)
+
+        counter.tap()
+        app.buttons["put-in-bowl"].tap()
+        XCTAssertFalse(app.staticTexts["Completed split"].exists)
+        XCTAssertFalse(app.buttons["Continue to Check"].exists)
+        XCTAssertEqual(missingPart(in: app).value as? String, "Blank")
+        XCTAssertFalse(app.buttons["Check my answer"].isEnabled)
+
+        app.buttons["key-6"].tap()
+        app.buttons["Check my answer"].tap()
+        counter.tap()
+        app.buttons["put-in-tray"].tap()
+        assertAwaitingWholeCount(in: app)
+        verifyWhole(in: app)
+    }
+
+    @MainActor
+    private func assertAwaitingWholeCount(in app: XCUIApplication) {
+        XCTAssertEqual(app.staticTexts["workspace-prompt"].label,
+                       "How many counters are together in the tray? Count them and enter the number.")
+        XCTAssertEqual(app.staticTexts["tray-label"].label, "Tray")
+        XCTAssertEqual(app.staticTexts["bowl-label"].label, "Bowl · 0")
+        let counters = app.buttons.matching(NSPredicate(format: "identifier BEGINSWITH %@", "counter-"))
+        XCTAssertEqual(counters.count, 7)
+        XCTAssertTrue(counters.allElementsBoundByIndex.allSatisfy { $0.label.hasSuffix("in tray") })
+        XCTAssertTrue(app.staticTexts["Completed split"].exists)
+        XCTAssertFalse(app.staticTexts["Number bond"].exists)
+        XCTAssertEqual(part("Whole", in: app).value as? String, "Blank")
+        XCTAssertEqual(part("Part 1", in: app).label, "Part 1")
+        XCTAssertEqual(part("Part 1", in: app).value as? String, "1")
+        XCTAssertEqual(missingPart(in: app).label, "Part 2")
+        XCTAssertEqual(missingPart(in: app).value as? String, "6")
+        XCTAssertEqual(part("Your count", in: app).value as? String, "Blank")
+        XCTAssertFalse(app.buttons["Check my answer"].exists)
+        XCTAssertFalse(app.buttons["Check my count"].isEnabled)
+        XCTAssertFalse(app.buttons["Continue to Check"].exists)
+    }
+
+    @MainActor
+    private func verifyWhole(in app: XCUIApplication) {
+        app.buttons["key-7"].tap()
+        app.buttons["Check my count"].tap()
+        XCTAssertEqual(app.staticTexts["tray-label"].label, "Tray · 7")
+        XCTAssertEqual(app.staticTexts["bowl-label"].label, "Bowl · 0")
+        XCTAssertTrue(app.staticTexts["Completed split"].exists)
+        XCTAssertEqual(part("Whole", in: app).value as? String, "7")
+        XCTAssertEqual(missingPart(in: app).value as? String, "6")
+        XCTAssertFalse(app.buttons["Check my answer"].exists)
+        XCTAssertFalse(app.buttons["Check my count"].exists)
+        XCTAssertTrue(app.buttons["Continue to Check"].isHittable)
+    }
+
+    @MainActor
+    func testCheckStartsBlankAndUsesBothModelAndNumber() throws {
+        let app = try launchPreview(orientation: .portrait)
+        defer { app.terminate() }
         app.buttons["Check"].tap()
 
         XCTAssertEqual(missingPart(in: app).value as? String, "Blank")
@@ -140,8 +227,9 @@ final class U07PreviewTests: XCTestCase {
     }
 
     @MainActor
-    func testCheckAcceptsTrayAsKnownPartAndHomeResetsBothWorkspaces() {
-        let app = launchPreview(orientation: .landscapeLeft)
+    func testCheckAcceptsTrayAsKnownPartAndHomeResetsBothWorkspaces() throws {
+        let app = try launchPreview(orientation: .landscapeLeft)
+        defer { app.terminate() }
         app.buttons["Next step"].tap()
         app.buttons["Try"].tap()
         app.buttons["key-6"].tap()
@@ -180,15 +268,20 @@ final class U07PreviewTests: XCTestCase {
     }
 
     @MainActor
-    private func launchPreview(orientation: UIDeviceOrientation) -> XCUIApplication {
-        XCUIDevice.shared.orientation = orientation
+    private func launchPreview(orientation: UIDeviceOrientation) throws -> XCUIApplication {
         let app = XCUIApplication()
+        // Rotate with the previous app process stopped, then wait for the fresh
+        // window to finish laying out before interacting with the welcome screen.
+        app.terminate()
+        XCTAssertTrue(app.wait(for: .notRunning, timeout: 10))
+        XCUIDevice.shared.orientation = orientation
         app.launchArguments = ["-u07-preview"]
         app.launch()
-        let start = app.buttons["Start lesson preview"]
-        XCTAssertTrue(start.waitForExistence(timeout: 10))
-        start.tap()
         expectOrientation(orientation, in: app)
+        let start = app.buttons["Start lesson preview"]
+        let welcome = start.waitForExistence(timeout: 10) ? start : nil
+        try XCTUnwrap(welcome, "Expected the U07 welcome screen after a fresh launch.").tap()
+        XCTAssertTrue(app.buttons["Next step"].waitForExistence(timeout: 10))
         return app
     }
 

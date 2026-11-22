@@ -39,7 +39,7 @@ struct U07Preview: View {
     @State private var page: Page?
     @State private var resumePage: Page?
     @State private var demo = DemoStep.whole
-    @State private var guided = Working()
+    @State private var guided = Working(isGuided: true)
     @State private var independent = Working()
     @State private var trayFrame = CGRect.zero
     @State private var bowlFrame = CGRect.zero
@@ -114,7 +114,7 @@ struct U07Preview: View {
 
     private func startOver() {
         demo = .whole
-        guided = Working()
+        guided = Working(isGuided: true)
         independent = Working()
         resumePage = nil
         page = .observe
@@ -215,30 +215,38 @@ struct U07Preview: View {
     }
 
     private enum Feedback {
-        case correct, retry, recombined
+        case correct, retry
 
         var message: String {
             switch self {
             case .correct: "Your counters and number bond match."
             case .retry: "Recount the two groups and check the missing number."
-            case .recombined: "All the counters are together again."
             }
         }
     }
 
+    private enum WholeVerification {
+        case counting, retry, verified
+    }
+
     private struct Working {
+        var isGuided = false
         var bowl: Set<Int> = []
         var selection: Int?
         var answer: Int?
         var feedback: Feedback?
+        var verification: WholeVerification?
     }
 
     private func guidedPrompt(_ state: Working) -> String {
+        if state.verification == .verified {
+            return "You counted the whole again."
+        }
+        if state.verification != nil {
+            return "How many counters are together in the tray? Count them and enter the number."
+        }
         if state.feedback == .correct {
             return "Now put the two groups back together in the tray."
-        }
-        if state.feedback == .recombined {
-            return "You made the whole again. Try the Check when you’re ready."
         }
         switch state.bowl.count {
         case 0: return "Move one counter into the bowl."
@@ -261,6 +269,7 @@ struct U07Preview: View {
                 VStack(alignment: .leading, spacing: 12) {
                     regions(whole: whole, bowl: state.bowl,
                             showCounts: isGuided && (state.bowl.isEmpty || state.feedback == .correct),
+                            hideTrayCount: state.verification != nil && state.verification != .verified,
                             work: work)
                     Text(state.selection == nil
                          ? "Drag a counter, or tap one to pick it up."
@@ -276,9 +285,7 @@ struct U07Preview: View {
                     }
                     .buttonStyle(PreviewButton())
                     Button("Recombine counters") {
-                        work.wrappedValue.bowl.removeAll()
-                        work.wrappedValue.selection = nil
-                        work.wrappedValue.feedback = isGuided && state.feedback == .correct ? .recombined : nil
+                        updateBowl([], work: work)
                     }
                     .buttonStyle(PreviewButton(prominent: isGuided && state.feedback == .correct))
                     .disabled(state.bowl.isEmpty)
@@ -286,29 +293,53 @@ struct U07Preview: View {
                 .frame(maxWidth: .infinity, alignment: .leading)
             } side: {
                 VStack(spacing: 12) {
-                    // Check accepts either orientation. Assign the group labels only after
-                    // a successful submission so the diagram cannot validate an unsubmitted model.
-                    let knownGroup: CounterGroup? = isGuided ? .bowl
-                        : state.feedback == .correct ? (state.bowl.count == known ? .bowl : .tray) : nil
-                    bond(whole, known, state.answer, title: "Number bond", knownGroup: knownGroup)
-                    keypad(work)
-                    Button("Check my answer") {
-                        let bowlCount = state.bowl.count
-                        let trayCount = whole - bowlCount
-                        let modelMatches = bowlCount == known || (!isGuided && trayCount == known)
-                        let matches = modelMatches
-                            && state.answer == NumberBond.missingPart(whole: whole, known: known)
-                        let feedback: Feedback = matches ? .correct : .retry
-                        work.wrappedValue.feedback = feedback
-                        let announcement = isGuided && matches
-                            ? feedback.message + " " + guidedPrompt(work.wrappedValue)
-                            : feedback.message
-                        AccessibilityNotification.Announcement(announcement).post()
-                    }
-                    .buttonStyle(PreviewButton(prominent: true))
-                    .disabled(state.answer == nil)
-                    if let feedback = state.feedback {
-                        Text(feedback.message).font(.callout).multilineTextAlignment(.center)
+                    if let verification = state.verification {
+                        bond(verification == .verified ? whole : nil, known, whole - known,
+                             title: "Completed split", knownGroup: nil)
+                        if verification == .verified {
+                            Button("Continue to Check") { page = .check }
+                                .buttonStyle(PreviewButton(prominent: true))
+                        } else {
+                            bondNode("Your count", value: state.answer)
+                            keypad(work)
+                            Button("Check my count") {
+                                let result: WholeVerification = state.answer == whole ? .verified : .retry
+                                work.wrappedValue.verification = result
+                                let message = result == .verified
+                                    ? guidedPrompt(work.wrappedValue) : "Count the counters in the tray again."
+                                AccessibilityNotification.Announcement(message).post()
+                            }
+                            .buttonStyle(PreviewButton(prominent: true))
+                            .disabled(state.answer == nil)
+                            if verification == .retry {
+                                Text("Count the counters in the tray again.").font(.callout)
+                            }
+                        }
+                    } else {
+                        // Check accepts either orientation. Assign the group labels only after
+                        // a successful submission so the diagram cannot validate an unsubmitted model.
+                        let knownGroup: CounterGroup? = isGuided ? .bowl
+                            : state.feedback == .correct ? (state.bowl.count == known ? .bowl : .tray) : nil
+                        bond(whole, known, state.answer, title: "Number bond", knownGroup: knownGroup)
+                        keypad(work)
+                        Button("Check my answer") {
+                            let bowlCount = state.bowl.count
+                            let trayCount = whole - bowlCount
+                            let modelMatches = bowlCount == known || (!isGuided && trayCount == known)
+                            let matches = modelMatches
+                                && state.answer == NumberBond.missingPart(whole: whole, known: known)
+                            let feedback: Feedback = matches ? .correct : .retry
+                            work.wrappedValue.feedback = feedback
+                            let announcement = isGuided && matches
+                                ? feedback.message + " " + guidedPrompt(work.wrappedValue)
+                                : feedback.message
+                            AccessibilityNotification.Announcement(announcement).post()
+                        }
+                        .buttonStyle(PreviewButton(prominent: true))
+                        .disabled(state.answer == nil)
+                        if let feedback = state.feedback {
+                            Text(feedback.message).font(.callout).multilineTextAlignment(.center)
+                        }
                     }
                 }
                 .frame(maxWidth: .infinity)
@@ -324,15 +355,33 @@ struct U07Preview: View {
     }
 
     private func move(_ id: Int, work: Binding<Working>, intoBowl: Bool) {
-        let state = work.wrappedValue
-        let recombinesGuidedModel = !intoBowl && state.bowl == [id] && state.feedback == .correct
+        var bowl = work.wrappedValue.bowl
         if intoBowl {
-            work.wrappedValue.bowl.insert(id)
+            bowl.insert(id)
         } else {
-            work.wrappedValue.bowl.remove(id)
+            bowl.remove(id)
         }
-        work.wrappedValue.selection = nil
-        work.wrappedValue.feedback = recombinesGuidedModel ? .recombined : nil
+        updateBowl(bowl, work: work)
+    }
+
+    private func updateBowl(_ bowl: Set<Int>, work: Binding<Working>) {
+        var state = work.wrappedValue
+        state.selection = nil
+        if state.verification != nil && bowl == state.bowl {
+            work.wrappedValue = state
+            return
+        }
+        let recombined = state.isGuided && state.feedback == .correct && bowl.isEmpty
+        if recombined || state.verification != nil {
+            state.answer = nil
+        }
+        state.bowl = bowl
+        state.feedback = nil
+        state.verification = recombined ? .counting : nil
+        work.wrappedValue = state
+        if recombined {
+            AccessibilityNotification.Announcement(guidedPrompt(state)).post()
+        }
     }
 
     private enum CounterGroup {
@@ -353,12 +402,12 @@ struct U07Preview: View {
     }
 
     private func regions(
-        whole: Int, bowl: Set<Int>, showCounts: Bool, work: Binding<Working>?
+        whole: Int, bowl: Set<Int>, showCounts: Bool, hideTrayCount: Bool = false, work: Binding<Working>?
     ) -> some View {
         let counters = Array(1...whole)
         return VStack(spacing: 12) {
             region(.tray, ids: counters.filter { !bowl.contains($0) },
-                   showCount: showCounts, work: work)
+                   showCount: showCounts && !hideTrayCount, work: work)
             region(.bowl, ids: counters.filter { bowl.contains($0) },
                    showCount: showCounts, work: work)
         }
@@ -462,7 +511,7 @@ struct U07Preview: View {
     }
 
     private func bond(
-        _ whole: Int, _ known: Int?, _ missing: Int?, title: String,
+        _ whole: Int?, _ known: Int?, _ missing: Int?, title: String,
         knownGroup: CounterGroup?, showParts: Bool = true
     ) -> some View {
         VStack(spacing: 8) {
@@ -512,12 +561,19 @@ struct U07Preview: View {
         .accessibilityIdentifier(label == "Part 2" ? "missing-part" : label)
     }
 
+    private func clearAnswerFeedback(_ work: Binding<Working>) {
+        work.wrappedValue.feedback = nil
+        if work.wrappedValue.verification == .retry {
+            work.wrappedValue.verification = .counting
+        }
+    }
+
     private func keypad(_ work: Binding<Working>) -> some View {
         LazyVGrid(columns: Array(repeating: GridItem(.flexible()), count: 4)) {
             ForEach([1, 2, 3, 4, 5, 6, 7, 8, 9, 0], id: \.self) { digit in
                 Button {
                     work.wrappedValue.answer = digit
-                    work.wrappedValue.feedback = nil
+                    clearAnswerFeedback(work)
                 } label: {
                     Text(digit.formatted()).font(.title3.bold()).frame(maxWidth: .infinity)
                 }
@@ -525,7 +581,7 @@ struct U07Preview: View {
             }
             Button {
                 work.wrappedValue.answer = nil
-                work.wrappedValue.feedback = nil
+                clearAnswerFeedback(work)
             } label: {
                 Image(systemName: "delete.left").frame(maxWidth: .infinity)
             }
