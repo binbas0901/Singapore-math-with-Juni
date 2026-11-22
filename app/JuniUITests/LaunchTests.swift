@@ -45,16 +45,16 @@ final class U07PreviewTests: XCTestCase {
         next.tap()
         XCTAssertEqual(bowl.label, "Bowl · 2")
         next.tap()
-        XCTAssertEqual(tray.label, "Other part · Tray · 4")
-        XCTAssertTrue(app.staticTexts["6 = 2 + 4"].exists)
+        XCTAssertEqual(tray.label, "Tray · 4")
+        XCTAssertEqual(part("Part 1", in: app).label, "Bowl")
+        XCTAssertEqual(part("Part 1", in: app).value as? String, "2")
+        XCTAssertEqual(missingPart(in: app).label, "Tray")
+        XCTAssertEqual(missingPart(in: app).value as? String, "4")
 
         XCUIDevice.shared.orientation = .portrait
         expectOrientation(.portrait, in: app)
-        XCTAssertTrue(app.staticTexts["6 = 2 + 4"].isHittable)
-        let screenshot = XCTAttachment(screenshot: XCUIScreen.main.screenshot())
-        screenshot.name = "U07 Observe number bond"
-        screenshot.lifetime = .keepAlways
-        add(screenshot)
+        XCTAssertTrue(missingPart(in: app).isHittable)
+        capture("U07-Observe")
 
         next.tap()
         XCTAssertEqual(tray.label, "Tray · 6")
@@ -63,23 +63,36 @@ final class U07PreviewTests: XCTestCase {
 
         app.buttons["Try together"].tap()
         XCTAssertEqual(tray.label, "Tray · 7")
+        let prompt = app.staticTexts["workspace-prompt"]
+        XCTAssertEqual(prompt.label, "Move one counter into the bowl.")
+        XCTAssertFalse(app.buttons["put-in-bowl"].isEnabled)
         app.buttons["counter-1"].tap()
+        XCTAssertFalse(app.buttons["put-in-tray"].isEnabled)
         app.buttons["put-in-bowl"].tap()
+        XCTAssertTrue(prompt.label.hasPrefix("How many counters are left in the tray?"))
+        XCTAssertEqual(tray.label, "Tray")
+        XCTAssertEqual(missingPart(in: app).label, "Tray")
+        XCTAssertEqual(missingPart(in: app).value as? String, "Blank")
+        XCUIDevice.shared.orientation = .landscapeLeft
+        expectOrientation(.landscapeLeft, in: app)
+        capture("U07-Try")
         app.buttons["key-6"].tap()
 
         app.buttons["Observe"].tap()
         app.buttons["Replay"].tap()
         XCTAssertEqual(tray.label, "Tray · 6")
-        XCTAssertFalse(app.staticTexts["6 = 2 + 4"].exists)
+        XCTAssertFalse(missingPart(in: app).exists)
         app.buttons["Try"].tap()
 
-        XCTAssertEqual(bowl.label, "Bowl · 1")
-        XCTAssertEqual(tray.label, "Tray · 6")
+        XCTAssertEqual(app.buttons["counter-1"].label, "Counter 1 in bowl")
+        XCTAssertEqual(tray.label, "Tray")
         XCTAssertEqual(missingPart(in: app).value as? String, "6")
-        app.buttons["Check my model"].tap()
+        app.buttons["Check my answer"].tap()
         XCTAssertTrue(app.staticTexts["Your counters and number bond match."].exists)
+        XCTAssertEqual(prompt.label, "Now put the two groups back together in the tray.")
         app.buttons["Recombine counters"].tap()
         XCTAssertEqual(tray.label, "Tray · 7")
+        XCTAssertTrue(prompt.label.hasPrefix("You made the whole again."))
     }
 
     @MainActor
@@ -91,8 +104,11 @@ final class U07PreviewTests: XCTestCase {
         XCTAssertEqual(app.staticTexts["tray-label"].label, "Tray")
         XCTAssertEqual(app.staticTexts["bowl-label"].label, "Bowl")
         XCTAssertEqual(app.buttons.matching(NSPredicate(format: "identifier BEGINSWITH %@", "counter-")).count, 8)
-        let submit = app.buttons["Check my model"]
+        let submit = app.buttons["Check my answer"]
         XCTAssertFalse(submit.isEnabled)
+        let prompt = app.staticTexts["workspace-prompt"].label
+        XCTAssertEqual(missingPart(in: app).label, "Part 2")
+        capture("U07-Check")
 
         app.buttons["key-5"].tap()
         submit.tap()
@@ -109,6 +125,8 @@ final class U07PreviewTests: XCTestCase {
             .press(forDuration: 0.6, thenDragTo: dropPoint)
         XCTAssertEqual(third.label, "Counter 3 in bowl")
         XCTAssertEqual(app.buttons["counter-4"].label, "Counter 4 in tray")
+        XCTAssertEqual(app.staticTexts["workspace-prompt"].label, prompt)
+        XCTAssertEqual(missingPart(in: app).label, "Part 2")
 
         app.buttons["key-4"].tap()
         submit.tap()
@@ -118,6 +136,47 @@ final class U07PreviewTests: XCTestCase {
         app.buttons["key-5"].tap()
         submit.tap()
         XCTAssertTrue(app.staticTexts["Your counters and number bond match."].exists)
+        XCTAssertEqual(missingPart(in: app).label, "Tray")
+    }
+
+    @MainActor
+    func testCheckAcceptsTrayAsKnownPartAndHomeResetsBothWorkspaces() {
+        let app = launchPreview(orientation: .landscapeLeft)
+        app.buttons["Next step"].tap()
+        app.buttons["Try"].tap()
+        app.buttons["key-6"].tap()
+        app.buttons["Check"].tap()
+        for id in 1...5 {
+            app.buttons["counter-\(id)"].tap()
+            app.buttons["put-in-bowl"].tap()
+        }
+        XCTAssertEqual(missingPart(in: app).label, "Part 2")
+        XCTAssertEqual(missingPart(in: app).value as? String, "Blank")
+        app.buttons["key-5"].tap()
+        app.buttons["Home"].tap()
+        app.buttons["Resume"].tap()
+        XCTAssertEqual(missingPart(in: app).value as? String, "5")
+        XCTAssertEqual(app.buttons["counter-5"].label, "Counter 5 in bowl")
+        app.buttons["Check my answer"].tap()
+        XCTAssertEqual(part("Part 1", in: app).label, "Tray")
+        XCTAssertEqual(missingPart(in: app).label, "Bowl")
+
+        app.buttons["Home"].tap()
+        app.buttons["Start Over"].tap()
+        XCTAssertEqual(app.staticTexts["bowl-label"].label, "Bowl · 0")
+        app.buttons["Try"].tap()
+        XCTAssertEqual(missingPart(in: app).value as? String, "Blank")
+        app.buttons["Check"].tap()
+        XCTAssertEqual(missingPart(in: app).value as? String, "Blank")
+        XCTAssertEqual(app.buttons["counter-5"].label, "Counter 5 in tray")
+    }
+
+    @MainActor
+    private func capture(_ name: String) {
+        let screenshot = XCTAttachment(screenshot: XCUIScreen.main.screenshot())
+        screenshot.name = name
+        screenshot.lifetime = .keepAlways
+        add(screenshot)
     }
 
     @MainActor
@@ -147,6 +206,11 @@ final class U07PreviewTests: XCTestCase {
 
     @MainActor
     private func missingPart(in app: XCUIApplication) -> XCUIElement {
-        app.descendants(matching: .any).matching(identifier: "missing-part").firstMatch
+        part("missing-part", in: app)
+    }
+
+    @MainActor
+    private func part(_ identifier: String, in app: XCUIApplication) -> XCUIElement {
+        app.descendants(matching: .any).matching(identifier: identifier).firstMatch
     }
 }
