@@ -1,6 +1,6 @@
 # Singapore Math with Juni --- Project Status
 
-**Version:** 1.29 \| **Baseline:** 2026-11-17 \| **Maintainer:** Lead agent \| **Current milestone:** M0 / Sprint 0
+**Version:** 1.30 \| **Baseline:** 2026-11-17 \| **Maintainer:** Lead agent \| **Current milestone:** M0 / Sprint 0
 
 ## 1. Executive status
 
@@ -425,3 +425,9 @@ Two targeted **contract defects** require changes: R1, four successes on one lea
 Independent Math/Education QA at `449dfadc862ef8db41dbcdc18419eca5e3a21cca` verified exact MATH-000 source commit `a71cb8861902a0709b31a3fcdbd12099a3cc4776`: **R1 finite assessment stopping and R2 truthful parent reporting CLOSED at specification level**. All 11 synthetic stopping assertions passed; all six written parent-summary acceptance cases cover bounded task/range, familiar-vs-novel complete-success counts and dated retention/review state together in visible/accessible summary. Existing owner-approved spaced-rested familiar retrieval, four-success/at-least-two-successful-learning-date threshold, and prior QA reports remain unchanged. The closeout report was copied **byte-identically** into draft PR #12 in commit `b4ac1ffb338e236dd2ee79cc8b7615d13db8b20e`, without modifying implementation. Lead accepted the *two finding closures*, not whole MATH-000 task; no runtime mastery engine or VoiceOver/device test was performed.
 
 Next gate: consolidate remaining owner beta operational decisions (zero/equal-part facet and substitution comparability, fixed opportunity/replacement and elapsed pause conventions, review progression after mixed result, recovery/maintenance, learner-model provenance and parent placement/summary wording). Then reconcile interfaces against portable DATA-001 data scope at PR #9 and IOS-001 v1.3 before LEAD-002 freeze. Prioritize an actual playable U07 iPad lesson instead of repeating the same specification review. States unchanged: 6 accepted, 3 review, 1 ready, 24 backlog; milestone gate unaccepted. 
+
+## 41. U07 exploratory integration audit — 2026-11-22 (v1.30)
+
+Independent architecture/integration preparatory matrix `4cc44ee599b6ec890c83a0519393bc263130995e` was verified to add only `docs/spikes/u07-contract-reconciliation.md`; preserved in **draft PR #26**. The matrix compares pinned DATA-001 PR #9 (`d42bc0e`), MATH-000 PR #12 (`b4ac1ff`), accepted CUR-003/U07 and IOS-001 v1.3. Agent reports both DATA-001 checker modes passing (10 positive/65 negative). This is a source and fixture review, not Swift runtime/device validation, contract acceptance or LEAD-002 freeze.
+
+**Lead preview boundary:** isolated Observe/Try/Check states, structured counter modelling, manual cue progression, keypad answer, separate learner workspaces and local draft resume can proceed in an unmerged spike. Do not credit an immediate Check 8/3 → 5 and 9/4 → 5 substitute as fresh independent when feedback exposed 5. Separate preview completion from production grading and mastery. **Production boundary:** loader version mapping and validation; immutable learner-built model and ink provenance; exposure, retry and opportunity receipts and cross-task applicability; commit/restore and clock rules; educational comparability/parent reporting and retained review schedule; accessibility/audio/device proof all remain gated. Await running U07 preview and Education draft QA before deciding any prototype integration. State counts unchanged: 6 accepted, 3 review, 1 ready, 24 backlog.
