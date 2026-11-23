@@ -2,6 +2,7 @@
 import AVFoundation
 import Foundation
 
+@MainActor
 enum U07Narration {
     private static let zeroStartClips: Set<String> = [
         "u07-observe-first", "u07-observe-second", "u07-observe-bond", "u07-observe-recombine"
@@ -11,47 +12,152 @@ enum U07Narration {
         let offsets: [TimeInterval]
     }
 
-    final class ObservePlayback: NSObject, AVAudioPlayerDelegate {
+    // One engine and one output node remain alive between short sentences.
+    // Stop unschedules a clip but does not stop or tear down the output engine.
+    final class AudioOutput {
+        static let shared = AudioOutput()
+
+        let engine = AVAudioEngine()
+        let node = AVAudioPlayerNode()
+        var activeID: UUID?
+        private var format: AVAudioFormat?
+
+        private init() {
+            engine.attach(node)
+        }
+
+        func ensureRunning(format requested: AVAudioFormat) -> Bool {
+            do {
+                let session = AVAudioSession.sharedInstance()
+                try session.setCategory(.playback, mode: .default)
+                try session.setActive(true)
+
+                if let format {
+                    // Every U07 narration export uses the same 44.1kHz mono format.
+                    guard format.sampleRate == requested.sampleRate,
+                          format.channelCount == requested.channelCount else { return false }
+                } else {
+                    engine.connect(node, to: engine.mainMixerNode, format: requested)
+                    format = requested
+                }
+                if !engine.isRunning { try engine.start() }
+                return true
+            } catch {
+                return false
+            }
+        }
+    }
+
+    final class Player {
+        private let file: AVAudioFile
+        private let id = UUID()
+        private let output = AudioOutput.shared
+        private var position: TimeInterval = 0
+        private var segmentStart: TimeInterval = 0
+        private var paused = false
+
+        let duration: TimeInterval
+
+        init?(url: URL) {
+            guard let file = try? AVAudioFile(forReading: url),
+                  file.length > 0,
+                  file.processingFormat.sampleRate > 0 else { return nil }
+            self.file = file
+            duration = Double(file.length) / file.processingFormat.sampleRate
+        }
+
+        var currentTime: TimeInterval {
+            get {
+                guard output.activeID == id, !paused, output.node.isPlaying,
+                      let renderTime = output.node.lastRenderTime,
+                      let playbackTime = output.node.playerTime(forNodeTime: renderTime),
+                      playbackTime.sampleRate > 0 else { return position }
+                return min(duration, max(position, segmentStart +
+                    Double(playbackTime.sampleTime) / playbackTime.sampleRate))
+            }
+            set {
+                if output.activeID == id {
+                    output.node.stop()
+                    output.activeID = nil
+                }
+                position = min(duration, max(0, newValue))
+                paused = false
+            }
+        }
+
+        var isPlaying: Bool {
+            output.activeID == id && !paused &&
+                output.node.isPlaying && currentTime < duration
+        }
+
+        @discardableResult
+        func play() -> Bool {
+            if output.activeID == id && paused {
+                output.node.play()
+                paused = false
+                return true
+            }
+            guard output.ensureRunning(format: file.processingFormat) else { return false }
+            output.node.stop()
+            output.activeID = id
+            let rate = file.processingFormat.sampleRate
+            let first = min(file.length, AVAudioFramePosition(position * rate))
+            let remaining = file.length - first
+            guard remaining > 0,
+                  remaining <= Int64(UInt32.max) else {
+                output.activeID = nil
+                return false
+            }
+            segmentStart = position
+            output.node.scheduleSegment(file, startingFrame: first,
+                                        frameCount: AVAudioFrameCount(remaining),
+                                        at: nil, completionHandler: nil)
+            output.node.play()
+            return true
+        }
+
+        func pause() {
+            guard output.activeID == id, !paused else { return }
+            position = currentTime
+            output.node.pause()
+            paused = true
+        }
+
+        func stop() {
+            if output.activeID == id {
+                output.node.stop()
+                output.activeID = nil
+            }
+            paused = false
+            position = 0
+            segmentStart = 0
+        }
+    }
+
+    final class ObservePlayback {
         enum Tick: Equatable {
             case position(TimeInterval)
             case waitingForCompletion
             case stopped
         }
 
-        private let completionLock = NSLock()
-        private var finishedSuccessfully: Bool?
+        // A brief start/route interruption should not prematurely end a clip.
         private var stoppedAt: ContinuousClock.Instant?
 
-        init(player: AVAudioPlayer) {
-            super.init()
-            player.delegate = self
-        }
-
-        func audioPlayerDidFinishPlaying(_ player: AVAudioPlayer, successfully flag: Bool) {
-            completionLock.withLock { finishedSuccessfully = flag }
-        }
-
-        func audioPlayerDecodeErrorDidOccur(_ player: AVAudioPlayer, error: (any Error)?) {
-            completionLock.withLock { finishedSuccessfully = false }
-        }
-
-        func tick(player: AVAudioPlayer, position: TimeInterval, elapsed: TimeInterval,
+        func tick(player: Player, position: TimeInterval, elapsed: TimeInterval,
                   now: ContinuousClock.Instant) -> Tick {
-            // A resumed quiet hold already has a position at or beyond the decoded end.
             if position >= player.duration { return .position(position + elapsed) }
-            switch completionLock.withLock({ finishedSuccessfully }) {
-            case true?: return .position(player.duration)
-            case false?: return .stopped
-            case nil: break
+            let heardPosition = player.currentTime
+            if heardPosition >= player.duration - 0.015 {
+                return .position(player.duration)
             }
             if player.isPlaying {
                 stoppedAt = nil
-                return .position(max(position, min(player.currentTime, player.duration.nextDown)))
+                return .position(max(position, heardPosition))
             }
-            // The finish callback can arrive after isPlaying changes. Freeze while waiting.
-            let firstStoppedTick = stoppedAt ?? now
-            stoppedAt = firstStoppedTick
-            return firstStoppedTick.duration(to: now) >= .milliseconds(100)
+            let first = stoppedAt ?? now
+            stoppedAt = first
+            return first.duration(to: now) >= .milliseconds(350)
                 ? .stopped : .waitingForCompletion
         }
     }
@@ -88,15 +194,15 @@ enum U07Narration {
         }
     }
 
-    static func player(for id: String, in bundle: Bundle = .main) -> AVAudioPlayer? {
+    static func player(for id: String, in bundle: Bundle = .main) -> Player? {
         guard let url = bundle.url(forResource: id, withExtension: "m4a", subdirectory: "U07Narration"),
-              let player = try? AVAudioPlayer(contentsOf: url),
+              let player = Player(url: url),
               player.duration.isFinite, player.duration > 0 else { return nil }
         return player
     }
 
     static func observe(_ id: String, cues: [Int], fallbackDuration: TimeInterval,
-                        quiet: TimeInterval, requiresImmediateCue: Bool = false, in bundle: Bundle = .main) -> (Timeline, AVAudioPlayer?) {
+                        quiet: TimeInterval, requiresImmediateCue: Bool = false, in bundle: Bundle = .main) -> (Timeline, Player?) {
         let player = player(for: id, in: bundle)
         var offsets: [TimeInterval] = cues.count == 1 ? [0] : []
         if cues.count > 1,
