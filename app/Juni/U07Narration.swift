@@ -52,7 +52,7 @@ enum U07Narration {
     @MainActor
     final class Player {
         private let file: AVAudioFile
-        private let id = UUID()
+        let id = UUID()
         private let output = AudioOutput.shared
         private var position: TimeInterval = 0
         private var segmentStart: TimeInterval = 0
