@@ -2,98 +2,103 @@
 import AVFoundation
 import Foundation
 
-/// Persistent engine started once and primed with silence so every later clip
-/// begins at full level. Used for both prompts and Observe narration.
-final class PersistentNarrationEngine: NSObject, @unchecked Sendable {
-    static let shared = PersistentNarrationEngine()
-
+/// Decodes an M4A, prepends silence in memory so hardware ramp-up is absorbed,
+/// then plays the combined buffer. Original files are never modified.
+final class PrependedSilencePlayer: NSObject, @unchecked Sendable {
     private let engine = AVAudioEngine()
     private let playerNode = AVAudioPlayerNode()
-    private var primed = false
-    private let silentDuration: TimeInterval = 0.40
+    private var combinedBuffer: AVAudioPCMBuffer?
+    private let silenceDuration: TimeInterval = 0.18
+    private var fileDuration: TimeInterval = 0
+    private var startedAt: ContinuousClock.Instant?
+    private var pausedAt: TimeInterval = 0
+    private var isPaused = false
 
-    private override init() {
+    var duration: TimeInterval { fileDuration }
+    var isPlaying: Bool { playerNode.isPlaying }
+
+    /// Time inside the original recording (silence prefix excluded).
+    var currentTime: TimeInterval {
+        guard let startedAt, !isPaused else { return pausedAt }
+        let elapsed = startedAt.duration(to: ContinuousClock().now).components
+        let total = Double(elapsed.seconds) + Double(elapsed.attoseconds) / 1e18
+        return max(0, total - silenceDuration)
+    }
+
+    override init() {
         super.init()
         engine.attach(playerNode)
         engine.connect(playerNode, to: engine.mainMixerNode, format: nil)
     }
 
-    func activateAndPrime() {
-        activateSession()
-        guard !primed else { return }
+    func load(url: URL) -> Bool {
         do {
-            if !engine.isRunning { try engine.start() }
-            if let silent = makeSilentBuffer() {
-                playerNode.scheduleBuffer(silent, at: nil, options: [], completionHandler: nil)
-                playerNode.play()
-                DispatchQueue.main.asyncAfter(deadline: .now() + silentDuration + 0.1) { [weak self] in
-                    self?.playerNode.stop()
-                    self?.primed = true
-                }
-            } else {
-                primed = true
-            }
-        } catch {
-            print("PersistentNarrationEngine prime failed: \(error)")
-        }
-    }
-
-    private func activateSession() {
-        let session = AVAudioSession.sharedInstance()
-        try? session.setCategory(.playback, mode: .spokenAudio, options: [.mixWithOthers])
-        try? session.setActive(true)
-    }
-
-    private func makeSilentBuffer() -> AVAudioPCMBuffer? {
-        let format = engine.mainMixerNode.outputFormat(forBus: 0)
-        guard format.sampleRate > 0 else { return nil }
-        let frames = AVAudioFrameCount(silentDuration * format.sampleRate)
-        let buffer = AVAudioPCMBuffer(pcmFormat: format, frameCapacity: frames)
-        buffer?.frameLength = frames
-        return buffer
-    }
-
-    /// Play an M4A on the already-primed engine. Returns true if scheduled.
-    @discardableResult
-    func play(url: URL, from position: TimeInterval = 0) -> Bool {
-        do {
-            if !engine.isRunning { try engine.start() }
             let file = try AVAudioFile(forReading: url)
-            playerNode.stop()
-            // Schedule a tiny extra silence immediately before the real audio
-            // so any residual ramp-up is absorbed.
-            if let tiny = makeTinySilent() {
-                playerNode.scheduleBuffer(tiny, at: nil, options: [], completionHandler: nil)
+            fileDuration = Double(file.length) / file.processingFormat.sampleRate
+            guard fileDuration > 0 else { return false }
+
+            guard let format = AVAudioFormat(commonFormat: .pcmFormatFloat32,
+                                              sampleRate: file.processingFormat.sampleRate,
+                                              channels: file.processingFormat.channelCount,
+                                              interleaved: false),
+                  let audioBuffer = AVAudioPCMBuffer(pcmFormat: format,
+                                                     frameCapacity: AVAudioFrameCount(file.length)) else {
+                return false
             }
-            let startFrame = AVAudioFramePosition(position * file.processingFormat.sampleRate)
-            let frames = AVAudioFrameCount(max(0, file.length - startFrame))
-            if frames > 0 {
-                playerNode.scheduleSegment(file,
-                                            startingFrame: startFrame,
-                                            frameCount: frames,
-                                            at: nil,
-                                            completionHandler: nil)
+            try file.read(into: audioBuffer)
+
+            let silenceFrames = AVAudioFrameCount(silenceDuration * format.sampleRate)
+            let totalFrames = silenceFrames + audioBuffer.frameLength
+            guard let combined = AVAudioPCMBuffer(pcmFormat: format, frameCapacity: totalFrames) else {
+                return false
             }
-            playerNode.play()
+            combined.frameLength = totalFrames
+
+            if let src = audioBuffer.floatChannelData, let dst = combined.floatChannelData {
+                for ch in 0..<Int(format.channelCount) {
+                    memcpy(dst[ch] + Int(silenceFrames),
+                           src[ch],
+                           Int(audioBuffer.frameLength) * MemoryLayout<Float>.size)
+                }
+            }
+            combinedBuffer = combined
             return true
         } catch {
-            print("PersistentNarrationEngine play failed: \(error)")
+            print("PrependedSilencePlayer load failed: \(error)")
             return false
         }
     }
 
-    private func makeTinySilent() -> AVAudioPCMBuffer? {
-        let format = engine.mainMixerNode.outputFormat(forBus: 0)
-        guard format.sampleRate > 0 else { return nil }
-        let frames = AVAudioFrameCount(0.06 * format.sampleRate)
-        let buffer = AVAudioPCMBuffer(pcmFormat: format, frameCapacity: frames)
-        buffer?.frameLength = frames
-        return buffer
+    func play(from position: TimeInterval = 0) {
+        guard let buffer = combinedBuffer else { return }
+        playerNode.stop()
+        pausedAt = position
+        isPaused = false
+
+        playerNode.scheduleBuffer(buffer, at: nil, options: [], completionHandler: nil)
+        if !engine.isRunning { try? engine.start() }
+        startedAt = ContinuousClock().now
+        playerNode.play()
     }
 
-    func stop() { playerNode.stop() }
-    func pause() { playerNode.pause() }
-    func resume() { playerNode.play() }
+    func pause() {
+        pausedAt = currentTime
+        isPaused = true
+        playerNode.pause()
+    }
+
+    func stop() {
+        playerNode.stop()
+        isPaused = false
+        pausedAt = 0
+        startedAt = nil
+    }
+
+    func resume() {
+        isPaused = false
+        startedAt = ContinuousClock().now
+        playerNode.play()
+    }
 }
 
 enum U07Narration {
@@ -106,7 +111,9 @@ enum U07Narration {
     }
 
     static func activateSession() {
-        PersistentNarrationEngine.shared.activateAndPrime()
+        let session = AVAudioSession.sharedInstance()
+        try? session.setCategory(.playback, mode: .spokenAudio, options: [.mixWithOthers])
+        try? session.setActive(true)
     }
 
     final class ObservePlayback: NSObject, AVAudioPlayerDelegate {
@@ -193,11 +200,12 @@ enum U07Narration {
         return player
     }
 
-    static func playPrimed(id: String, in bundle: Bundle = .main, from position: TimeInterval = 0) -> Bool {
+    static func prependedPlayer(for id: String, in bundle: Bundle = .main) -> PrependedSilencePlayer? {
         guard let url = bundle.url(forResource: id, withExtension: "m4a", subdirectory: "U07Narration") else {
-            return false
+            return nil
         }
-        return PersistentNarrationEngine.shared.play(url: url, from: position)
+        let p = PrependedSilencePlayer()
+        return p.load(url: url) ? p : nil
     }
 
     static func observe(_ id: String, cues: [Int], fallbackDuration: TimeInterval,
