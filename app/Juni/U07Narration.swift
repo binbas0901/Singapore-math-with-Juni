@@ -2,15 +2,15 @@
 import AVFoundation
 import Foundation
 
-/// Persistent engine that is started and primed once so every later clip
-/// begins at full level. Avoids the clipped first word in the simulator.
+/// Persistent engine started once and primed with silence so every later clip
+/// begins at full level. Used for both prompts and Observe narration.
 final class PersistentNarrationEngine: NSObject, @unchecked Sendable {
     static let shared = PersistentNarrationEngine()
 
     private let engine = AVAudioEngine()
     private let playerNode = AVAudioPlayerNode()
     private var primed = false
-    private let silentDuration: TimeInterval = 0.25
+    private let silentDuration: TimeInterval = 0.40
 
     private override init() {
         super.init()
@@ -18,8 +18,6 @@ final class PersistentNarrationEngine: NSObject, @unchecked Sendable {
         engine.connect(playerNode, to: engine.mainMixerNode, format: nil)
     }
 
-    /// Call once when the lesson appears. Starts the engine and plays silence
-    /// so the hardware is already at full gain before any real clip.
     func activateAndPrime() {
         activateSession()
         guard !primed else { return }
@@ -28,8 +26,7 @@ final class PersistentNarrationEngine: NSObject, @unchecked Sendable {
             if let silent = makeSilentBuffer() {
                 playerNode.scheduleBuffer(silent, at: nil, options: [], completionHandler: nil)
                 playerNode.play()
-                // Let the silence finish so the ramp-up is complete.
-                DispatchQueue.main.asyncAfter(deadline: .now() + silentDuration + 0.05) { [weak self] in
+                DispatchQueue.main.asyncAfter(deadline: .now() + silentDuration + 0.1) { [weak self] in
                     self?.playerNode.stop()
                     self?.primed = true
                 }
@@ -56,12 +53,18 @@ final class PersistentNarrationEngine: NSObject, @unchecked Sendable {
         return buffer
     }
 
-    /// Play an M4A. The engine is already running and primed.
+    /// Play an M4A on the already-primed engine. Returns true if scheduled.
+    @discardableResult
     func play(url: URL, from position: TimeInterval = 0) -> Bool {
-        guard primed || engine.isRunning else { return false }
         do {
+            if !engine.isRunning { try engine.start() }
             let file = try AVAudioFile(forReading: url)
             playerNode.stop()
+            // Schedule a tiny extra silence immediately before the real audio
+            // so any residual ramp-up is absorbed.
+            if let tiny = makeTinySilent() {
+                playerNode.scheduleBuffer(tiny, at: nil, options: [], completionHandler: nil)
+            }
             let startFrame = AVAudioFramePosition(position * file.processingFormat.sampleRate)
             let frames = AVAudioFrameCount(max(0, file.length - startFrame))
             if frames > 0 {
@@ -71,13 +74,21 @@ final class PersistentNarrationEngine: NSObject, @unchecked Sendable {
                                             at: nil,
                                             completionHandler: nil)
             }
-            if !engine.isRunning { try engine.start() }
             playerNode.play()
             return true
         } catch {
             print("PersistentNarrationEngine play failed: \(error)")
             return false
         }
+    }
+
+    private func makeTinySilent() -> AVAudioPCMBuffer? {
+        let format = engine.mainMixerNode.outputFormat(forBus: 0)
+        guard format.sampleRate > 0 else { return nil }
+        let frames = AVAudioFrameCount(0.06 * format.sampleRate)
+        let buffer = AVAudioPCMBuffer(pcmFormat: format, frameCapacity: frames)
+        buffer?.frameLength = frames
+        return buffer
     }
 
     func stop() { playerNode.stop() }
@@ -182,7 +193,6 @@ enum U07Narration {
         return player
     }
 
-    /// Play using the already-primed persistent engine.
     static func playPrimed(id: String, in bundle: Bundle = .main, from position: TimeInterval = 0) -> Bool {
         guard let url = bundle.url(forResource: id, withExtension: "m4a", subdirectory: "U07Narration") else {
             return false
