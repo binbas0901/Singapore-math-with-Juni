@@ -89,7 +89,8 @@ enum U07Narration {
     }
 
     static func player(for id: String, in bundle: Bundle = .main) -> AVAudioPlayer? {
-        guard let url = bundle.url(forResource: id, withExtension: "m4a", subdirectory: "U07Narration"),
+        guard let url = bundle.url(forResource: id, withExtension: "wav", subdirectory: "U07Narration")
+                  ?? bundle.url(forResource: id, withExtension: "m4a", subdirectory: "U07Narration"),
               let player = try? AVAudioPlayer(contentsOf: url),
               player.duration.isFinite, player.duration > 0 else { return nil }
         return player
