@@ -14,6 +14,7 @@ enum U07Narration {
 
     // One engine and one output node remain alive between short sentences.
     // Stop unschedules a clip but does not stop or tear down the output engine.
+    @MainActor
     final class AudioOutput {
         static let shared = AudioOutput()
 
