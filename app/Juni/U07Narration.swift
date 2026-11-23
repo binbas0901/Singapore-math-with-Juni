@@ -12,7 +12,10 @@ final class PrimedNarrationPlayer: NSObject {
     private let silentDuration: TimeInterval = 0.10
     private var playbackStartPosition: TimeInterval = 0
 
-    var duration: TimeInterval { file?.duration ?? 0 }
+    var duration: TimeInterval {
+        guard let file else { return 0 }
+        return Double(file.length) / file.processingFormat.sampleRate
+    }
     var isPlaying: Bool { playerNode.isPlaying }
 
     /// Time inside the real recording (silent prime is excluded).
