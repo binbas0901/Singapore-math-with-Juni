@@ -4,7 +4,7 @@ import Foundation
 
 /// Persistent engine that is started and primed once so every later clip
 /// begins at full level. Avoids the clipped first word in the simulator.
-final class PersistentNarrationEngine: NSObject {
+final class PersistentNarrationEngine: NSObject, @unchecked Sendable {
     static let shared = PersistentNarrationEngine()
 
     private let engine = AVAudioEngine()
