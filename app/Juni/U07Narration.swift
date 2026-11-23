@@ -2,103 +2,6 @@
 import AVFoundation
 import Foundation
 
-/// Decodes an M4A, prepends silence in memory so hardware ramp-up is absorbed,
-/// then plays the combined buffer. Original files are never modified.
-final class PrependedSilencePlayer: NSObject, @unchecked Sendable {
-    private let engine = AVAudioEngine()
-    private let playerNode = AVAudioPlayerNode()
-    private var combinedBuffer: AVAudioPCMBuffer?
-    private let silenceDuration: TimeInterval = 0.18
-    private var fileDuration: TimeInterval = 0
-    private var startedAt: ContinuousClock.Instant?
-    private var pausedAt: TimeInterval = 0
-    private var isPaused = false
-
-    var duration: TimeInterval { fileDuration }
-    var isPlaying: Bool { playerNode.isPlaying }
-
-    var currentTime: TimeInterval {
-        guard let startedAt, !isPaused else { return pausedAt }
-        let elapsed = startedAt.duration(to: ContinuousClock().now).components
-        let total = Double(elapsed.seconds) + Double(elapsed.attoseconds) / 1e18
-        return max(0, total - silenceDuration)
-    }
-
-    override init() {
-        super.init()
-        engine.attach(playerNode)
-        engine.connect(playerNode, to: engine.mainMixerNode, format: nil)
-    }
-
-    func load(url: URL) -> Bool {
-        do {
-            let file = try AVAudioFile(forReading: url)
-            fileDuration = Double(file.length) / file.processingFormat.sampleRate
-            guard fileDuration > 0 else { return false }
-
-            guard let format = AVAudioFormat(commonFormat: .pcmFormatFloat32,
-                                              sampleRate: file.processingFormat.sampleRate,
-                                              channels: file.processingFormat.channelCount,
-                                              interleaved: false),
-                  let audioBuffer = AVAudioPCMBuffer(pcmFormat: format,
-                                                     frameCapacity: AVAudioFrameCount(file.length)) else {
-                return false
-            }
-            try file.read(into: audioBuffer)
-
-            let silenceFrames = AVAudioFrameCount(silenceDuration * format.sampleRate)
-            let totalFrames = silenceFrames + audioBuffer.frameLength
-            guard let combined = AVAudioPCMBuffer(pcmFormat: format, frameCapacity: totalFrames) else {
-                return false
-            }
-            combined.frameLength = totalFrames
-
-            if let src = audioBuffer.floatChannelData, let dst = combined.floatChannelData {
-                for ch in 0..<Int(format.channelCount) {
-                    memcpy(dst[ch] + Int(silenceFrames),
-                           src[ch],
-                           Int(audioBuffer.frameLength) * MemoryLayout<Float>.size)
-                }
-            }
-            combinedBuffer = combined
-            return true
-        } catch {
-            print("PrependedSilencePlayer load failed: \(error)")
-            return false
-        }
-    }
-
-    func play(from position: TimeInterval = 0) {
-        guard let buffer = combinedBuffer else { return }
-        playerNode.stop()
-        pausedAt = position
-        isPaused = false
-        playerNode.scheduleBuffer(buffer, at: nil, options: [], completionHandler: nil)
-        if !engine.isRunning { try? engine.start() }
-        startedAt = ContinuousClock().now
-        playerNode.play()
-    }
-
-    func pause() {
-        pausedAt = currentTime
-        isPaused = true
-        playerNode.pause()
-    }
-
-    func stop() {
-        playerNode.stop()
-        isPaused = false
-        pausedAt = 0
-        startedAt = nil
-    }
-
-    func resume() {
-        isPaused = false
-        startedAt = ContinuousClock().now
-        playerNode.play()
-    }
-}
-
 enum U07Narration {
     private static let zeroStartClips: Set<String> = [
         "u07-observe-first", "u07-observe-second", "u07-observe-bond", "u07-observe-recombine"
@@ -108,10 +11,38 @@ enum U07Narration {
         let offsets: [TimeInterval]
     }
 
+    private static let warmEngine = AVAudioEngine()
+    private static let warmNode = AVAudioPlayerNode()
+    private static var hasWarmed = false
+
     static func activateSession() {
         let session = AVAudioSession.sharedInstance()
         try? session.setCategory(.playback, mode: .spokenAudio, options: [.mixWithOthers])
         try? session.setActive(true)
+        warmUpIfNeeded()
+    }
+
+    /// Play a short silent buffer once so the hardware ramp-up is finished
+    /// before the first real sentence. Leaves the engine running.
+    private static func warmUpIfNeeded() {
+        guard !hasWarmed else { return }
+        hasWarmed = true
+        if warmEngine.attachedNodes.contains(warmNode) == false {
+            warmEngine.attach(warmNode)
+            warmEngine.connect(warmNode, to: warmEngine.mainMixerNode, format: nil)
+        }
+        do {
+            if !warmEngine.isRunning { try warmEngine.start() }
+            let format = warmEngine.mainMixerNode.outputFormat(forBus: 0)
+            let frames = AVAudioFrameCount(0.25 * format.sampleRate)
+            if let silent = AVAudioPCMBuffer(pcmFormat: format, frameCapacity: frames) {
+                silent.frameLength = frames
+                warmNode.scheduleBuffer(silent, at: nil, options: [], completionHandler: nil)
+                warmNode.play()
+            }
+        } catch {
+            print("warm-up failed: \(error)")
+        }
     }
 
     final class ObservePlayback: NSObject, AVAudioPlayerDelegate {
@@ -203,12 +134,6 @@ enum U07Narration {
         player.volume = 1.0
         player.prepareToPlay()
         return player
-    }
-
-    static func prependedPlayer(for id: String, in bundle: Bundle = .main) -> PrependedSilencePlayer? {
-        guard let url = url(for: id, extension: "m4a", in: bundle) else { return nil }
-        let p = PrependedSilencePlayer()
-        return p.load(url: url) ? p : nil
     }
 
     static func observe(_ id: String, cues: [Int], fallbackDuration: TimeInterval,
