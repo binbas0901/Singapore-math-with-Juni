@@ -306,11 +306,9 @@ struct NumberBondLessonView: View {
             if demo.manual {
                 demoPosition = timeline.offset(for: projection.manualCue)
             }
-            // Use the continuous player so the hardware stays warm between sentences.
-            if let clipID = step.caption.clipID,
-               U07Narration.playContinuous(id: clipID, from: demoPosition) {
-                narration = nil   // timing comes from the continuous player below
-            } else if let player, demoPosition < player.duration {
+            narration = player
+            let playback = player.map { U07Narration.ObservePlayback(player: $0) }
+            if let player, demoPosition < player.duration {
                 player.currentTime = demoPosition
                 if !player.play() {
                     let cue = timeline.cue(at: demoPosition)
@@ -318,8 +316,6 @@ struct NumberBondLessonView: View {
                     demoPosition = timeline.offset(for: cue)
                     failedAudioStep = index
                     narration = nil
-                } else {
-                    narration = player
                 }
             }
             showDemo(timedFrame(timeline), animate: false)
@@ -336,8 +332,7 @@ struct NumberBondLessonView: View {
                 let delta = previousTick.duration(to: now).components
                 let elapsed = Double(delta.seconds) + Double(delta.attoseconds) / 1e18
                 previousTick = now
-                if let player = narration {
-                    let playback = U07Narration.ObservePlayback(player: player)
+                if let player = narration, let playback {
                     switch playback.tick(player: player, position: demoPosition, elapsed: elapsed, now: now) {
                     case .position(let position):
                         demoPosition = position
@@ -348,13 +343,7 @@ struct NumberBondLessonView: View {
                         return
                     }
                 } else {
-                    // Continuous player path
-                    let t = U07Narration.continuousCurrentTime()
-                    if t > 0 || demoPosition == 0 {
-                        demoPosition = t
-                    } else {
-                        demoPosition += elapsed
-                    }
+                    demoPosition += elapsed
                 }
                 let frame = timedFrame(timeline)
                 if frame != demo { showDemo(frame) }
@@ -538,9 +527,7 @@ struct NumberBondLessonView: View {
         guard scenePhase == .active else { return }
         let caption = lesson.prompt(prompt)
         if let clipID = caption.clipID {
-            if U07Narration.playContinuous(id: clipID) {
-                // continuous player
-            } else if let player = U07Narration.player(for: clipID), player.play() {
+            if let player = U07Narration.player(for: clipID), player.play() {
                 narration = player
             } else {
                 AccessibilityNotification.Announcement(caption.text).post()
