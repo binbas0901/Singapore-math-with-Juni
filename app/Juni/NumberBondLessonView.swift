@@ -546,7 +546,7 @@ struct NumberBondLessonView: View {
             Button("Replay prompt") { playPrompt(prompt) }
         }
         .buttonStyle(PreviewButton())
-        .task(id: player) {
+        .task(id: player?.id) {
             guard let player else { return }
             while player.isPlaying || promptPaused {
                 do { try await Task.sleep(for: .milliseconds(100)) } catch { return }
