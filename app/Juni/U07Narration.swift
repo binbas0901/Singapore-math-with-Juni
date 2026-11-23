@@ -88,10 +88,29 @@ enum U07Narration {
         }
     }
 
+    // Keep the output session active across adjacent short clips. Repeatedly
+    // starting a cold audio session can mute the onset of each spoken sentence.
+    private static var audioSessionReady = false
+
+    private static func prepareAudioSession() -> Bool {
+        if audioSessionReady { return true }
+        do {
+            let session = AVAudioSession.sharedInstance()
+            try session.setCategory(.playback, mode: .default)
+            try session.setActive(true)
+            audioSessionReady = true
+            return true
+        } catch {
+            return false
+        }
+    }
+
     static func player(for id: String, in bundle: Bundle = .main) -> AVAudioPlayer? {
-        guard let url = bundle.url(forResource: id, withExtension: "m4a", subdirectory: "U07Narration"),
+        guard prepareAudioSession(),
+              let url = bundle.url(forResource: id, withExtension: "m4a", subdirectory: "U07Narration"),
               let player = try? AVAudioPlayer(contentsOf: url),
-              player.duration.isFinite, player.duration > 0 else { return nil }
+              player.duration.isFinite, player.duration > 0,
+              player.prepareToPlay() else { return nil }
         return player
     }
 
