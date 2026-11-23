@@ -258,6 +258,11 @@ final class U07PreviewTests: XCTestCase {
     private func assertObserveCounters(in app: XCUIApplication, bowl: Int, stage: Int) {
         let counters = app.descendants(matching: .any)
             .matching(NSPredicate(format: "identifier BEGINSWITH %@", "observe-counter-"))
+        if counters.count != 6 {
+            // SwiftUI can expose outgoing and incoming counters during the transfer animation.
+            let settled = XCTNSPredicateExpectation(predicate: NSPredicate(format: "count == 6"), object: counters)
+            XCTAssertEqual(XCTWaiter.wait(for: [settled], timeout: 2), .completed, "Stage \(stage)")
+        }
         XCTAssertEqual(counters.count, 6, "Stage \(stage)")
         let bowlCounters = counters.allElementsBoundByIndex.filter { $0.label == "Counter in bowl" }
         XCTAssertEqual(bowlCounters.count, bowl, "Stage \(stage)")
