@@ -107,10 +107,28 @@ enum U07Narration {
         audioSessionReady
     }
 
-    // Give Core Audio time to start the output route before the first phoneme.
-    // Scheduling playback preserves the beginning of short narrated clips.
-    static func start(_ player: AVAudioPlayer) -> Bool {
-        player.play(atTime: player.deviceCurrentTime + 0.25)
+    // Prime the *same* audio player before making speech audible. Unlike
+    // play(atTime:), this warms the output route while the file is already
+    // playing, then seeks to the requested position without stopping it.
+    // This is intentionally preview-only until verified on a physical iPad.
+    @MainActor
+    static func start(_ player: AVAudioPlayer, at position: TimeInterval = 0) async -> Bool {
+        player.currentTime = 0
+        player.volume = 0
+        guard player.play() else { return false }
+        do {
+            try await Task.sleep(for: .milliseconds(900))
+        } catch {
+            player.stop()
+            return false
+        }
+        guard !Task.isCancelled else {
+            player.stop()
+            return false
+        }
+        player.currentTime = min(max(0, position), player.duration.nextDown)
+        player.volume = 1
+        return player.isPlaying || player.play()
     }
 
     static func player(for id: String, in bundle: Bundle = .main) -> AVAudioPlayer? {
