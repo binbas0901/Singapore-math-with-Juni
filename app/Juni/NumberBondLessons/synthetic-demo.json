@@ -1,0 +1,311 @@
+{
+  "schemaVersion": 1,
+  "id": "synthetic-demo",
+  "version": "1.0.0",
+  "title": "Split five counters",
+  "synthetic": true,
+  "observe": {
+    "whole": 5,
+    "knownPart": 1,
+    "expectedAnswer": 4,
+    "modelRequirement": "knownPartInBowl"
+  },
+  "guided": {
+    "whole": 6,
+    "knownPart": 2,
+    "expectedAnswer": 4,
+    "modelRequirement": "knownPartInBowl"
+  },
+  "check": {
+    "whole": 9,
+    "knownPart": 2,
+    "expectedAnswer": 7,
+    "modelRequirement": "wholeAndBothParts"
+  },
+  "steps": [
+    {
+      "caption": {
+        "text": "Start with all five counters in the tray."
+      },
+      "cues": [
+        {
+          "at": 0
+        }
+      ],
+      "quiet": 0.5,
+      "showWhole": false,
+      "showParts": false,
+      "showTrayCount": true,
+      "otherGroup": false,
+      "reaction": "smiling",
+      "highlight": [],
+      "requiresImmediateAudioCue": false
+    },
+    {
+      "caption": {
+        "text": "One, two, three, four, five."
+      },
+      "cues": [
+        {
+          "at": 5,
+          "count": 1
+        },
+        {
+          "at": 6,
+          "count": 2
+        },
+        {
+          "at": 7,
+          "count": 3
+        },
+        {
+          "at": 8,
+          "count": 4
+        },
+        {
+          "at": 9,
+          "count": 5
+        }
+      ],
+      "quiet": 0.5,
+      "showWhole": false,
+      "showParts": false,
+      "showTrayCount": true,
+      "otherGroup": false,
+      "reaction": "focused",
+      "highlight": [],
+      "requiresImmediateAudioCue": false
+    },
+    {
+      "caption": {
+        "text": "Five is our whole. We can split it into two groups."
+      },
+      "cues": [
+        {
+          "at": 12
+        }
+      ],
+      "quiet": 1,
+      "showWhole": true,
+      "showParts": false,
+      "showTrayCount": true,
+      "otherGroup": false,
+      "reaction": "smiling",
+      "highlight": [
+        "tray"
+      ],
+      "requiresImmediateAudioCue": false
+    },
+    {
+      "caption": {
+        "text": "Move one counter from the tray into the bowl."
+      },
+      "cues": [
+        {
+          "at": 19
+        },
+        {
+          "at": 20,
+          "moveToBowl": 1
+        }
+      ],
+      "quiet": 0.5,
+      "showWhole": true,
+      "showParts": false,
+      "showTrayCount": false,
+      "otherGroup": false,
+      "reaction": "focused",
+      "highlight": [],
+      "requiresImmediateAudioCue": true
+    },
+    {
+      "caption": {
+        "text": "How many counters stayed in the tray?"
+      },
+      "cues": [
+        {
+          "at": 26
+        }
+      ],
+      "quiet": 2,
+      "showWhole": true,
+      "showParts": false,
+      "showTrayCount": false,
+      "otherGroup": true,
+      "reaction": "thinking",
+      "highlight": [
+        "tray"
+      ],
+      "requiresImmediateAudioCue": false
+    },
+    {
+      "caption": {
+        "text": "Count the four counters that stayed in the tray."
+      },
+      "cues": [
+        {
+          "at": 32,
+          "count": 2
+        },
+        {
+          "at": 33,
+          "count": 3
+        },
+        {
+          "at": 34,
+          "count": 4
+        },
+        {
+          "at": 35,
+          "count": 5
+        }
+      ],
+      "quiet": 0.5,
+      "showWhole": true,
+      "showParts": false,
+      "showTrayCount": false,
+      "otherGroup": true,
+      "reaction": "focused",
+      "highlight": [],
+      "requiresImmediateAudioCue": false
+    },
+    {
+      "caption": {
+        "text": "One in the bowl and four in the tray make five."
+      },
+      "cues": [
+        {
+          "at": 38,
+          "highlight": [
+            "bowl"
+          ]
+        },
+        {
+          "at": 40,
+          "highlight": [
+            "tray"
+          ]
+        },
+        {
+          "at": 42,
+          "highlight": [
+            "tray",
+            "bowl"
+          ]
+        }
+      ],
+      "quiet": 0.5,
+      "showWhole": true,
+      "showParts": true,
+      "showTrayCount": true,
+      "otherGroup": false,
+      "reaction": "smiling",
+      "highlight": [
+        "tray",
+        "bowl"
+      ],
+      "requiresImmediateAudioCue": true
+    },
+    {
+      "caption": {
+        "text": "Return the bowl counter and count all five again."
+      },
+      "cues": [
+        {
+          "at": 49
+        },
+        {
+          "at": 51,
+          "recombine": true,
+          "highlight": []
+        },
+        {
+          "at": 52,
+          "count": 1
+        },
+        {
+          "at": 53,
+          "count": 2
+        },
+        {
+          "at": 54,
+          "count": 3
+        },
+        {
+          "at": 55,
+          "count": 4
+        },
+        {
+          "at": 56,
+          "count": 5
+        },
+        {
+          "at": 57,
+          "revealTrayCount": true
+        }
+      ],
+      "quiet": 0.5,
+      "showWhole": true,
+      "showParts": true,
+      "showTrayCount": false,
+      "otherGroup": false,
+      "reaction": "delighted",
+      "highlight": [
+        "tray",
+        "bowl"
+      ],
+      "requiresImmediateAudioCue": true
+    },
+    {
+      "caption": {
+        "text": "Now try a different split."
+      },
+      "cues": [
+        {
+          "at": 60
+        }
+      ],
+      "quiet": 0.5,
+      "showWhole": true,
+      "showParts": true,
+      "showTrayCount": true,
+      "otherGroup": false,
+      "reaction": "delighted",
+      "highlight": [],
+      "requiresImmediateAudioCue": false
+    }
+  ],
+  "end": 64,
+  "prompts": {
+    "tryEntry": {
+      "text": "Start with six counters. Move two into the bowl."
+    },
+    "tryCount": {
+      "text": "Two are in the bowl. Count the counters still in the tray."
+    },
+    "tryBond": {
+      "text": "Put that number in the empty part of the number bond."
+    },
+    "trySplit": {
+      "text": "Two and four make six. Move both bowl counters back to the tray."
+    },
+    "tryRecount": {
+      "text": "How many counters are together in the tray? Count them and enter the number."
+    },
+    "tryDone": {
+      "text": "You put the six counters back together."
+    },
+    "tryRetry": {
+      "text": "Try once more. How many are in the other part?"
+    },
+    "tryMoveBack": {
+      "text": "Move counters back until two are left in the bowl."
+    },
+    "tryRecountRetry": {
+      "text": "Count the counters in the tray again."
+    },
+    "checkSuccess": {
+      "text": "You showed two parts that make nine. Well done!"
+    }
+  }
+}

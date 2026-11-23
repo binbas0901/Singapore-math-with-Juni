@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Scheme version="1.7">
+   <BuildAction parallelizeBuildables="YES" buildImplicitDependencies="YES">
+      <BuildActionEntries>
+         <BuildActionEntry buildForTesting="YES" buildForRunning="YES" buildForProfiling="NO" buildForArchiving="NO" buildForAnalyzing="YES">
+            <BuildableReference BuildableIdentifier="primary" BlueprintIdentifier="000000000000000000000016" BuildableName="Juni.app" BlueprintName="Juni" ReferencedContainer="container:Juni.xcodeproj"/>
+         </BuildActionEntry>
+      </BuildActionEntries>
+   </BuildAction>
+   <TestAction buildConfiguration="Debug" selectedDebuggerIdentifier="Xcode.DebuggerFoundation.Debugger.LLDB" selectedLauncherIdentifier="Xcode.DebuggerFoundation.Launcher.LLDB">
+      <Testables>
+         <TestableReference skipped="NO">
+            <BuildableReference BuildableIdentifier="primary" BlueprintIdentifier="000000000000000000000019" BuildableName="JuniUITests.xctest" BlueprintName="JuniUITests" ReferencedContainer="container:Juni.xcodeproj"/>
+         </TestableReference>
+      </Testables>
+   </TestAction>
+   <LaunchAction buildConfiguration="Debug" selectedDebuggerIdentifier="Xcode.DebuggerFoundation.Debugger.LLDB" selectedLauncherIdentifier="Xcode.DebuggerFoundation.Launcher.LLDB">
+      <BuildableProductRunnable runnableDebuggingMode="0">
+         <BuildableReference BuildableIdentifier="primary" BlueprintIdentifier="000000000000000000000016" BuildableName="Juni.app" BlueprintName="Juni" ReferencedContainer="container:Juni.xcodeproj"/>
+      </BuildableProductRunnable>
+      <CommandLineArguments>
+         <CommandLineArgument argument="-u07-preview" isEnabled="YES"/>
+      </CommandLineArguments>
+   </LaunchAction>
+   <ProfileAction buildConfiguration="Release">
+      <BuildableProductRunnable runnableDebuggingMode="0">
+         <BuildableReference BuildableIdentifier="primary" BlueprintIdentifier="000000000000000000000016" BuildableName="Juni.app" BlueprintName="Juni" ReferencedContainer="container:Juni.xcodeproj"/>
+      </BuildableProductRunnable>
+   </ProfileAction>
+   <AnalyzeAction buildConfiguration="Debug"/>
+</Scheme>
