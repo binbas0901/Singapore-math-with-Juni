@@ -90,19 +90,21 @@ enum U07Narration {
 
     // Keep the output session active across adjacent short clips. Repeatedly
     // starting a cold audio session can mute the onset of each spoken sentence.
-    private static var audioSessionReady = false
-
-    private static func prepareAudioSession() -> Bool {
-        if audioSessionReady { return true }
+    // Swift initializes static constants once in a thread-safe manner.
+    // Avoid mutable global state under Swift 6 strict concurrency.
+    private static let audioSessionReady: Bool = {
         do {
             let session = AVAudioSession.sharedInstance()
             try session.setCategory(.playback, mode: .default)
             try session.setActive(true)
-            audioSessionReady = true
             return true
         } catch {
             return false
         }
+    }()
+
+    private static func prepareAudioSession() -> Bool {
+        audioSessionReady
     }
 
     static func player(for id: String, in bundle: Bundle = .main) -> AVAudioPlayer? {
