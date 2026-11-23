@@ -35,7 +35,7 @@ public struct NumberBondLesson: Decodable {
         }
 
         fileprivate var isValid: Bool {
-            whole > 1 && knownPart > 0 && expectedAnswer > 0
+            (2...10).contains(whole) && knownPart > 0 && expectedAnswer > 0
                 && NumberBond.missingPart(whole: whole, known: knownPart) == expectedAnswer
         }
 
