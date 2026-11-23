@@ -2,6 +2,84 @@
 import AVFoundation
 import Foundation
 
+/// Forces the iOS audio hardware to full level before real content plays.
+/// Prevents the clipped/attenuated first words that happen with plain AVAudioPlayer.
+final class PrimedNarrationPlayer: NSObject {
+    private let engine = AVAudioEngine()
+    private let playerNode = AVAudioPlayerNode()
+    private var file: AVAudioFile?
+    private var silentBuffer: AVAudioPCMBuffer?
+    private let silentDuration: TimeInterval = 0.10
+    private var playbackStartPosition: TimeInterval = 0
+
+    var duration: TimeInterval { file?.duration ?? 0 }
+    var isPlaying: Bool { playerNode.isPlaying }
+
+    /// Time inside the real recording (silent prime is excluded).
+    var currentTime: TimeInterval {
+        guard let nodeTime = playerNode.lastRenderTime,
+              let playerTime = playerNode.playerTime(forNodeTime: nodeTime) else {
+            return playbackStartPosition
+        }
+        let elapsed = Double(playerTime.sampleTime) / playerTime.sampleRate
+        return max(0, elapsed - silentDuration + playbackStartPosition)
+    }
+
+    override init() {
+        super.init()
+        engine.attach(playerNode)
+        engine.connect(playerNode, to: engine.mainMixerNode, format: nil)
+        createSilentBuffer()
+    }
+
+    private func createSilentBuffer() {
+        let format = engine.mainMixerNode.outputFormat(forBus: 0)
+        guard format.sampleRate > 0 else { return }
+        let frames = AVAudioFrameCount(silentDuration * format.sampleRate)
+        silentBuffer = AVAudioPCMBuffer(pcmFormat: format, frameCapacity: frames)
+        silentBuffer?.frameLength = frames
+    }
+
+    func load(url: URL) -> Bool {
+        do {
+            file = try AVAudioFile(forReading: url)
+            return file != nil
+        } catch {
+            print("PrimedNarrationPlayer load failed: \(error)")
+            return false
+        }
+    }
+
+    func play(from position: TimeInterval = 0) {
+        guard let file else { return }
+        playerNode.stop()
+        playbackStartPosition = position
+
+        if let silent = silentBuffer {
+            playerNode.scheduleBuffer(silent, at: nil, options: [], completionHandler: nil)
+        }
+
+        let startFrame = AVAudioFramePosition(position * file.processingFormat.sampleRate)
+        let frames = AVAudioFrameCount(max(0, file.length - startFrame))
+        if frames > 0 {
+            playerNode.scheduleSegment(file,
+                                        startingFrame: startFrame,
+                                        frameCount: frames,
+                                        at: nil,
+                                        completionHandler: nil)
+        }
+
+        if !engine.isRunning {
+            try? engine.start()
+        }
+        playerNode.play()
+    }
+
+    func pause() { playerNode.pause() }
+    func stop() { playerNode.stop() }
+    func resume() { playerNode.play() }
+}
+
 enum U07Narration {
     private static let zeroStartClips: Set<String> = [
         "u07-observe-first", "u07-observe-second", "u07-observe-bond", "u07-observe-recombine"
@@ -9,6 +87,16 @@ enum U07Narration {
 
     private struct CueSheet: Decodable {
         let offsets: [TimeInterval]
+    }
+
+    static func activateSession() {
+        let session = AVAudioSession.sharedInstance()
+        do {
+            try session.setCategory(.playback, mode: .spokenAudio, options: [.mixWithOthers])
+            try session.setActive(true)
+        } catch {
+            print("U07Narration: session activation failed: \(error)")
+        }
     }
 
     final class ObservePlayback: NSObject, AVAudioPlayerDelegate {
@@ -37,7 +125,6 @@ enum U07Narration {
 
         func tick(player: AVAudioPlayer, position: TimeInterval, elapsed: TimeInterval,
                   now: ContinuousClock.Instant) -> Tick {
-            // A resumed quiet hold already has a position at or beyond the decoded end.
             if position >= player.duration { return .position(position + elapsed) }
             switch completionLock.withLock({ finishedSuccessfully }) {
             case true?: return .position(player.duration)
@@ -48,7 +135,6 @@ enum U07Narration {
                 stoppedAt = nil
                 return .position(max(position, min(player.currentTime, player.duration.nextDown)))
             }
-            // The finish callback can arrive after isPlaying changes. Freeze while waiting.
             let firstStoppedTick = stoppedAt ?? now
             stoppedAt = firstStoppedTick
             return firstStoppedTick.duration(to: now) >= .milliseconds(100)
@@ -92,7 +178,18 @@ enum U07Narration {
         guard let url = bundle.url(forResource: id, withExtension: "m4a", subdirectory: "U07Narration"),
               let player = try? AVAudioPlayer(contentsOf: url),
               player.duration.isFinite, player.duration > 0 else { return nil }
+        player.volume = 1.0
+        player.prepareToPlay()
         return player
+    }
+
+    /// Prefer the primed engine player. Falls back to classic AVAudioPlayer.
+    static func primedPlayer(for id: String, in bundle: Bundle = .main) -> PrimedNarrationPlayer? {
+        guard let url = bundle.url(forResource: id, withExtension: "m4a", subdirectory: "U07Narration") else {
+            return nil
+        }
+        let primed = PrimedNarrationPlayer()
+        return primed.load(url: url) ? primed : nil
     }
 
     static func observe(_ id: String, cues: [Int], fallbackDuration: TimeInterval,
