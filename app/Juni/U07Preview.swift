@@ -397,6 +397,7 @@ struct U07Preview: View {
                 demoPosition = timeline.offset(for: manualCue)
             }
             narration = player
+            let playback = player.map { U07Narration.ObservePlayback(player: $0) }
             if let player, demoPosition < player.duration {
                 player.currentTime = demoPosition
                 if !player.play() {
@@ -419,12 +420,21 @@ struct U07Preview: View {
                 guard demoRun == run, page == .observe else { return }
                 let now = clock.now
                 let delta = previousTick.duration(to: now).components
-                if let player = narration, player.isPlaying {
-                    demoPosition = max(demoPosition, player.currentTime)
-                } else {
-                    demoPosition += Double(delta.seconds) + Double(delta.attoseconds) / 1e18
-                }
+                let elapsed = Double(delta.seconds) + Double(delta.attoseconds) / 1e18
                 previousTick = now
+                if let player = narration, let playback {
+                    switch playback.tick(player: player, position: demoPosition, elapsed: elapsed, now: now) {
+                    case .position(let position):
+                        demoPosition = position
+                    case .waitingForCompletion:
+                        continue
+                    case .stopped:
+                        pauseDemo()
+                        return
+                    }
+                } else {
+                    demoPosition += elapsed
+                }
                 let frame = timedFrame(timeline)
                 if frame != demo { showDemo(frame) }
             }

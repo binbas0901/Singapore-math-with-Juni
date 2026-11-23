@@ -3,8 +3,57 @@ import AVFoundation
 import Foundation
 
 enum U07Narration {
+    private static let zeroStartClips: Set<String> = [
+        "u07-observe-first", "u07-observe-second", "u07-observe-bond", "u07-observe-recombine"
+    ]
+
     private struct CueSheet: Decodable {
         let offsets: [TimeInterval]
+    }
+
+    final class ObservePlayback: NSObject, AVAudioPlayerDelegate {
+        enum Tick: Equatable {
+            case position(TimeInterval)
+            case waitingForCompletion
+            case stopped
+        }
+
+        private let completionLock = NSLock()
+        private var finishedSuccessfully: Bool?
+        private var stoppedAt: ContinuousClock.Instant?
+
+        init(player: AVAudioPlayer) {
+            super.init()
+            player.delegate = self
+        }
+
+        func audioPlayerDidFinishPlaying(_ player: AVAudioPlayer, successfully flag: Bool) {
+            completionLock.withLock { finishedSuccessfully = flag }
+        }
+
+        func audioPlayerDecodeErrorDidOccur(_ player: AVAudioPlayer, error: (any Error)?) {
+            completionLock.withLock { finishedSuccessfully = false }
+        }
+
+        func tick(player: AVAudioPlayer, position: TimeInterval, elapsed: TimeInterval,
+                  now: ContinuousClock.Instant) -> Tick {
+            // A resumed quiet hold already has a position at or beyond the decoded end.
+            if position >= player.duration { return .position(position + elapsed) }
+            switch completionLock.withLock({ finishedSuccessfully }) {
+            case true?: return .position(player.duration)
+            case false?: return .stopped
+            case nil: break
+            }
+            if player.isPlaying {
+                stoppedAt = nil
+                return .position(max(position, min(player.currentTime, player.duration.nextDown)))
+            }
+            // The finish callback can arrive after isPlaying changes. Freeze while waiting.
+            let firstStoppedTick = stoppedAt ?? now
+            stoppedAt = firstStoppedTick
+            return firstStoppedTick.duration(to: now) >= .milliseconds(100)
+                ? .stopped : .waitingForCompletion
+        }
     }
 
     struct Timeline {
@@ -53,7 +102,8 @@ enum U07Narration {
         if cues.count > 1,
            let url = bundle.url(forResource: id, withExtension: "json", subdirectory: "U07Narration"),
            let data = try? Data(contentsOf: url),
-           let sheet = try? JSONDecoder().decode(CueSheet.self, from: data) {
+           let sheet = try? JSONDecoder().decode(CueSheet.self, from: data),
+           !zeroStartClips.contains(id) || sheet.offsets.first == 0 {
             offsets = sheet.offsets
         }
         let timeline = Timeline(cues: cues, fallbackDuration: fallbackDuration,
