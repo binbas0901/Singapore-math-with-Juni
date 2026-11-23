@@ -31,6 +31,7 @@ struct NumberBondLessonView: View {
     @State private var failedAudioStep: Int?
     @State private var demoRun: UUID?
     @State private var narration: AVAudioPlayer?
+    @State private var promptStartTask: Task<Void, Never>?
     @State private var promptPaused = false
 
     private var projection: NumberBondLesson.Projection { lesson.project(demo) }
@@ -306,8 +307,12 @@ struct NumberBondLessonView: View {
             narration = player
             let playback = player.map { U07Narration.ObservePlayback(player: $0) }
             if let player, demoPosition < player.duration {
-                player.currentTime = demoPosition
-                if !U07Narration.start(player) {
+                let started = await U07Narration.start(player, at: demoPosition)
+                guard demoRun == run, page == .observe, !Task.isCancelled else {
+                    player.stop()
+                    return
+                }
+                if !started {
                     let cue = timeline.cue(at: demoPosition)
                     timeline = fallback
                     demoPosition = timeline.offset(for: cue)
@@ -514,6 +519,8 @@ struct NumberBondLessonView: View {
     }
 
     private func stopPrompt() {
+        promptStartTask?.cancel()
+        promptStartTask = nil
         narration?.stop()
         narration = nil
         promptPaused = false
@@ -523,8 +530,17 @@ struct NumberBondLessonView: View {
         stopPrompt()
         guard scenePhase == .active else { return }
         let caption = lesson.prompt(prompt)
-        if let clipID = caption.clipID, let player = U07Narration.player(for: clipID), U07Narration.start(player) {
+        if let clipID = caption.clipID, let player = U07Narration.player(for: clipID) {
             narration = player
+            promptStartTask = Task { @MainActor in
+                let started = await U07Narration.start(player)
+                guard narration === player else { return }
+                promptStartTask = nil
+                if !started {
+                    stopPrompt()
+                    AccessibilityNotification.Announcement(caption.text).post()
+                }
+            }
         } else {
             AccessibilityNotification.Announcement(caption.text).post()
         }
@@ -533,7 +549,7 @@ struct NumberBondLessonView: View {
     private func promptControls(_ prompt: Prompt) -> some View {
         let player = narration
         return HStack {
-            if let narration, narration.isPlaying || promptPaused {
+            if let narration, promptStartTask == nil && (narration.isPlaying || promptPaused) {
                 Button(promptPaused ? "Resume narration" : "Pause narration") {
                     if promptPaused {
                         if narration.play() { promptPaused = false } else { stopPrompt() }
@@ -548,10 +564,10 @@ struct NumberBondLessonView: View {
         .buttonStyle(PreviewButton())
         .task(id: player) {
             guard let player else { return }
-            // Scheduled playback is briefly not yet isPlaying. Do not
-            // release the player before its scheduled start time.
-            do { try await Task.sleep(for: .milliseconds(350)) } catch { return }
-            while player.isPlaying || promptPaused {
+            // Keep the player alive during its inaudible warm-up and while
+            // playing or paused. A canceled start belongs to stopPrompt().
+            while narration === player &&
+                    (promptStartTask != nil || player.isPlaying || promptPaused) {
                 do { try await Task.sleep(for: .milliseconds(100)) } catch { return }
             }
             if narration === player { stopPrompt() }
