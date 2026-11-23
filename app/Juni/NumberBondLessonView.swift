@@ -30,7 +30,7 @@ struct NumberBondLessonView: View {
     @State private var demoPosition: TimeInterval = 0
     @State private var failedAudioStep: Int?
     @State private var demoRun: UUID?
-    @State private var narration: AVAudioPlayer?
+    @State private var narration: U07Narration.Player?
     @State private var promptPaused = false
 
     private var projection: NumberBondLesson.Projection { lesson.project(demo) }
@@ -293,7 +293,7 @@ struct NumberBondLessonView: View {
             let cues = step.cues.map(\.at)
             let fallback = U07Narration.Timeline(cues: cues, fallbackDuration: fallbackDuration)
             var timeline = fallback
-            var player: AVAudioPlayer?
+            var player: U07Narration.Player?
             if failedAudioStep != index, let clipID = step.caption.clipID {
                 (timeline, player) = U07Narration.observe(
                     clipID, cues: cues, fallbackDuration: fallbackDuration, quiet: step.quiet,
@@ -304,7 +304,7 @@ struct NumberBondLessonView: View {
                 demoPosition = timeline.offset(for: projection.manualCue)
             }
             narration = player
-            let playback = player.map { U07Narration.ObservePlayback(player: $0) }
+            let playback = player.map { _ in U07Narration.ObservePlayback() }
             if let player, demoPosition < player.duration {
                 player.currentTime = demoPosition
                 if !player.play() {
