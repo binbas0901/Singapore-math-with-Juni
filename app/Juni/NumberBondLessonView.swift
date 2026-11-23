@@ -336,7 +336,8 @@ struct NumberBondLessonView: View {
                 let delta = previousTick.duration(to: now).components
                 let elapsed = Double(delta.seconds) + Double(delta.attoseconds) / 1e18
                 previousTick = now
-                if let player = narration, let playback = player.map({ U07Narration.ObservePlayback(player: $0) }) {
+                if let player = narration {
+                    let playback = U07Narration.ObservePlayback(player: player)
                     switch playback.tick(player: player, position: demoPosition, elapsed: elapsed, now: now) {
                     case .position(let position):
                         demoPosition = position
