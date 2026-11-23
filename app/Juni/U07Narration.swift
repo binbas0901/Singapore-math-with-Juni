@@ -49,6 +49,7 @@ enum U07Narration {
         }
     }
 
+    @MainActor
     final class Player {
         private let file: AVAudioFile
         private let id = UUID()
@@ -135,6 +136,7 @@ enum U07Narration {
         }
     }
 
+    @MainActor
     final class ObservePlayback {
         enum Tick: Equatable {
             case position(TimeInterval)
