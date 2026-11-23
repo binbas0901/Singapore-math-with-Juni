@@ -17,7 +17,6 @@ final class PrependedSilencePlayer: NSObject, @unchecked Sendable {
     var duration: TimeInterval { fileDuration }
     var isPlaying: Bool { playerNode.isPlaying }
 
-    /// Time inside the original recording (silence prefix excluded).
     var currentTime: TimeInterval {
         guard let startedAt, !isPaused else { return pausedAt }
         let elapsed = startedAt.duration(to: ContinuousClock().now).components
@@ -74,7 +73,6 @@ final class PrependedSilencePlayer: NSObject, @unchecked Sendable {
         playerNode.stop()
         pausedAt = position
         isPaused = false
-
         playerNode.scheduleBuffer(buffer, at: nil, options: [], completionHandler: nil)
         if !engine.isRunning { try? engine.start() }
         startedAt = ContinuousClock().now
@@ -191,8 +189,15 @@ enum U07Narration {
         }
     }
 
+    private static func url(for id: String, extension ext: String, in bundle: Bundle) -> URL? {
+        if let primed = bundle.url(forResource: id + "-primed", withExtension: ext, subdirectory: "U07Narration") {
+            return primed
+        }
+        return bundle.url(forResource: id, withExtension: ext, subdirectory: "U07Narration")
+    }
+
     static func player(for id: String, in bundle: Bundle = .main) -> AVAudioPlayer? {
-        guard let url = bundle.url(forResource: id, withExtension: "m4a", subdirectory: "U07Narration"),
+        guard let url = url(for: id, extension: "m4a", in: bundle),
               let player = try? AVAudioPlayer(contentsOf: url),
               player.duration.isFinite, player.duration > 0 else { return nil }
         player.volume = 1.0
@@ -201,9 +206,7 @@ enum U07Narration {
     }
 
     static func prependedPlayer(for id: String, in bundle: Bundle = .main) -> PrependedSilencePlayer? {
-        guard let url = bundle.url(forResource: id, withExtension: "m4a", subdirectory: "U07Narration") else {
-            return nil
-        }
+        guard let url = url(for: id, extension: "m4a", in: bundle) else { return nil }
         let p = PrependedSilencePlayer()
         return p.load(url: url) ? p : nil
     }
@@ -213,7 +216,7 @@ enum U07Narration {
         let player = player(for: id, in: bundle)
         var offsets: [TimeInterval] = cues.count == 1 ? [0] : []
         if cues.count > 1,
-           let url = bundle.url(forResource: id, withExtension: "json", subdirectory: "U07Narration"),
+           let url = url(for: id, extension: "json", in: bundle),
            let data = try? Data(contentsOf: url),
            let sheet = try? JSONDecoder().decode(CueSheet.self, from: data),
            !(requiresImmediateCue || zeroStartClips.contains(id)) || sheet.offsets.first == 0 {
