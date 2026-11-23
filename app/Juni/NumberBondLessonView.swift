@@ -307,7 +307,7 @@ struct NumberBondLessonView: View {
             let playback = player.map { U07Narration.ObservePlayback(player: $0) }
             if let player, demoPosition < player.duration {
                 player.currentTime = demoPosition
-                if !player.play() {
+                if !U07Narration.start(player) {
                     let cue = timeline.cue(at: demoPosition)
                     timeline = fallback
                     demoPosition = timeline.offset(for: cue)
@@ -523,7 +523,7 @@ struct NumberBondLessonView: View {
         stopPrompt()
         guard scenePhase == .active else { return }
         let caption = lesson.prompt(prompt)
-        if let clipID = caption.clipID, let player = U07Narration.player(for: clipID), player.play() {
+        if let clipID = caption.clipID, let player = U07Narration.player(for: clipID), U07Narration.start(player) {
             narration = player
         } else {
             AccessibilityNotification.Announcement(caption.text).post()
@@ -548,6 +548,9 @@ struct NumberBondLessonView: View {
         .buttonStyle(PreviewButton())
         .task(id: player) {
             guard let player else { return }
+            // Scheduled playback is briefly not yet isPlaying. Do not
+            // release the player before its scheduled start time.
+            do { try await Task.sleep(for: .milliseconds(350)) } catch { return }
             while player.isPlaying || promptPaused {
                 do { try await Task.sleep(for: .milliseconds(100)) } catch { return }
             }
