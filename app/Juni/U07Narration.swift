@@ -2,6 +2,99 @@
 import AVFoundation
 import Foundation
 
+/// One long-lived engine + player node. Never stopped between sentences so the
+/// hardware stays warm. This is why only the second sentence was clean before.
+final class ContinuousNarrationPlayer: NSObject, @unchecked Sendable {
+    static let shared = ContinuousNarrationPlayer()
+
+    private let engine = AVAudioEngine()
+    private let playerNode = AVAudioPlayerNode()
+    private var currentFile: AVAudioFile?
+    private var fileDuration: TimeInterval = 0
+    private var startedAt: ContinuousClock.Instant?
+    private var startPosition: TimeInterval = 0
+    private var isPaused = false
+
+    var duration: TimeInterval { fileDuration }
+    var isPlaying: Bool { playerNode.isPlaying }
+
+    var currentTime: TimeInterval {
+        guard let startedAt, !isPaused else { return startPosition }
+        let elapsed = startedAt.duration(to: ContinuousClock().now).components
+        let total = Double(elapsed.seconds) + Double(elapsed.attoseconds) / 1e18
+        return min(fileDuration, max(0, startPosition + total))
+    }
+
+    private override init() {
+        super.init()
+        engine.attach(playerNode)
+        engine.connect(playerNode, to: engine.mainMixerNode, format: nil)
+        activateAndWarm()
+    }
+
+    private func activateAndWarm() {
+        let session = AVAudioSession.sharedInstance()
+        try? session.setCategory(.playback, mode: .spokenAudio, options: [.mixWithOthers])
+        try? session.setActive(true)
+        do {
+            if !engine.isRunning { try engine.start() }
+            let format = engine.mainMixerNode.outputFormat(forBus: 0)
+            let frames = AVAudioFrameCount(0.2 * format.sampleRate)
+            if let silent = AVAudioPCMBuffer(pcmFormat: format, frameCapacity: frames) {
+                silent.frameLength = frames
+                playerNode.scheduleBuffer(silent, at: nil, options: [], completionHandler: nil)
+                playerNode.play()
+            }
+        } catch { }
+    }
+
+    func loadAndPlay(url: URL, from position: TimeInterval = 0) -> Bool {
+        do {
+            if !engine.isRunning { try engine.start() }
+            let file = try AVAudioFile(forReading: url)
+            currentFile = file
+            fileDuration = Double(file.length) / file.processingFormat.sampleRate
+            startPosition = position
+            isPaused = false
+
+            let startFrame = AVAudioFramePosition(position * file.processingFormat.sampleRate)
+            let frames = AVAudioFrameCount(max(0, file.length - startFrame))
+            if frames > 0 {
+                playerNode.scheduleSegment(file,
+                                            startingFrame: startFrame,
+                                            frameCount: frames,
+                                            at: nil,
+                                            completionHandler: nil)
+            }
+            if !playerNode.isPlaying { playerNode.play() }
+            startedAt = ContinuousClock().now
+            return true
+        } catch {
+            print("ContinuousNarrationPlayer loadAndPlay failed: \(error)")
+            return false
+        }
+    }
+
+    func pause() {
+        startPosition = currentTime
+        isPaused = true
+        playerNode.pause()
+    }
+
+    func stop() {
+        currentFile = nil
+        isPaused = false
+        startPosition = 0
+        startedAt = nil
+    }
+
+    func resume() {
+        isPaused = false
+        startedAt = ContinuousClock().now
+        if !playerNode.isPlaying { playerNode.play() }
+    }
+}
+
 enum U07Narration {
     private static let zeroStartClips: Set<String> = [
         "u07-observe-first", "u07-observe-second", "u07-observe-bond", "u07-observe-recombine"
@@ -11,38 +104,8 @@ enum U07Narration {
         let offsets: [TimeInterval]
     }
 
-    private static let warmEngine = AVAudioEngine()
-    private static let warmNode = AVAudioPlayerNode()
-    private static var hasWarmed = false
-
     static func activateSession() {
-        let session = AVAudioSession.sharedInstance()
-        try? session.setCategory(.playback, mode: .spokenAudio, options: [.mixWithOthers])
-        try? session.setActive(true)
-        warmUpIfNeeded()
-    }
-
-    /// Play a short silent buffer once so the hardware ramp-up is finished
-    /// before the first real sentence. Leaves the engine running.
-    private static func warmUpIfNeeded() {
-        guard !hasWarmed else { return }
-        hasWarmed = true
-        if warmEngine.attachedNodes.contains(warmNode) == false {
-            warmEngine.attach(warmNode)
-            warmEngine.connect(warmNode, to: warmEngine.mainMixerNode, format: nil)
-        }
-        do {
-            if !warmEngine.isRunning { try warmEngine.start() }
-            let format = warmEngine.mainMixerNode.outputFormat(forBus: 0)
-            let frames = AVAudioFrameCount(0.25 * format.sampleRate)
-            if let silent = AVAudioPCMBuffer(pcmFormat: format, frameCapacity: frames) {
-                silent.frameLength = frames
-                warmNode.scheduleBuffer(silent, at: nil, options: [], completionHandler: nil)
-                warmNode.play()
-            }
-        } catch {
-            print("warm-up failed: \(error)")
-        }
+        _ = ContinuousNarrationPlayer.shared
     }
 
     final class ObservePlayback: NSObject, AVAudioPlayerDelegate {
@@ -134,6 +197,15 @@ enum U07Narration {
         player.volume = 1.0
         player.prepareToPlay()
         return player
+    }
+
+    static func continuousCurrentTime() -> TimeInterval {
+        ContinuousNarrationPlayer.shared.currentTime
+    }
+
+    static func playContinuous(id: String, from position: TimeInterval = 0, in bundle: Bundle = .main) -> Bool {
+        guard let url = url(for: id, extension: "m4a", in: bundle) else { return false }
+        return ContinuousNarrationPlayer.shared.loadAndPlay(url: url, from: position)
     }
 
     static func observe(_ id: String, cues: [Int], fallbackDuration: TimeInterval,
