@@ -308,19 +308,14 @@ struct NumberBondLessonView: View {
             }
             narration = player
             let playback = player.map { U07Narration.ObservePlayback(player: $0) }
-            if let clipID = step.caption.clipID {
-                // Prefer the persistent primed engine so the first word is not clipped.
-                if U07Narration.playPrimed(id: clipID, from: demoPosition) {
-                    // Engine is playing; keep the classic player only for timing if needed.
-                } else if let player, demoPosition < player.duration {
-                    player.currentTime = demoPosition
-                    if !player.play() {
-                        let cue = timeline.cue(at: demoPosition)
-                        timeline = fallback
-                        demoPosition = timeline.offset(for: cue)
-                        failedAudioStep = index
-                        narration = nil
-                    }
+            if let player, demoPosition < player.duration {
+                player.currentTime = demoPosition
+                if !player.play() {
+                    let cue = timeline.cue(at: demoPosition)
+                    timeline = fallback
+                    demoPosition = timeline.offset(for: cue)
+                    failedAudioStep = index
+                    narration = nil
                 }
             }
             showDemo(timedFrame(timeline), animate: false)
@@ -533,7 +528,7 @@ struct NumberBondLessonView: View {
         let caption = lesson.prompt(prompt)
         if let clipID = caption.clipID {
             if U07Narration.playPrimed(id: clipID) {
-                // Persistent engine already primed at launch — first word should be intact.
+                // Persistent engine for prompts only
             } else if let player = U07Narration.player(for: clipID), player.play() {
                 narration = player
             } else {
