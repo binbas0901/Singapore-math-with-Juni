@@ -59,6 +59,10 @@ final class NumberBondLessonTests: XCTestCase {
             item["expectedAnswer"] = 6
             $0["check"] = item
         }
+        try rejects("whole exceeds supported 0–10 preview range") {
+            $0["check"] = ["whole": 11, "knownPart": 3, "expectedAnswer": 8,
+                           "modelRequirement": "wholeAndBothParts"]
+        }
         try rejects("check repeats worked example with parts swapped") {
             $0["check"] = ["whole": 6, "knownPart": 4, "expectedAnswer": 2, "modelRequirement": "wholeAndBothParts"]
         }
