@@ -51,7 +51,7 @@ enum U07Narration {
             // The finish callback can arrive after isPlaying changes. Freeze while waiting.
             let firstStoppedTick = stoppedAt ?? now
             stoppedAt = firstStoppedTick
-            return firstStoppedTick.duration(to: now) >= .milliseconds(100)
+            return firstStoppedTick.duration(to: now) >= .milliseconds(600)
                 ? .stopped : .waitingForCompletion
         }
     }
@@ -105,6 +105,12 @@ enum U07Narration {
 
     private static func prepareAudioSession() -> Bool {
         audioSessionReady
+    }
+
+    // Give Core Audio time to start the output route before the first phoneme.
+    // Scheduling playback preserves the beginning of short narrated clips.
+    static func start(_ player: AVAudioPlayer) -> Bool {
+        player.play(atTime: player.deviceCurrentTime + 0.25)
     }
 
     static func player(for id: String, in bundle: Bundle = .main) -> AVAudioPlayer? {
