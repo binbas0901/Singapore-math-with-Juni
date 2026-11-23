@@ -3,119 +3,17 @@ import AVFoundation
 import JuniCore
 import SwiftUI
 
-struct U07Preview: View {
+struct NumberBondLessonView: View {
+    let lesson: NumberBondLesson
+
+    private typealias DemoFrame = NumberBondLesson.Frame
+    private typealias Prompt = NumberBondLesson.Prompt
+    private typealias CounterGroup = NumberBondLesson.Group
     private enum Page: String {
         case observe = "Observe"
         case tryIt = "Try"
         case check = "Check"
         case completion, review
-    }
-
-    // Nominal cue keys also define the captions-only schedule.
-    private enum DemoStep: Int, CaseIterable {
-        case intro, count, whole, first, second, otherGroup, countTray, bond, recombine, ready
-
-        var start: Int { [0, 5, 12, 19, 22, 26, 32, 38, 49, 60][rawValue] }
-
-        var clipID: String {
-            "u07-observe-" + ["intro", "count", "whole", "first", "second", "other-group",
-                              "count-tray", "bond", "recombine", "ready"][rawValue]
-        }
-
-        var nextStart: Int { DemoStep(rawValue: rawValue + 1)?.start ?? Self.end }
-        var cues: [Int] { Self.cues.filter { (start..<nextStart).contains($0) } }
-        var quiet: TimeInterval { self == .otherGroup ? 2 : self == .whole ? 1 : 0.5 }
-
-        var caption: String {
-            switch self {
-            case .intro: "Let’s count the counters in this tray."
-            case .count: "One, two, three, four, five, six."
-            case .whole: "Six is the whole. That means all the counters. Watch me split them into two groups."
-            case .first: "One into the bowl."
-            case .second: "One more into the bowl. Two in the bowl."
-            case .otherGroup: "The tray is our other group. How many are there?"
-            case .countTray: "One, two, three, four. Four in the tray."
-            case .bond: "Two in the bowl. Four in the tray. Two and four make six. This picture is a number bond."
-            case .recombine: "Let’s put the two back. One, two, three, four, five, six. We still have six!"
-            case .ready: "Ready to make your own split? Tap Try."
-            }
-        }
-
-        static let end = 64
-        static let cues = (
-            allCases.map(\.start) + Array(6...10) + [20, 23, 33, 34, 35, 40, 42, 51]
-            + Array(52...57) + [end]
-        ).sorted()
-    }
-
-    private struct DemoFrame: Equatable {
-        var time = 0
-        var manual = true
-        var countIndex = 0
-        var waitingForFirstCue = false
-
-        var step: DemoStep { DemoStep.allCases.last { $0.start <= time } ?? .intro }
-        var bowl: Set<Int> {
-            if manual {
-                switch step {
-                case .first: return [1]
-                case .second, .otherGroup, .countTray, .bond: return [1, 2]
-                default: return []
-                }
-            }
-            switch time {
-            case 20..<23: return [1]
-            case 23..<51: return [1, 2]
-            default: return []
-            }
-        }
-
-        var historical: Bool { manual ? step.rawValue >= DemoStep.recombine.rawValue : time >= 51 }
-        var canTry: Bool { manual ? step == .ready : time == DemoStep.end }
-
-        var countOrder: [Int] {
-            switch step {
-            case .count, .recombine: Array(1...6)
-            case .countTray: Array(3...6)
-            default: []
-            }
-        }
-
-        var indicatedCounter: Int? {
-            if step == .first { return bowl.contains(1) ? 1 : nil }
-            if step == .second { return bowl.contains(2) ? 2 : nil }
-            if manual {
-                return countOrder.indices.contains(countIndex) ? countOrder[countIndex] : nil
-            }
-            if waitingForFirstCue { return nil }
-            switch time {
-            case 5..<12: return min(time - 4, 6)
-            case 32..<38: return min(time - 29, 6)
-            case 52..<60: return min(time - 51, 6)
-            default: return nil
-            }
-        }
-
-        var canCountNext: Bool { manual && countIndex + 1 < countOrder.count }
-
-        var indicatedWord: String? {
-            guard let indicatedCounter, let index = countOrder.firstIndex(of: indicatedCounter) else {
-                return nil
-            }
-            return ["One", "Two", "Three", "Four", "Five", "Six"][index]
-        }
-
-        var linkedGroups: Set<CounterGroup> {
-            switch step {
-            case .whole: [.tray]
-            case .otherGroup: [.tray]
-            case .bond where manual: [.tray, .bowl]
-            case .bond:
-                time < 40 ? [.bowl] : time < 42 ? [.tray] : [.tray, .bowl]
-            case .recombine where !historical: [.tray, .bowl]
-            default: []
-            }
-        }
     }
 
     private let ink = Color(red: 0.14, green: 0.21, blue: 0.31)
@@ -126,14 +24,16 @@ struct U07Preview: View {
     @State private var page: Page?
     @State private var resumePage: Page?
     @State private var animateCelebration = false
-    private let celebrationMessage = Prompt.checkSuccess.caption
+    private var celebrationMessage: String { lesson.prompt(.checkSuccess).text }
     @Environment(\.scenePhase) private var scenePhase
     @State private var demo = DemoFrame()
     @State private var demoPosition: TimeInterval = 0
-    @State private var failedAudioStep: DemoStep?
+    @State private var failedAudioStep: Int?
     @State private var demoRun: UUID?
     @State private var narration: AVAudioPlayer?
     @State private var promptPaused = false
+
+    private var projection: NumberBondLesson.Projection { lesson.project(demo) }
 
     private var playing: Bool { demoRun != nil }
     @State private var guided = Working(isGuided: true)
@@ -209,7 +109,7 @@ struct U07Preview: View {
             Text("Singapore Math with Juni")
                 .font(.largeTitle.bold())
                 .accessibilityAddTraits(.isHeader)
-            Text("Split a whole")
+            Text(lesson.title)
                 .font(.system(.largeTitle, design: .rounded, weight: .heavy))
             Text("Move counters into two groups, then put them back together.")
                 .font(.title3)
@@ -224,7 +124,7 @@ struct U07Preview: View {
                 Button("Start lesson preview") { startOver() }
                     .buttonStyle(PreviewButton(prominent: true))
             }
-            Text("U07 lesson preview").font(.subheadline)
+            Text(lesson.synthetic ? "Synthetic demonstration fixture" : "\(lesson.id.uppercased()) lesson preview").font(.subheadline)
         }
         .multilineTextAlignment(.center)
         .frame(maxWidth: .infinity)
@@ -249,8 +149,8 @@ struct U07Preview: View {
     }
 
     private var completedBond: some View {
-        bond(8, 3, independent.answer, title: "Your number bond",
-             knownGroup: independent.bowl.count == 3 ? .bowl : .tray)
+        bond(lesson.check.whole, lesson.check.knownPart, independent.answer, title: "Your number bond",
+             knownGroup: independent.bowl.count == lesson.check.knownPart ? .bowl : .tray)
     }
 
     private var completion: some View {
@@ -304,7 +204,7 @@ struct U07Preview: View {
                 .buttonStyle(PreviewButton())
             Text("My Check work").font(.title2.bold()).accessibilityAddTraits(.isHeader)
             AdaptiveColumns {
-                regions(whole: 8, bowl: independent.bowl, showCounts: true, work: nil, reviewing: true)
+                regions(whole: lesson.check.whole, bowl: independent.bowl, showCounts: true, work: nil, reviewing: true)
             } side: {
                 completedBond
                     .padding(16)
@@ -317,8 +217,8 @@ struct U07Preview: View {
     private var header: some View {
         HStack(spacing: 14) {
             VStack(alignment: .leading, spacing: 3) {
-                Text("Split a whole").font(.title2.bold()).accessibilityAddTraits(.isHeader)
-                Text("U07 lesson preview").font(.subheadline)
+                Text(lesson.title).font(.title2.bold()).accessibilityAddTraits(.isHeader)
+                Text(lesson.synthetic ? "Synthetic demonstration fixture" : "\(lesson.id.uppercased()) lesson preview").font(.subheadline)
             }
             Spacer()
             Button("Home") { goHome() }
@@ -349,26 +249,25 @@ struct U07Preview: View {
     private var observe: some View {
         let run = demoRun
         return VStack(alignment: .leading, spacing: 16) {
-            teachingPrompt(demo.step.caption, identifier: "observe-caption", reaction: demoReaction)
+            teachingPrompt(projection.step.caption.text, identifier: "observe-caption", reaction: demoReaction)
             ViewThatFits(in: .horizontal) {
                 HStack { demoButtons }
                 VStack(alignment: .leading) { demoButtons }
             }
             AdaptiveColumns {
-                regions(whole: 6, bowl: demo.bowl,
-                        showCounts: demo.step.rawValue >= DemoStep.whole.rawValue,
-                        hideTrayCount: (DemoStep.first.rawValue...DemoStep.countTray.rawValue).contains(demo.step.rawValue)
-                            || (demo.step == .recombine && !demo.manual && demo.time < 57),
+                regions(whole: lesson.observe.whole, bowl: projection.bowl,
+                        showCounts: projection.step.showWhole, hideTrayCount: !projection.showTrayCount,
                         work: nil)
                     .frame(maxWidth: .infinity)
             } side: {
                 VStack(spacing: 12) {
-                    let showsParts = demo.step.rawValue >= DemoStep.bond.rawValue
-                    if demo.step.rawValue >= DemoStep.whole.rawValue {
-                        bond(6, showsParts ? 2 : nil, showsParts ? 4 : nil,
-                             title: demo.historical ? "Our split" : "Number bond",
+                    let showsParts = projection.step.showParts
+                    if projection.step.showWhole {
+                        bond(lesson.observe.whole, showsParts ? lesson.observe.knownPart : nil,
+                             showsParts ? lesson.observe.expectedAnswer : nil,
+                             title: projection.historical ? "Our split" : "Number bond",
                              knownGroup: showsParts ? .bowl : nil, showParts: showsParts,
-                             teaching: !demo.historical)
+                             teaching: !projection.historical)
                     } else {
                         Color.clear.frame(height: 1).accessibilityHidden(true)
                     }
@@ -386,15 +285,23 @@ struct U07Preview: View {
 
     private func runDemo(_ run: UUID) async {
         let clock = ContinuousClock()
-        for step in DemoStep.allCases.dropFirst(demo.step.rawValue) {
+        for index in lesson.steps.indices.dropFirst(projection.index) {
             guard demoRun == run, page == .observe, !Task.isCancelled else { return }
-            let fallbackDuration = Double(step.nextStart - step.start)
-            let fallback = U07Narration.Timeline(cues: step.cues, fallbackDuration: fallbackDuration)
-            var (timeline, player) = failedAudioStep == step ? (fallback, nil) : U07Narration.observe(
-                step.clipID, cues: step.cues, fallbackDuration: fallbackDuration, quiet: step.quiet
-            )
+            let step = lesson.steps[index]
+            let next = lesson.steps.indices.contains(index + 1) ? lesson.steps[index + 1].start : lesson.end
+            let fallbackDuration = Double(next - step.start)
+            let cues = step.cues.map(\.at)
+            let fallback = U07Narration.Timeline(cues: cues, fallbackDuration: fallbackDuration)
+            var timeline = fallback
+            var player: AVAudioPlayer?
+            if failedAudioStep != index, let clipID = step.caption.clipID {
+                (timeline, player) = U07Narration.observe(
+                    clipID, cues: cues, fallbackDuration: fallbackDuration, quiet: step.quiet,
+                    requiresImmediateCue: step.requiresImmediateAudioCue == true
+                )
+            }
             if demo.manual {
-                demoPosition = timeline.offset(for: manualCue)
+                demoPosition = timeline.offset(for: projection.manualCue)
             }
             narration = player
             let playback = player.map { U07Narration.ObservePlayback(player: $0) }
@@ -404,7 +311,7 @@ struct U07Preview: View {
                     let cue = timeline.cue(at: demoPosition)
                     timeline = fallback
                     demoPosition = timeline.offset(for: cue)
-                    failedAudioStep = step
+                    failedAudioStep = index
                     narration = nil
                 }
             }
@@ -443,7 +350,7 @@ struct U07Preview: View {
             demoPosition = 0
             failedAudioStep = nil
         }
-        showDemo(DemoFrame(time: DemoStep.end, manual: false))
+        showDemo(DemoFrame(time: lesson.end, manual: false))
         demoRun = nil
     }
 
@@ -452,23 +359,12 @@ struct U07Preview: View {
                   waitingForFirstCue: demoPosition < timeline.offsets[0])
     }
 
-    private var manualCue: Int {
-        switch demo.step {
-        case .count, .countTray: demo.step.start + demo.countIndex
-        case .first: 20
-        case .second: 23
-        case .recombine: 52 + demo.countIndex
-        default: demo.time
-        }
-    }
-
     private var demoReaction: JuniMoon.Reaction {
-        switch demo.step {
-        case .otherGroup: .thinking
-        case .first, .second, .count, .countTray: .focused
-        case .recombine where demo.historical: .delighted
-        case .ready: .delighted
-        default: .smiling
+        switch projection.step.reaction {
+        case .smiling: .smiling
+        case .thinking: .thinking
+        case .focused: .focused
+        case .delighted: projection.step.showParts && !projection.historical ? .smiling : .delighted
         }
     }
 
@@ -478,14 +374,14 @@ struct U07Preview: View {
                 if playing { pauseDemo() } else { playDemo() }
             }
             .buttonStyle(PreviewButton(prominent: true))
-            .disabled(!playing && demo.time == DemoStep.end)
+            .disabled(!playing && demo.time == lesson.end)
             Button("Replay") {
                 resetDemo()
                 playDemo()
             }
             .buttonStyle(PreviewButton())
-            Button(demo.canCountNext ? "Count next" : "Next step") {
-                if demo.canCountNext {
+            Button(projection.canCountNext ? "Count next" : "Next step") {
+                if projection.canCountNext {
                     var frame = demo
                     frame.countIndex += 1
                     showDemo(frame, animate: false)
@@ -493,17 +389,18 @@ struct U07Preview: View {
                 }
                 pauseDemo()
                 failedAudioStep = nil
-                if let next = DemoStep(rawValue: demo.step.rawValue + 1) {
+                let nextIndex = projection.index + 1
+                if lesson.steps.indices.contains(nextIndex) {
                     demoPosition = 0
-                    showDemo(DemoFrame(time: next.start), animate: false)
+                    showDemo(DemoFrame(time: lesson.steps[nextIndex].start), animate: false)
                 } else {
                     demoPosition = 0
-                    showDemo(DemoFrame(time: DemoStep.end), animate: false)
+                    showDemo(DemoFrame(time: lesson.end), animate: false)
                 }
             }
             .buttonStyle(PreviewButton())
-            .disabled(demo.canTry)
-            if demo.canTry {
+            .disabled(projection.canTry)
+            if projection.canTry {
                 Button("Try together") { page = .tryIt }
                     .buttonStyle(PreviewButton(prominent: true))
             }
@@ -539,17 +436,18 @@ struct U07Preview: View {
     }
 
     private func showDemo(_ frame: DemoFrame, animate: Bool = true) {
-        let announce = frame.step != demo.step
-        let animation: Animation? = animate && !reduceMotion && frame.bowl != demo.bowl
+        let next = lesson.project(frame)
+        let announce = next.index != projection.index
+        let animation: Animation? = animate && !reduceMotion && next.bowl != projection.bowl
             ? .easeInOut(duration: 0.38) : nil
         withAnimation(animation) { demo = frame }
         if announce && (frame.manual || narration == nil) {
-            var message = frame.step.caption
-            if frame.manual, let word = frame.indicatedWord {
+            var message = next.step.caption.text
+            if frame.manual, let word = next.indicatedWord {
                 message += " " + word
             }
             AccessibilityNotification.Announcement(message).post()
-        } else if frame.manual, let word = frame.indicatedWord {
+        } else if frame.manual, let word = next.indicatedWord {
             AccessibilityNotification.Announcement(word).post()
         }
     }
@@ -584,40 +482,13 @@ struct U07Preview: View {
         var answer: Int?
         var hasEnteredAnswer = false
         var feedback: Feedback?
+        var returningCounters = false
         var verification: WholeVerification?
     }
 
     private struct PromptContext: Equatable {
         let page: Page?
         let prompt: Prompt?
-    }
-
-    private enum Prompt: String {
-        case tryEntry = "try-entry", tryCount = "try-count", tryBond = "try-bond"
-        case trySplit = "try-split", tryRecount = "try-recount", tryDone = "try-done"
-        case tryRetry = "try-retry", tryMoveBack = "try-move-back", tryRecountRetry = "try-recount-retry"
-        case checkEntry = "check-entry", checkAnswer = "check-answer", checkRetry = "check-retry"
-        case checkSuccess = "check-success"
-
-        var clipID: String { "u07-" + rawValue }
-
-        var caption: String {
-            switch self {
-            case .tryEntry: "Here are seven counters. Move one from the tray to the bowl."
-            case .tryCount: "The bowl has one. The counters in the tray are the other part. How many are in the tray?"
-            case .tryBond: "Put that number in the empty part of the number bond."
-            case .trySplit: "You made two groups. One and six make seven. Put the bowl counter back in the tray. How many are there now?"
-            case .tryRecount: "How many counters are together in the tray? Count them and enter the number."
-            case .tryDone: "Seven again! You split the whole and put it back together."
-            case .tryRetry: "Try once more. How many are in the other part?"
-            case .tryMoveBack: "We need one in the bowl. Move counters back until just one is there."
-            case .tryRecountRetry: "Count the counters in the tray again."
-            case .checkEntry: "The whole is eight. One part is three. What is the other part? Show how your two parts make eight with counters."
-            case .checkAnswer: "Put your answer in the empty part."
-            case .checkRetry: "Take another look. The whole is eight. One part is three. What is the other part? Show how your two parts make eight."
-            case .checkSuccess: "You showed both parts and how they make eight. Well done!"
-            }
-        }
     }
 
     private var activePrompt: Prompt? {
@@ -629,9 +500,9 @@ struct U07Preview: View {
             case .counting: return .tryRecount
             case nil: break
             }
-            if guided.feedback == .correct { return .trySplit }
-            if guided.bowl.isEmpty { return .tryEntry }
-            if guided.bowl.count > 1 { return .tryMoveBack }
+            if guided.feedback == .correct || guided.returningCounters { return .trySplit }
+            if guided.bowl.count < lesson.guided.knownPart { return .tryEntry }
+            if guided.bowl.count > lesson.guided.knownPart { return .tryMoveBack }
             if guided.feedback == .retry { return .tryRetry }
             return guided.hasEnteredAnswer ? .tryBond : .tryCount
         case .check:
@@ -651,10 +522,11 @@ struct U07Preview: View {
     private func playPrompt(_ prompt: Prompt) {
         stopPrompt()
         guard scenePhase == .active else { return }
-        if let player = U07Narration.player(for: prompt.clipID), player.play() {
+        let caption = lesson.prompt(prompt)
+        if let clipID = caption.clipID, let player = U07Narration.player(for: clipID), player.play() {
             narration = player
         } else {
-            AccessibilityNotification.Announcement(prompt.caption).post()
+            AccessibilityNotification.Announcement(caption.text).post()
         }
     }
 
@@ -684,12 +556,13 @@ struct U07Preview: View {
     }
 
     private func workspace(guided isGuided: Bool, work: Binding<Working>) -> some View {
-        let whole = isGuided ? 7 : 8
-        let known = isGuided ? 1 : 3
+        let item = isGuided ? lesson.guided : lesson.check
+        let whole = item.whole
+        let known = item.knownPart
         let state = work.wrappedValue
         return VStack(alignment: .leading, spacing: 16) {
             if let prompt = activePrompt {
-                teachingPrompt(prompt.caption, identifier: "workspace-prompt")
+                teachingPrompt(lesson.prompt(prompt).text, identifier: "workspace-prompt")
                 HStack {
                     promptControls(prompt)
                     if prompt == .tryCount {
@@ -746,11 +619,7 @@ struct U07Preview: View {
                         bond(whole, known, state.answer, title: "Number bond", knownGroup: isGuided ? .bowl : nil)
                         keypad(work)
                         Button("Check my answer") {
-                            let bowlCount = state.bowl.count
-                            let trayCount = whole - bowlCount
-                            let modelMatches = bowlCount == known || (!isGuided && trayCount == known)
-                            let matches = modelMatches
-                                && state.answer == NumberBond.missingPart(whole: whole, known: known)
+                            let matches = item.matches(answer: state.answer, bowlCount: state.bowl.count)
                             if matches && !isGuided {
                                 animateCelebration = true
                                 page = .completion
@@ -760,7 +629,7 @@ struct U07Preview: View {
                             work.wrappedValue.feedback = feedback
                         }
                         .buttonStyle(PreviewButton(prominent: true))
-                        .disabled(state.answer == nil)
+                        .disabled(state.answer == nil || state.returningCounters)
                     }
                 }
                 .frame(maxWidth: .infinity)
@@ -792,32 +661,18 @@ struct U07Preview: View {
             work.wrappedValue = state
             return
         }
-        let recombined = state.isGuided && state.feedback == .correct && bowl.isEmpty
+        let isReturning = state.isGuided && (state.feedback == .correct || state.returningCounters)
+            && bowl.isStrictSubset(of: state.bowl)
+        let recombined = isReturning && bowl.isEmpty
         if recombined || state.verification != nil {
             state.answer = nil
         }
         if state.isGuided { state.hasEnteredAnswer = false }
         state.bowl = bowl
         state.feedback = nil
+        state.returningCounters = isReturning && !recombined
         state.verification = recombined ? .counting : nil
         work.wrappedValue = state
-    }
-
-    private enum CounterGroup {
-        case tray, bowl
-
-        var title: String { self == .tray ? "Tray" : "Bowl" }
-        var opposite: Self { self == .tray ? .bowl : .tray }
-        var symbol: String { self == .tray ? "rectangle" : "oval" }
-        var tint: Color {
-            self == .tray ? Color(red: 0.29, green: 0.24, blue: 0.54)
-                : Color(red: 0.12, green: 0.35, blue: 0.34)
-        }
-
-        var fill: Color {
-            self == .tray ? Color(red: 0.92, green: 0.89, blue: 0.98)
-                : Color(red: 0.86, green: 0.94, blue: 0.90)
-        }
     }
 
     private func regions(
@@ -840,7 +695,7 @@ struct U07Preview: View {
         let intoBowl = group == .bowl
         let observing = work == nil && !reviewing
         let isOtherGroup = observing && group == .tray
-            && (demo.step == .otherGroup || demo.step == .countTray)
+            && projection.step.otherGroup
         let title = isOtherGroup ? "Tray · Other group"
             : showCount ? "\(group.title) · \(ids.count)" : group.title
         return VStack(alignment: .leading, spacing: 8) {
@@ -848,7 +703,7 @@ struct U07Preview: View {
                 Image(systemName: group.symbol).accessibilityHidden(true)
                 Text(title)
                 if observing, !demo.manual, !reduceMotion,
-                   let indicated = demo.indicatedCounter, ids.contains(indicated) {
+                   let indicated = projection.indicatedCounter, ids.contains(indicated) {
                     Image(systemName: "hand.point.down.fill").accessibilityHidden(true)
                 }
             }
@@ -891,8 +746,8 @@ struct U07Preview: View {
         .background(group.fill, in: RoundedRectangle(cornerRadius: intoBowl ? 32 : 16))
         .overlay {
             RoundedRectangle(cornerRadius: intoBowl ? 32 : 16)
-                .strokeBorder(group.tint.opacity(observing && demo.linkedGroups.contains(group) ? 1 : 0.35),
-                              lineWidth: observing && demo.linkedGroups.contains(group) ? 4 : 2)
+                .strokeBorder(group.tint.opacity(observing && projection.linkedGroups.contains(group) ? 1 : 0.35),
+                              lineWidth: observing && projection.linkedGroups.contains(group) ? 4 : 2)
                 .allowsHitTesting(false)
         }
         .contentShape(Rectangle())
@@ -909,8 +764,8 @@ struct U07Preview: View {
     }
 
     private func demoCounter(_ id: Int, group: CounterGroup) -> some View {
-        let indicated = demo.indicatedCounter == id
-        let shownWord = group == .tray && indicated ? demo.indicatedWord : nil
+        let indicated = projection.indicatedCounter == id
+        let shownWord = group == .tray && indicated ? projection.indicatedWord : nil
         return counter(false)
             .overlay {
                 if indicated {
@@ -973,7 +828,8 @@ struct U07Preview: View {
         VStack(spacing: 8) {
             Text(title).font(.headline)
             bondNode("Whole", value: whole,
-                     linked: teaching && (demo.step == .whole || demo.linkedGroups.count == 2))
+                     linked: teaching && ((!projection.step.showParts && !projection.step.otherGroup
+                         && projection.linkedGroups.contains(.tray)) || projection.linkedGroups.count == 2))
             if showParts {
                 Canvas { context, size in
                     var branches = Path()
@@ -987,10 +843,10 @@ struct U07Preview: View {
                 .accessibilityHidden(true)
                 HStack(spacing: 8) {
                     bondNode("Part 1", value: known, group: knownGroup,
-                             linked: teaching && demo.linkedGroups.contains(.bowl))
+                             linked: teaching && projection.linkedGroups.contains(.bowl))
                         .frame(maxWidth: .infinity)
                     bondNode("Part 2", value: missing, group: knownGroup?.opposite,
-                             linked: teaching && demo.linkedGroups.contains(.tray))
+                             linked: teaching && projection.linkedGroups.contains(.tray))
                         .frame(maxWidth: .infinity)
                 }
             }
@@ -1162,6 +1018,21 @@ private struct JuniMoon: View {
         .accessibilityElement(children: .ignore)
         .accessibilityLabel("Juni, a \(reaction.rawValue) golden full moon")
         .accessibilityAddTraits(.isImage)
+    }
+}
+
+private extension NumberBondLesson.Group {
+    var title: String { self == .tray ? "Tray" : "Bowl" }
+    var opposite: Self { self == .tray ? .bowl : .tray }
+    var symbol: String { self == .tray ? "rectangle" : "oval" }
+    var tint: Color {
+        self == .tray ? Color(red: 0.29, green: 0.24, blue: 0.54)
+            : Color(red: 0.12, green: 0.35, blue: 0.34)
+    }
+
+    var fill: Color {
+        self == .tray ? Color(red: 0.92, green: 0.89, blue: 0.98)
+            : Color(red: 0.86, green: 0.94, blue: 0.90)
     }
 }
 #endif

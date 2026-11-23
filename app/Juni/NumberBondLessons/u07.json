@@ -1,0 +1,358 @@
+{
+  "schemaVersion": 1,
+  "id": "u07",
+  "version": "1.0.0",
+  "title": "Split a whole",
+  "synthetic": false,
+  "observe": {
+    "whole": 6,
+    "knownPart": 2,
+    "expectedAnswer": 4,
+    "modelRequirement": "knownPartInBowl"
+  },
+  "guided": {
+    "whole": 7,
+    "knownPart": 1,
+    "expectedAnswer": 6,
+    "modelRequirement": "knownPartInBowl"
+  },
+  "check": {
+    "whole": 8,
+    "knownPart": 3,
+    "expectedAnswer": 5,
+    "modelRequirement": "wholeAndBothParts"
+  },
+  "steps": [
+    {
+      "caption": {
+        "text": "Let’s count the counters in this tray.",
+        "clipID": "u07-observe-intro"
+      },
+      "cues": [
+        {
+          "at": 0
+        }
+      ],
+      "quiet": 0.5,
+      "showWhole": false,
+      "showParts": false,
+      "showTrayCount": true,
+      "otherGroup": false,
+      "reaction": "smiling",
+      "highlight": [],
+      "requiresImmediateAudioCue": false
+    },
+    {
+      "caption": {
+        "text": "One, two, three, four, five, six.",
+        "clipID": "u07-observe-count"
+      },
+      "cues": [
+        {
+          "at": 5,
+          "count": 1
+        },
+        {
+          "at": 6,
+          "count": 2
+        },
+        {
+          "at": 7,
+          "count": 3
+        },
+        {
+          "at": 8,
+          "count": 4
+        },
+        {
+          "at": 9,
+          "count": 5
+        },
+        {
+          "at": 10,
+          "count": 6
+        }
+      ],
+      "quiet": 0.5,
+      "showWhole": false,
+      "showParts": false,
+      "showTrayCount": true,
+      "otherGroup": false,
+      "reaction": "focused",
+      "highlight": [],
+      "requiresImmediateAudioCue": false
+    },
+    {
+      "caption": {
+        "text": "Six is the whole. That means all the counters. Watch me split them into two groups.",
+        "clipID": "u07-observe-whole"
+      },
+      "cues": [
+        {
+          "at": 12
+        }
+      ],
+      "quiet": 1,
+      "showWhole": true,
+      "showParts": false,
+      "showTrayCount": true,
+      "otherGroup": false,
+      "reaction": "smiling",
+      "highlight": [
+        "tray"
+      ],
+      "requiresImmediateAudioCue": false
+    },
+    {
+      "caption": {
+        "text": "One into the bowl.",
+        "clipID": "u07-observe-first"
+      },
+      "cues": [
+        {
+          "at": 19
+        },
+        {
+          "at": 20,
+          "moveToBowl": 1
+        }
+      ],
+      "quiet": 0.5,
+      "showWhole": true,
+      "showParts": false,
+      "showTrayCount": false,
+      "otherGroup": false,
+      "reaction": "focused",
+      "highlight": [],
+      "requiresImmediateAudioCue": true
+    },
+    {
+      "caption": {
+        "text": "One more into the bowl. Two in the bowl.",
+        "clipID": "u07-observe-second"
+      },
+      "cues": [
+        {
+          "at": 22
+        },
+        {
+          "at": 23,
+          "moveToBowl": 2
+        }
+      ],
+      "quiet": 0.5,
+      "showWhole": true,
+      "showParts": false,
+      "showTrayCount": false,
+      "otherGroup": false,
+      "reaction": "focused",
+      "highlight": [],
+      "requiresImmediateAudioCue": true
+    },
+    {
+      "caption": {
+        "text": "The tray is our other group. How many are there?",
+        "clipID": "u07-observe-other-group"
+      },
+      "cues": [
+        {
+          "at": 26
+        }
+      ],
+      "quiet": 2,
+      "showWhole": true,
+      "showParts": false,
+      "showTrayCount": false,
+      "otherGroup": true,
+      "reaction": "thinking",
+      "highlight": [
+        "tray"
+      ],
+      "requiresImmediateAudioCue": false
+    },
+    {
+      "caption": {
+        "text": "One, two, three, four. Four in the tray.",
+        "clipID": "u07-observe-count-tray"
+      },
+      "cues": [
+        {
+          "at": 32,
+          "count": 3
+        },
+        {
+          "at": 33,
+          "count": 4
+        },
+        {
+          "at": 34,
+          "count": 5
+        },
+        {
+          "at": 35,
+          "count": 6
+        }
+      ],
+      "quiet": 0.5,
+      "showWhole": true,
+      "showParts": false,
+      "showTrayCount": false,
+      "otherGroup": true,
+      "reaction": "focused",
+      "highlight": [],
+      "requiresImmediateAudioCue": false
+    },
+    {
+      "caption": {
+        "text": "Two in the bowl. Four in the tray. Two and four make six. This picture is a number bond.",
+        "clipID": "u07-observe-bond"
+      },
+      "cues": [
+        {
+          "at": 38,
+          "highlight": [
+            "bowl"
+          ]
+        },
+        {
+          "at": 40,
+          "highlight": [
+            "tray"
+          ]
+        },
+        {
+          "at": 42,
+          "highlight": [
+            "tray",
+            "bowl"
+          ]
+        }
+      ],
+      "quiet": 0.5,
+      "showWhole": true,
+      "showParts": true,
+      "showTrayCount": true,
+      "otherGroup": false,
+      "reaction": "smiling",
+      "highlight": [
+        "tray",
+        "bowl"
+      ],
+      "requiresImmediateAudioCue": true
+    },
+    {
+      "caption": {
+        "text": "Let’s put the two back. One, two, three, four, five, six. We still have six!",
+        "clipID": "u07-observe-recombine"
+      },
+      "cues": [
+        {
+          "at": 49
+        },
+        {
+          "at": 51,
+          "recombine": true,
+          "highlight": []
+        },
+        {
+          "at": 52,
+          "count": 1
+        },
+        {
+          "at": 53,
+          "count": 2
+        },
+        {
+          "at": 54,
+          "count": 3
+        },
+        {
+          "at": 55,
+          "count": 4
+        },
+        {
+          "at": 56,
+          "count": 5
+        },
+        {
+          "at": 57,
+          "count": 6,
+          "revealTrayCount": true
+        }
+      ],
+      "quiet": 0.5,
+      "showWhole": true,
+      "showParts": true,
+      "showTrayCount": false,
+      "otherGroup": false,
+      "reaction": "delighted",
+      "highlight": [
+        "tray",
+        "bowl"
+      ],
+      "requiresImmediateAudioCue": true
+    },
+    {
+      "caption": {
+        "text": "Ready to make your own split? Tap Try.",
+        "clipID": "u07-observe-ready"
+      },
+      "cues": [
+        {
+          "at": 60
+        }
+      ],
+      "quiet": 0.5,
+      "showWhole": true,
+      "showParts": true,
+      "showTrayCount": true,
+      "otherGroup": false,
+      "reaction": "delighted",
+      "highlight": [],
+      "requiresImmediateAudioCue": false
+    }
+  ],
+  "end": 64,
+  "prompts": {
+    "tryEntry": {
+      "text": "Here are seven counters. Move one from the tray to the bowl.",
+      "clipID": "u07-try-entry"
+    },
+    "tryCount": {
+      "text": "The bowl has one. The counters in the tray are the other part. How many are in the tray?",
+      "clipID": "u07-try-count"
+    },
+    "tryBond": {
+      "text": "Put that number in the empty part of the number bond.",
+      "clipID": "u07-try-bond"
+    },
+    "trySplit": {
+      "text": "You made two groups. One and six make seven. Put the bowl counter back in the tray. How many are there now?",
+      "clipID": "u07-try-split"
+    },
+    "tryRecount": {
+      "text": "How many counters are together in the tray? Count them and enter the number.",
+      "clipID": "u07-try-recount"
+    },
+    "tryDone": {
+      "text": "Seven again! You split the whole and put it back together.",
+      "clipID": "u07-try-done"
+    },
+    "tryRetry": {
+      "text": "Try once more. How many are in the other part?",
+      "clipID": "u07-try-retry"
+    },
+    "tryMoveBack": {
+      "text": "We need one in the bowl. Move counters back until just one is there.",
+      "clipID": "u07-try-move-back"
+    },
+    "tryRecountRetry": {
+      "text": "Count the counters in the tray again.",
+      "clipID": "u07-try-recount-retry"
+    },
+    "checkSuccess": {
+      "text": "You showed both parts and how they make eight. Well done!",
+      "clipID": "u07-check-success"
+    }
+  }
+}

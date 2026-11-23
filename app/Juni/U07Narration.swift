@@ -96,14 +96,14 @@ enum U07Narration {
     }
 
     static func observe(_ id: String, cues: [Int], fallbackDuration: TimeInterval,
-                        quiet: TimeInterval, in bundle: Bundle = .main) -> (Timeline, AVAudioPlayer?) {
+                        quiet: TimeInterval, requiresImmediateCue: Bool = false, in bundle: Bundle = .main) -> (Timeline, AVAudioPlayer?) {
         let player = player(for: id, in: bundle)
         var offsets: [TimeInterval] = cues.count == 1 ? [0] : []
         if cues.count > 1,
            let url = bundle.url(forResource: id, withExtension: "json", subdirectory: "U07Narration"),
            let data = try? Data(contentsOf: url),
            let sheet = try? JSONDecoder().decode(CueSheet.self, from: data),
-           !zeroStartClips.contains(id) || sheet.offsets.first == 0 {
+           !(requiresImmediateCue || zeroStartClips.contains(id)) || sheet.offsets.first == 0 {
             offsets = sheet.offsets
         }
         let timeline = Timeline(cues: cues, fallbackDuration: fallbackDuration,

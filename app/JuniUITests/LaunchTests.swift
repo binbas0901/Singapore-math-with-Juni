@@ -310,6 +310,50 @@ final class U07PreviewTests: XCTestCase {
     }
 
     @MainActor
+    func testSyntheticLessonUsesSharedPreview() {
+        XCUIDevice.shared.orientation = .portrait
+        let app = XCUIApplication()
+        app.launchArguments = ["-number-bond-preview", "synthetic-demo"]
+        app.launch()
+        defer { app.terminate() }
+
+        XCTAssertTrue(app.staticTexts["Synthetic demonstration fixture"].exists)
+        app.buttons["Start lesson preview"].tap()
+        XCTAssertEqual(app.staticTexts["observe-caption"].label, "Start with all five counters in the tray.")
+        app.buttons["Try"].tap()
+        XCTAssertEqual(app.staticTexts["workspace-prompt"].label, "Start with six counters. Move two into the bowl.")
+        moveCountersToBowl(1...2, in: app)
+        app.buttons["key-4"].tap()
+        app.buttons["Check my answer"].tap()
+        for id in 1...2 {
+            app.buttons["counter-\(id)"].tap()
+            app.buttons["put-in-tray"].tap()
+        }
+        XCTAssertTrue(app.buttons["Check my count"].exists)
+        app.buttons["key-6"].tap()
+        app.buttons["Check my count"].tap()
+        app.buttons["Continue to Check"].tap()
+        XCTAssertEqual(missingPart(in: app).value as? String, "Blank")
+        app.buttons["key-7"].tap()
+        app.buttons["Check my answer"].tap()
+        XCTAssertFalse(app.staticTexts["check-celebration"].exists)
+        moveCountersToBowl(1...2, in: app)
+        app.buttons["Check my answer"].tap()
+        XCTAssertEqual(app.staticTexts["check-celebration"].label, "You showed two parts that make nine. Well done!")
+    }
+
+    @MainActor
+    func testMissingLessonStaysOutOfPreview() {
+        let app = XCUIApplication()
+        app.launchArguments = ["-number-bond-preview", "missing-lesson"]
+        app.launch()
+        defer { app.terminate() }
+
+        XCTAssertTrue(app.staticTexts["Lesson unavailable"].exists)
+        XCTAssertFalse(app.buttons["Start lesson preview"].exists)
+    }
+
+    @MainActor
     func testCheckStartsBlankAndUsesBothModelAndNumber() throws {
         let app = try launchPreview(orientation: .portrait)
         defer { app.terminate() }
