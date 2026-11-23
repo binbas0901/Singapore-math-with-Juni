@@ -4,10 +4,11 @@ import JuniCore
 import SwiftUI
 
 struct U07Preview: View {
-    private enum Page: String, CaseIterable {
+    private enum Page: String {
         case observe = "Observe"
         case tryIt = "Try"
         case check = "Check"
+        case completion, review
     }
 
     // en-SG Observe draft, PR #25 at 29213ce. Times are offsets in the future local clip.
@@ -113,6 +114,8 @@ struct U07Preview: View {
     @Environment(\.accessibilityReduceMotion) private var reduceMotion
     @State private var page: Page?
     @State private var resumePage: Page?
+    @State private var animateCelebration = false
+    private let celebrationMessage = "You showed both parts and how they make eight. Well done!"
     @Environment(\.scenePhase) private var scenePhase
     @State private var demo = DemoFrame()
     @State private var elapsed: TimeInterval = 0
@@ -131,12 +134,16 @@ struct U07Preview: View {
         ScrollView {
             VStack(alignment: .leading, spacing: 14) {
                 if let page {
-                    header
-                    navigation(page)
+                    if page != .completion && page != .review {
+                        header
+                        navigation(page)
+                    }
                     switch page {
                     case .observe: observe
                     case .tryIt: workspace(guided: true, work: $guided)
                     case .check: workspace(guided: false, work: $independent)
+                    case .completion: completion
+                    case .review: completedWork
                     }
                 } else {
                     welcome
@@ -201,7 +208,80 @@ struct U07Preview: View {
         guided = Working(isGuided: true)
         independent = Working()
         resumePage = nil
+        animateCelebration = false
         page = .observe
+    }
+
+    private func goHome() {
+        pauseDemo()
+        animateCelebration = false
+        resumePage = page
+        page = nil
+    }
+
+    private var completedBond: some View {
+        bond(8, 3, independent.answer, title: "Your number bond",
+             knownGroup: independent.bowl.count == 3 ? .bowl : .tray)
+    }
+
+    private var completion: some View {
+        VStack(spacing: 24) {
+            VStack(spacing: 16) {
+                Group {
+                    if animateCelebration && !reduceMotion {
+                        CelebratingJuni()
+                    } else {
+                        JuniMoon(reaction: .delighted)
+                    }
+                }
+                .frame(width: 156, height: 156)
+                Text(celebrationMessage)
+                    .font(.system(.title, design: .rounded, weight: .bold))
+                    .accessibilityAddTraits(.isHeader)
+                    .accessibilityIdentifier("check-celebration")
+            }
+            completedBond
+                .padding(20)
+                .background(.white, in: RoundedRectangle(cornerRadius: 24))
+            ViewThatFits(in: .horizontal) {
+                HStack(spacing: 12) { completionActions }
+                VStack(spacing: 12) { completionActions }
+            }
+        }
+        .multilineTextAlignment(.center)
+        .frame(maxWidth: 620)
+        .frame(maxWidth: .infinity)
+        .padding(.vertical, 24)
+    }
+
+    private var completionActions: some View {
+        Group {
+            Button("Play Again") { startOver() }
+                .buttonStyle(PreviewButton(prominent: true))
+            Button("See My Work") {
+                animateCelebration = false
+                page = .review
+            }
+            .buttonStyle(PreviewButton())
+            Button("Back to Home") { goHome() }
+                .buttonStyle(PreviewButton())
+        }
+    }
+
+    private var completedWork: some View {
+        VStack(alignment: .leading, spacing: 16) {
+            Button("Back to Completion") { page = .completion }
+                .buttonStyle(PreviewButton())
+            Text("My Check work").font(.title2.bold()).accessibilityAddTraits(.isHeader)
+            AdaptiveColumns {
+                regions(whole: 8, bowl: independent.bowl, showCounts: true, work: nil, reviewing: true)
+            } side: {
+                completedBond
+                    .padding(16)
+                    .frame(maxWidth: .infinity)
+                    .background(.white, in: RoundedRectangle(cornerRadius: 22))
+            }
+        }
     }
 
     private var header: some View {
@@ -211,11 +291,7 @@ struct U07Preview: View {
                 Text(narration == nil ? "U07 lesson preview · Captions only" : "U07 lesson preview").font(.subheadline)
             }
             Spacer()
-            Button("Home") {
-                pauseDemo()
-                resumePage = page
-                page = nil
-            }
+            Button("Home") { goHome() }
             .buttonStyle(PreviewButton())
         }
     }
@@ -230,7 +306,7 @@ struct U07Preview: View {
     }
 
     private func pageButtons(_ current: Page) -> some View {
-        ForEach(Page.allCases, id: \.self) { stage in
+        ForEach([Page.observe, .tryIt, .check], id: \.self) { stage in
             Button(stage.rawValue) {
                 if stage != .observe { pauseDemo() }
                 page = stage
@@ -508,11 +584,7 @@ struct U07Preview: View {
                             }
                         }
                     } else {
-                        // Check accepts either orientation. Assign the group labels only after
-                        // a successful submission so the diagram cannot validate an unsubmitted model.
-                        let knownGroup: CounterGroup? = isGuided ? .bowl
-                            : state.feedback == .correct ? (state.bowl.count == known ? .bowl : .tray) : nil
-                        bond(whole, known, state.answer, title: "Number bond", knownGroup: knownGroup)
+                        bond(whole, known, state.answer, title: "Number bond", knownGroup: isGuided ? .bowl : nil)
                         keypad(work)
                         Button("Check my answer") {
                             let bowlCount = state.bowl.count
@@ -520,6 +592,12 @@ struct U07Preview: View {
                             let modelMatches = bowlCount == known || (!isGuided && trayCount == known)
                             let matches = modelMatches
                                 && state.answer == NumberBond.missingPart(whole: whole, known: known)
+                            if matches && !isGuided {
+                                animateCelebration = true
+                                page = .completion
+                                AccessibilityNotification.Announcement(celebrationMessage).post()
+                                return
+                            }
                             let feedback: Feedback = matches ? .correct : .retry
                             work.wrappedValue.feedback = feedback
                             let announcement = isGuided && matches
@@ -594,23 +672,25 @@ struct U07Preview: View {
     }
 
     private func regions(
-        whole: Int, bowl: Set<Int>, showCounts: Bool, hideTrayCount: Bool = false, work: Binding<Working>?
+        whole: Int, bowl: Set<Int>, showCounts: Bool, hideTrayCount: Bool = false,
+        work: Binding<Working>?, reviewing: Bool = false
     ) -> some View {
         let counters = Array(1...whole)
         return VStack(spacing: 12) {
             region(.tray, ids: counters.filter { !bowl.contains($0) },
-                   showCount: showCounts && !hideTrayCount, work: work)
+                   showCount: showCounts && !hideTrayCount, work: work, reviewing: reviewing)
             region(.bowl, ids: counters.filter { bowl.contains($0) },
-                   showCount: showCounts, work: work)
+                   showCount: showCounts, work: work, reviewing: reviewing)
         }
     }
 
     private func region(
         _ group: CounterGroup, ids: [Int], showCount: Bool,
-        work: Binding<Working>?
+        work: Binding<Working>?, reviewing: Bool
     ) -> some View {
         let intoBowl = group == .bowl
-        let isOtherGroup = work == nil && group == .tray
+        let observing = work == nil && !reviewing
+        let isOtherGroup = observing && group == .tray
             && (demo.step == .otherGroup || demo.step == .countTray)
         let title = isOtherGroup ? "Tray · Other group"
             : showCount ? "\(group.title) · \(ids.count)" : group.title
@@ -618,7 +698,7 @@ struct U07Preview: View {
             HStack(spacing: 7) {
                 Image(systemName: group.symbol).accessibilityHidden(true)
                 Text(title)
-                if work == nil, !demo.manual, !reduceMotion,
+                if observing, !demo.manual, !reduceMotion,
                    let indicated = demo.indicatedCounter, ids.contains(indicated) {
                     Image(systemName: "hand.point.down.fill").accessibilityHidden(true)
                 }
@@ -644,6 +724,11 @@ struct U07Preview: View {
                         .accessibilityAddTraits(selected ? .isSelected : [])
                         .accessibilityIdentifier("counter-\(id)")
                         .highPriorityGesture(counterDrag(id, work: work))
+                    } else if reviewing {
+                        counter(false)
+                            .accessibilityElement(children: .ignore)
+                            .accessibilityLabel("Counter in \(group.title.lowercased())")
+                            .accessibilityIdentifier("counter-\(id)")
                     } else {
                         demoCounter(id, group: group)
                             .matchedGeometryEffect(id: id, in: demoCounters)
@@ -657,8 +742,8 @@ struct U07Preview: View {
         .background(group.fill, in: RoundedRectangle(cornerRadius: intoBowl ? 32 : 16))
         .overlay {
             RoundedRectangle(cornerRadius: intoBowl ? 32 : 16)
-                .strokeBorder(group.tint.opacity(work == nil && demo.linkedGroups.contains(group) ? 1 : 0.35),
-                              lineWidth: work == nil && demo.linkedGroups.contains(group) ? 4 : 2)
+                .strokeBorder(group.tint.opacity(observing && demo.linkedGroups.contains(group) ? 1 : 0.35),
+                              lineWidth: observing && demo.linkedGroups.contains(group) ? 4 : 2)
                 .allowsHitTesting(false)
         }
         .contentShape(Rectangle())
@@ -859,6 +944,23 @@ private struct PreviewButton: ButtonStyle {
             .background(prominent ? Color(red: 0.12, green: 0.35, blue: 0.34) : Color(red: 0.93, green: 0.91, blue: 0.86),
                         in: RoundedRectangle(cornerRadius: 12))
             .opacity(isEnabled ? (configuration.isPressed ? 0.72 : 1) : 0.45)
+    }
+}
+
+private struct CelebratingJuni: View {
+    @State private var started = false
+
+    var body: some View {
+        JuniMoon(reaction: .delighted)
+            .keyframeAnimator(initialValue: CGFloat.zero, trigger: started) { view, lift in
+                view.offset(y: lift)
+            } keyframes: { _ in
+                CubicKeyframe(-14, duration: 0.28)
+                CubicKeyframe(0, duration: 0.36)
+                CubicKeyframe(-5, duration: 0.16)
+                CubicKeyframe(0, duration: 0.20)
+            }
+            .task { started = true }
     }
 }
 

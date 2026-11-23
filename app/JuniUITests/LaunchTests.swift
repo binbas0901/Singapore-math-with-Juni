@@ -326,10 +326,11 @@ final class U07PreviewTests: XCTestCase {
         app.buttons["key-5"].tap()
         submit.tap()
         XCTAssertTrue(app.staticTexts["Recount the two groups and check the missing number."].exists)
-        for id in 1...2 {
-            app.buttons["counter-\(id)"].tap()
-            app.buttons["put-in-bowl"].tap()
-        }
+        XCTAssertFalse(app.staticTexts["check-celebration"].exists)
+        moveCountersToBowl(1...2, in: app)
+        submit.tap()
+        XCTAssertTrue(app.staticTexts["Recount the two groups and check the missing number."].exists)
+        XCTAssertFalse(app.staticTexts["check-celebration"].exists)
         let third = app.buttons["counter-3"]
         let bowl = app.staticTexts["bowl-label"]
         let dropPoint = bowl.coordinate(withNormalizedOffset: CGVector(dx: 0.5, dy: 1))
@@ -346,12 +347,27 @@ final class U07PreviewTests: XCTestCase {
         app.buttons["key-4"].tap()
         submit.tap()
         XCTAssertTrue(app.staticTexts["Recount the two groups and check the missing number."].exists)
+        XCTAssertFalse(app.staticTexts["check-celebration"].exists)
         app.buttons["Clear answer"].tap()
         XCTAssertEqual(missingPart(in: app).value as? String, "Blank")
         app.buttons["key-5"].tap()
         submit.tap()
-        XCTAssertTrue(app.staticTexts["Your counters and number bond match."].exists)
-        XCTAssertEqual(missingPart(in: app).label, "Tray")
+        assertCompletion(in: app, knownGroup: "Bowl")
+        capture("U07-Check-Celebration-Portrait")
+
+        XCUIDevice.shared.orientation = .landscapeLeft
+        expectOrientation(.landscapeLeft, in: app)
+        assertCompletion(in: app, knownGroup: "Bowl")
+        capture("U07-Check-Completion-Landscape")
+
+        app.buttons["See My Work"].tap()
+        XCTAssertEqual(app.staticTexts["tray-label"].label, "Tray · 5")
+        XCTAssertEqual(app.staticTexts["bowl-label"].label, "Bowl · 3")
+        XCTAssertFalse(app.buttons["Check my answer"].exists)
+        XCTAssertFalse(app.buttons["counter-3"].exists)
+        XCTAssertEqual(part("counter-3", in: app).label, "Counter in bowl")
+        app.buttons["Back to Completion"].tap()
+        assertCompletion(in: app, knownGroup: "Bowl")
     }
 
     @MainActor
@@ -362,10 +378,7 @@ final class U07PreviewTests: XCTestCase {
         app.buttons["Try"].tap()
         app.buttons["key-6"].tap()
         app.buttons["Check"].tap()
-        for id in 1...5 {
-            app.buttons["counter-\(id)"].tap()
-            app.buttons["put-in-bowl"].tap()
-        }
+        moveCountersToBowl(1...5, in: app)
         XCTAssertEqual(missingPart(in: app).label, "Part 2")
         XCTAssertEqual(missingPart(in: app).value as? String, "Blank")
         app.buttons["key-5"].tap()
@@ -374,17 +387,97 @@ final class U07PreviewTests: XCTestCase {
         XCTAssertEqual(missingPart(in: app).value as? String, "5")
         XCTAssertEqual(app.buttons["counter-5"].label, "Counter in bowl")
         app.buttons["Check my answer"].tap()
-        XCTAssertEqual(part("Part 1", in: app).label, "Tray")
-        XCTAssertEqual(missingPart(in: app).label, "Bowl")
+        assertCompletion(in: app, knownGroup: "Tray")
 
-        app.buttons["Home"].tap()
-        app.buttons["Start Over"].tap()
+        app.buttons["Back to Home"].tap()
+        XCTAssertTrue(app.staticTexts["Singapore Math with Juni"].exists)
+        XCTAssertTrue(app.buttons["Start Over"].isHittable)
+        app.buttons["Resume"].tap()
+        assertCompletion(in: app, knownGroup: "Tray")
+
+        app.buttons["Play Again"].tap()
+        XCTAssertEqual(app.staticTexts["observe-caption"].label, "Let’s count the counters in this tray.")
         XCTAssertEqual(app.staticTexts["bowl-label"].label, "Bowl")
         app.buttons["Try"].tap()
         XCTAssertEqual(missingPart(in: app).value as? String, "Blank")
         app.buttons["Check"].tap()
         XCTAssertEqual(missingPart(in: app).value as? String, "Blank")
         XCTAssertEqual(app.buttons["counter-5"].label, "Counter in tray")
+        moveCountersToBowl(1...3, in: app)
+        app.buttons["key-5"].tap()
+        app.buttons["Check my answer"].tap()
+        assertCompletion(in: app, knownGroup: "Bowl")
+        app.buttons["Back to Home"].tap()
+        app.buttons["Start Over"].tap()
+        XCTAssertEqual(app.staticTexts["observe-caption"].label, "Let’s count the counters in this tray.")
+        app.buttons["Check"].tap()
+        XCTAssertEqual(missingPart(in: app).value as? String, "Blank")
+        XCTAssertEqual(app.buttons["counter-1"].label, "Counter in tray")
+    }
+
+    @MainActor
+    func testCompletionWithSystemReduceMotion() throws {
+        XCUIDevice.shared.orientation = .portrait
+        let settings = XCUIApplication(bundleIdentifier: "com.apple.Preferences")
+        settings.launch()
+        let accessibility = settings.cells.containing(.staticText, identifier: "Accessibility").firstMatch
+        try XCTUnwrap(accessibility.waitForExistence(timeout: 10) ? accessibility : nil).tap()
+        let motion = settings.cells.containing(.staticText, identifier: "Motion").firstMatch
+        try XCTUnwrap(motion.waitForExistence(timeout: 10) ? motion : nil).tap()
+        let reduceMotion = settings.switches["Reduce Motion"].firstMatch
+        try XCTUnwrap(reduceMotion.waitForExistence(timeout: 10) ? reduceMotion : nil)
+        let initialValue = try XCTUnwrap(reduceMotion.value as? String)
+        let toggle = reduceMotion.coordinate(withNormalizedOffset: CGVector(dx: 0.95, dy: 0.5))
+        defer {
+            settings.activate()
+            if reduceMotion.value as? String != initialValue {
+                toggle.tap()
+                expectSwitchValue(initialValue, on: reduceMotion)
+            }
+        }
+        if initialValue == "0" { toggle.tap() }
+        expectSwitchValue("1", on: reduceMotion)
+
+        let app = try launchPreview(orientation: .portrait)
+        defer { app.terminate() }
+        app.buttons["Check"].tap()
+        moveCountersToBowl(1...3, in: app)
+        app.buttons["key-5"].tap()
+        app.buttons["Check my answer"].tap()
+        assertCompletion(in: app, knownGroup: "Bowl")
+        capture("U07-Check-Completion-Reduce-Motion")
+    }
+
+    @MainActor
+    private func expectSwitchValue(_ value: String, on element: XCUIElement) {
+        let expectation = XCTNSPredicateExpectation(predicate: NSPredicate(format: "value == %@", value),
+                                                    object: element)
+        XCTAssertEqual(XCTWaiter.wait(for: [expectation], timeout: 5), .completed)
+    }
+
+    @MainActor
+    private func moveCountersToBowl(_ ids: ClosedRange<Int>, in app: XCUIApplication) {
+        for id in ids {
+            app.buttons["counter-\(id)"].tap()
+            app.buttons["put-in-bowl"].tap()
+        }
+    }
+
+    @MainActor
+    private func assertCompletion(in app: XCUIApplication, knownGroup: String) {
+        let message = app.staticTexts["check-celebration"]
+        XCTAssertTrue(message.waitForExistence(timeout: 5))
+        XCTAssertEqual(message.label, "You showed both parts and how they make eight. Well done!")
+        XCTAssertTrue(part("Juni, a delighted golden full moon", in: app).exists)
+        XCTAssertEqual(part("Whole", in: app).value as? String, "8")
+        XCTAssertEqual(part("Part 1", in: app).value as? String, "3")
+        XCTAssertEqual(part("Part 1", in: app).label, knownGroup)
+        XCTAssertEqual(missingPart(in: app).value as? String, "5")
+        XCTAssertEqual(missingPart(in: app).label, knownGroup == "Bowl" ? "Tray" : "Bowl")
+        for action in ["Play Again", "Back to Home", "See My Work"] {
+            XCTAssertTrue(app.buttons[action].isHittable)
+        }
+        XCTAssertFalse(app.buttons["Next Lesson"].exists)
     }
 
     @MainActor
