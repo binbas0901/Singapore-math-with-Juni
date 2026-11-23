@@ -6,6 +6,8 @@
 	objects = {
 
 /* Begin PBXFileReference section */
+		000000000000000000000041 /* U07Narration.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = U07Narration.swift; sourceTree = "<group>"; };
+		000000000000000000000043 /* U07Narration */ = {isa = PBXFileReference; lastKnownFileType = folder; path = U07Narration; sourceTree = "<group>"; };
 		000000000000000000000031 /* U07Preview.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = U07Preview.swift; sourceTree = "<group>"; };
 		000000000000000000000001 /* AppSource */ = {
 			isa = PBXFileReference;
@@ -40,7 +42,7 @@
 		};
 		000000000000000000000006 /* AppGroup */ = {
 			isa = PBXGroup;
-			children = (000000000000000000000001 /* AppSource */, 000000000000000000000031 /* U07Preview.swift */,);
+			children = (000000000000000000000001 /* AppSource */, 000000000000000000000031 /* U07Preview.swift */, 000000000000000000000041 /* U07Narration.swift */, 000000000000000000000043 /* U07Narration */,);
 			path = Juni;
 			sourceTree = "<group>";
 		};
@@ -74,6 +76,8 @@
 /* End XCSwiftPackageProductDependency section */
 
 /* Begin PBXBuildFile section */
+		000000000000000000000042 /* U07Narration.swift in Sources */ = {isa = PBXBuildFile; fileRef = 000000000000000000000041 /* U07Narration.swift */; };
+		000000000000000000000044 /* U07Narration in Resources */ = {isa = PBXBuildFile; fileRef = 000000000000000000000043 /* U07Narration */; };
 		000000000000000000000032 /* U07Preview.swift in Sources */ = {isa = PBXBuildFile; fileRef = 000000000000000000000031 /* U07Preview.swift */; };
 		00000000000000000000000B /* AppBuildFile */ = {
 			isa = PBXBuildFile;
@@ -93,7 +97,7 @@
 		00000000000000000000000E /* AppSources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
-			files = (00000000000000000000000B /* AppBuildFile */, 000000000000000000000032 /* U07Preview.swift in Sources */,);
+			files = (00000000000000000000000B /* AppBuildFile */, 000000000000000000000032 /* U07Preview.swift in Sources */, 000000000000000000000042 /* U07Narration.swift in Sources */,);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 		00000000000000000000000F /* TestSources */ = {
@@ -123,7 +127,7 @@
 		000000000000000000000012 /* AppResources */ = {
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
-			files = ();
+			files = (000000000000000000000044 /* U07Narration in Resources */,);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 		000000000000000000000013 /* TestResources */ = {

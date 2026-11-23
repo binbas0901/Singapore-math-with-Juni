@@ -86,12 +86,12 @@ final class U07PreviewTests: XCTestCase {
         app.buttons["Try together"].tap()
         XCTAssertEqual(tray.label, "Tray · 7")
         let prompt = app.staticTexts["workspace-prompt"]
-        XCTAssertEqual(prompt.label, "Move one counter into the bowl.")
+        XCTAssertEqual(prompt.label, "Here are seven counters. Move one from the tray to the bowl.")
         XCTAssertFalse(app.buttons["put-in-bowl"].isEnabled)
         app.buttons["counter-1"].tap()
         XCTAssertFalse(app.buttons["put-in-tray"].isEnabled)
         app.buttons["put-in-bowl"].tap()
-        XCTAssertTrue(prompt.label.hasPrefix("How many counters are left in the tray?"))
+        XCTAssertEqual(prompt.label, "The bowl has one. The counters in the tray are the other part. How many are in the tray?")
         XCTAssertEqual(tray.label, "Tray")
         XCTAssertEqual(missingPart(in: app).label, "Tray")
         XCTAssertEqual(missingPart(in: app).value as? String, "Blank")
@@ -111,8 +111,7 @@ final class U07PreviewTests: XCTestCase {
         XCTAssertEqual(tray.label, "Tray")
         XCTAssertEqual(missingPart(in: app).value as? String, "6")
         app.buttons["Check my answer"].tap()
-        XCTAssertTrue(app.staticTexts["Your counters and number bond match."].exists)
-        XCTAssertEqual(prompt.label, "Now put the two groups back together in the tray.")
+        XCTAssertEqual(prompt.label, "You made two groups. One and six make seven. Put the bowl counter back in the tray. How many are there now?")
         app.buttons["Recombine counters"].tap()
         assertAwaitingWholeCount(in: app)
         capture("U07-Try-Count-Whole")
@@ -319,17 +318,26 @@ final class U07PreviewTests: XCTestCase {
         XCTAssertTrue(counters.allElementsBoundByIndex.allSatisfy { $0.label == "Counter in tray" })
         let submit = app.buttons["Check my answer"]
         XCTAssertFalse(submit.isEnabled)
-        let prompt = app.staticTexts["workspace-prompt"].label
+        let prompt = app.staticTexts["workspace-prompt"]
+        let entry = "The whole is eight. One part is three. What is the other part? Show how your two parts make eight with counters."
+        let retry = "Take another look. The whole is eight. One part is three. What is the other part? Show how your two parts make eight."
+        XCTAssertEqual(prompt.label, entry)
+        app.buttons["Replay prompt"].tap()
+        XCTAssertEqual(prompt.label, entry)
+        XCTAssertFalse(app.buttons["Pause narration"].exists)
+        XCTAssertFalse(submit.isEnabled)
+        XCTAssertEqual(missingPart(in: app).value as? String, "Blank")
         XCTAssertEqual(missingPart(in: app).label, "Part 2")
         capture("U07-Check")
 
         app.buttons["key-5"].tap()
+        XCTAssertEqual(prompt.label, "Put your answer in the empty part.")
         submit.tap()
-        XCTAssertTrue(app.staticTexts["Recount the two groups and check the missing number."].exists)
+        XCTAssertEqual(prompt.label, retry)
         XCTAssertFalse(app.staticTexts["check-celebration"].exists)
         moveCountersToBowl(1...2, in: app)
         submit.tap()
-        XCTAssertTrue(app.staticTexts["Recount the two groups and check the missing number."].exists)
+        XCTAssertEqual(prompt.label, retry)
         XCTAssertFalse(app.staticTexts["check-celebration"].exists)
         let third = app.buttons["counter-3"]
         let bowl = app.staticTexts["bowl-label"]
@@ -339,14 +347,14 @@ final class U07PreviewTests: XCTestCase {
             .press(forDuration: 0.6, thenDragTo: dropPoint)
         XCTAssertEqual(third.label, "Counter in bowl")
         XCTAssertEqual(app.buttons["counter-4"].label, "Counter in tray")
-        XCTAssertEqual(app.staticTexts["workspace-prompt"].label, prompt)
+        XCTAssertEqual(prompt.label, "Put your answer in the empty part.")
         XCTAssertEqual(app.staticTexts["tray-label"].label, "Tray")
         XCTAssertEqual(app.staticTexts["bowl-label"].label, "Bowl")
         XCTAssertEqual(missingPart(in: app).label, "Part 2")
 
         app.buttons["key-4"].tap()
         submit.tap()
-        XCTAssertTrue(app.staticTexts["Recount the two groups and check the missing number."].exists)
+        XCTAssertEqual(prompt.label, retry)
         XCTAssertFalse(app.staticTexts["check-celebration"].exists)
         app.buttons["Clear answer"].tap()
         XCTAssertEqual(missingPart(in: app).value as? String, "Blank")

@@ -11,11 +11,20 @@ struct U07Preview: View {
         case completion, review
     }
 
-    // en-SG Observe draft, PR #25 at 29213ce. Times are offsets in the future local clip.
+    // Nominal cue keys also define the captions-only schedule.
     private enum DemoStep: Int, CaseIterable {
         case intro, count, whole, first, second, otherGroup, countTray, bond, recombine, ready
 
         var start: Int { [0, 5, 12, 19, 22, 26, 32, 38, 49, 60][rawValue] }
+
+        var clipID: String {
+            "u07-observe-" + ["intro", "count", "whole", "first", "second", "other-group",
+                              "count-tray", "bond", "recombine", "ready"][rawValue]
+        }
+
+        var nextStart: Int { DemoStep(rawValue: rawValue + 1)?.start ?? Self.end }
+        var cues: [Int] { Self.cues.filter { (start..<nextStart).contains($0) } }
+        var quiet: TimeInterval { self == .otherGroup ? 2 : self == .whole ? 1 : 0.5 }
 
         var caption: String {
             switch self {
@@ -43,6 +52,7 @@ struct U07Preview: View {
         var time = 0
         var manual = true
         var countIndex = 0
+        var waitingForFirstCue = false
 
         var step: DemoStep { DemoStep.allCases.last { $0.start <= time } ?? .intro }
         var bowl: Set<Int> {
@@ -77,6 +87,7 @@ struct U07Preview: View {
             if manual {
                 return countOrder.indices.contains(countIndex) ? countOrder[countIndex] : nil
             }
+            if waitingForFirstCue { return nil }
             switch time {
             case 5..<12: return min(time - 4, 6)
             case 32..<38: return min(time - 29, 6)
@@ -115,14 +126,16 @@ struct U07Preview: View {
     @State private var page: Page?
     @State private var resumePage: Page?
     @State private var animateCelebration = false
-    private let celebrationMessage = "You showed both parts and how they make eight. Well done!"
+    private let celebrationMessage = Prompt.checkSuccess.caption
     @Environment(\.scenePhase) private var scenePhase
     @State private var demo = DemoFrame()
-    @State private var elapsed: TimeInterval = 0
-    @State private var startedAt: ContinuousClock.Instant?
+    @State private var demoPosition: TimeInterval = 0
+    @State private var failedAudioStep: DemoStep?
+    @State private var demoRun: UUID?
     @State private var narration: AVAudioPlayer?
+    @State private var promptPaused = false
 
-    private var playing: Bool { startedAt != nil }
+    private var playing: Bool { demoRun != nil }
     @State private var guided = Working(isGuided: true)
     @State private var independent = Working()
     @State private var trayFrame = CGRect.zero
@@ -171,7 +184,22 @@ struct U07Preview: View {
         .tint(teal)
         .preferredColorScheme(.light)
         .onChange(of: scenePhase) { _, phase in
-            if phase != .active { pauseDemo() }
+            if phase != .active { pauseNarration() }
+        }
+        .onReceive(NotificationCenter.default.publisher(for: AVAudioSession.interruptionNotification)) { note in
+            if note.userInfo?[AVAudioSessionInterruptionTypeKey] as? UInt == AVAudioSession.InterruptionType.began.rawValue {
+                pauseNarration()
+            }
+        }
+        .onDisappear {
+            pauseDemo()
+            stopPrompt()
+        }
+        .onChange(of: PromptContext(page: page, prompt: activePrompt)) { previous, next in
+            if previous.page != next.page && next.page != .observe { pauseDemo() }
+            stopPrompt()
+            if next.page == .completion && previous.page != .check { return }
+            if let prompt = next.prompt { playPrompt(prompt) }
         }
     }
 
@@ -204,6 +232,7 @@ struct U07Preview: View {
     }
 
     private func startOver() {
+        stopPrompt()
         resetDemo()
         guided = Working(isGuided: true)
         independent = Working()
@@ -213,7 +242,7 @@ struct U07Preview: View {
     }
 
     private func goHome() {
-        pauseDemo()
+        pauseNarration()
         animateCelebration = false
         resumePage = page
         page = nil
@@ -239,6 +268,7 @@ struct U07Preview: View {
                     .font(.system(.title, design: .rounded, weight: .bold))
                     .accessibilityAddTraits(.isHeader)
                     .accessibilityIdentifier("check-celebration")
+                promptControls(.checkSuccess)
             }
             completedBond
                 .padding(20)
@@ -288,7 +318,7 @@ struct U07Preview: View {
         HStack(spacing: 14) {
             VStack(alignment: .leading, spacing: 3) {
                 Text("Split a whole").font(.title2.bold()).accessibilityAddTraits(.isHeader)
-                Text(narration == nil ? "U07 lesson preview · Captions only" : "U07 lesson preview").font(.subheadline)
+                Text("U07 lesson preview").font(.subheadline)
             }
             Spacer()
             Button("Home") { goHome() }
@@ -317,7 +347,8 @@ struct U07Preview: View {
     }
 
     private var observe: some View {
-        VStack(alignment: .leading, spacing: 16) {
+        let run = demoRun
+        return VStack(alignment: .leading, spacing: 16) {
             teachingPrompt(demo.step.caption, identifier: "observe-caption", reaction: demoReaction)
             ViewThatFits(in: .horizontal) {
                 HStack { demoButtons }
@@ -347,23 +378,77 @@ struct U07Preview: View {
                 .background(.white, in: RoundedRectangle(cornerRadius: 22))
             }
         }
-        .task(id: startedAt) {
-            guard playing, let startedAt else { return }
-            let clock = ContinuousClock()
-            do {
-                for cue in DemoStep.cues where Double(cue) > elapsed {
-                    try await clock.sleep(until: startedAt.advanced(by: .seconds(Double(cue))))
-                    try Task.checkCancellation()
-                    guard playing, self.startedAt == startedAt, page == .observe else { return }
-                    showDemo(DemoFrame(time: cue, manual: false))
-                }
-                pauseDemo()
-                elapsed = Double(DemoStep.end)
-            } catch is CancellationError {
-                // Leaving Observe or pausing cancels the current schedule.
-            } catch {
-                pauseDemo()
+        .task(id: run) {
+            guard let run else { return }
+            await runDemo(run)
+        }
+    }
+
+    private func runDemo(_ run: UUID) async {
+        let clock = ContinuousClock()
+        for step in DemoStep.allCases.dropFirst(demo.step.rawValue) {
+            guard demoRun == run, page == .observe, !Task.isCancelled else { return }
+            let fallbackDuration = Double(step.nextStart - step.start)
+            let fallback = U07Narration.Timeline(cues: step.cues, fallbackDuration: fallbackDuration)
+            var (timeline, player) = failedAudioStep == step ? (fallback, nil) : U07Narration.observe(
+                step.clipID, cues: step.cues, fallbackDuration: fallbackDuration, quiet: step.quiet
+            )
+            if demo.manual {
+                demoPosition = timeline.offset(for: manualCue)
             }
+            narration = player
+            if let player, demoPosition < player.duration {
+                player.currentTime = demoPosition
+                if !player.play() {
+                    let cue = timeline.cue(at: demoPosition)
+                    timeline = fallback
+                    demoPosition = timeline.offset(for: cue)
+                    failedAudioStep = step
+                    narration = nil
+                }
+            }
+            showDemo(timedFrame(timeline), animate: false)
+            var previousTick = clock.now
+            while demoPosition < timeline.duration {
+                do {
+                    try await clock.sleep(for: .milliseconds(25))
+                    try Task.checkCancellation()
+                } catch {
+                    return
+                }
+                guard demoRun == run, page == .observe else { return }
+                let now = clock.now
+                let delta = previousTick.duration(to: now).components
+                if let player = narration, player.isPlaying {
+                    demoPosition = max(demoPosition, player.currentTime)
+                } else {
+                    demoPosition += Double(delta.seconds) + Double(delta.attoseconds) / 1e18
+                }
+                previousTick = now
+                let frame = timedFrame(timeline)
+                if frame != demo { showDemo(frame) }
+            }
+            narration?.stop()
+            narration = nil
+            demoPosition = 0
+            failedAudioStep = nil
+        }
+        showDemo(DemoFrame(time: DemoStep.end, manual: false))
+        demoRun = nil
+    }
+
+    private func timedFrame(_ timeline: U07Narration.Timeline) -> DemoFrame {
+        DemoFrame(time: timeline.cue(at: demoPosition), manual: false,
+                  waitingForFirstCue: demoPosition < timeline.offsets[0])
+    }
+
+    private var manualCue: Int {
+        switch demo.step {
+        case .count, .countTray: demo.step.start + demo.countIndex
+        case .first: 20
+        case .second: 23
+        case .recombine: 52 + demo.countIndex
+        default: demo.time
         }
     }
 
@@ -383,7 +468,7 @@ struct U07Preview: View {
                 if playing { pauseDemo() } else { playDemo() }
             }
             .buttonStyle(PreviewButton(prominent: true))
-            .disabled(!playing && elapsed >= Double(DemoStep.end))
+            .disabled(!playing && demo.time == DemoStep.end)
             Button("Replay") {
                 resetDemo()
                 playDemo()
@@ -397,11 +482,12 @@ struct U07Preview: View {
                     return
                 }
                 pauseDemo()
+                failedAudioStep = nil
                 if let next = DemoStep(rawValue: demo.step.rawValue + 1) {
-                    elapsed = Double(next.start)
+                    demoPosition = 0
                     showDemo(DemoFrame(time: next.start), animate: false)
                 } else {
-                    elapsed = Double(DemoStep.end)
+                    demoPosition = 0
                     showDemo(DemoFrame(time: DemoStep.end), animate: false)
                 }
             }
@@ -416,39 +502,30 @@ struct U07Preview: View {
 
     private func resetDemo() {
         pauseDemo()
-        elapsed = 0
+        failedAudioStep = nil
+        demoPosition = 0
         showDemo(DemoFrame(), animate: false)
     }
 
     private func playDemo() {
-        if demo.manual {
-            switch demo.step {
-            case .first: elapsed = 20
-            case .second: elapsed = 23
-            case .recombine: elapsed = 51
-            default: break
-            }
-        }
-        // A single bundled clip uses the same timebase as the authored cues.
-        // The caption timeline also runs when the clip is absent or unreadable.
-        if narration == nil, let clip = Bundle.main.url(forResource: "u07-observe-en-SG", withExtension: "m4a") {
-            narration = try? AVAudioPlayer(contentsOf: clip)
-        }
-        if let narration, elapsed < narration.duration {
-            narration.currentTime = elapsed
-            narration.play()
-        }
-        let time = Int(elapsed)
-        showDemo(DemoFrame(time: time, manual: false), animate: false)
-        startedAt = ContinuousClock().now.advanced(by: .seconds(-elapsed))
+        guard page == .observe, scenePhase == .active else { return }
+        stopPrompt()
+        demoRun = UUID()
     }
 
     private func pauseDemo() {
-        guard playing, let startedAt else { return }
-        let duration = startedAt.duration(to: ContinuousClock().now).components
-        elapsed = min(Double(DemoStep.end), Double(duration.seconds) + Double(duration.attoseconds) / 1e18)
-        narration?.pause()
-        self.startedAt = nil
+        guard playing else { return }
+        demoRun = nil
+        narration?.stop()
+        narration = nil
+    }
+
+    private func pauseNarration() {
+        pauseDemo()
+        if narration != nil {
+            narration?.pause()
+            promptPaused = true
+        }
     }
 
     private func showDemo(_ frame: DemoFrame, animate: Bool = true) {
@@ -484,13 +561,6 @@ struct U07Preview: View {
 
     private enum Feedback {
         case correct, retry
-
-        var message: String {
-            switch self {
-            case .correct: "Your counters and number bond match."
-            case .retry: "Recount the two groups and check the missing number."
-            }
-        }
     }
 
     private enum WholeVerification {
@@ -502,24 +572,104 @@ struct U07Preview: View {
         var bowl: Set<Int> = []
         var selection: Int?
         var answer: Int?
+        var hasEnteredAnswer = false
         var feedback: Feedback?
         var verification: WholeVerification?
     }
 
-    private func guidedPrompt(_ state: Working) -> String {
-        if state.verification == .verified {
-            return "You counted the whole again."
+    private struct PromptContext: Equatable {
+        let page: Page?
+        let prompt: Prompt?
+    }
+
+    private enum Prompt: String {
+        case tryEntry = "try-entry", tryCount = "try-count", tryBond = "try-bond"
+        case trySplit = "try-split", tryRecount = "try-recount", tryDone = "try-done"
+        case tryRetry = "try-retry", tryMoveBack = "try-move-back", tryRecountRetry = "try-recount-retry"
+        case checkEntry = "check-entry", checkAnswer = "check-answer", checkRetry = "check-retry"
+        case checkSuccess = "check-success"
+
+        var clipID: String { "u07-" + rawValue }
+
+        var caption: String {
+            switch self {
+            case .tryEntry: "Here are seven counters. Move one from the tray to the bowl."
+            case .tryCount: "The bowl has one. The counters in the tray are the other part. How many are in the tray?"
+            case .tryBond: "Put that number in the empty part of the number bond."
+            case .trySplit: "You made two groups. One and six make seven. Put the bowl counter back in the tray. How many are there now?"
+            case .tryRecount: "How many counters are together in the tray? Count them and enter the number."
+            case .tryDone: "Seven again! You split the whole and put it back together."
+            case .tryRetry: "Try once more. How many are in the other part?"
+            case .tryMoveBack: "We need one in the bowl. Move counters back until just one is there."
+            case .tryRecountRetry: "Count the counters in the tray again."
+            case .checkEntry: "The whole is eight. One part is three. What is the other part? Show how your two parts make eight with counters."
+            case .checkAnswer: "Put your answer in the empty part."
+            case .checkRetry: "Take another look. The whole is eight. One part is three. What is the other part? Show how your two parts make eight."
+            case .checkSuccess: "You showed both parts and how they make eight. Well done!"
+            }
         }
-        if state.verification != nil {
-            return "How many counters are together in the tray? Count them and enter the number."
+    }
+
+    private var activePrompt: Prompt? {
+        switch page {
+        case .tryIt:
+            switch guided.verification {
+            case .verified: return .tryDone
+            case .retry: return .tryRecountRetry
+            case .counting: return .tryRecount
+            case nil: break
+            }
+            if guided.feedback == .correct { return .trySplit }
+            if guided.bowl.isEmpty { return .tryEntry }
+            if guided.bowl.count > 1 { return .tryMoveBack }
+            if guided.feedback == .retry { return .tryRetry }
+            return guided.hasEnteredAnswer ? .tryBond : .tryCount
+        case .check:
+            if independent.feedback == .retry { return .checkRetry }
+            return independent.hasEnteredAnswer ? .checkAnswer : .checkEntry
+        case .completion: return .checkSuccess
+        default: return nil
         }
-        if state.feedback == .correct {
-            return "Now put the two groups back together in the tray."
+    }
+
+    private func stopPrompt() {
+        narration?.stop()
+        narration = nil
+        promptPaused = false
+    }
+
+    private func playPrompt(_ prompt: Prompt) {
+        stopPrompt()
+        guard scenePhase == .active else { return }
+        if let player = U07Narration.player(for: prompt.clipID), player.play() {
+            narration = player
+        } else {
+            AccessibilityNotification.Announcement(prompt.caption).post()
         }
-        switch state.bowl.count {
-        case 0: return "Move one counter into the bowl."
-        case 1: return "How many counters are left in the tray? Enter your answer in the number bond."
-        default: return "Leave just one counter in the bowl. Move the others back to the tray."
+    }
+
+    private func promptControls(_ prompt: Prompt) -> some View {
+        let player = narration
+        return HStack {
+            if let narration, narration.isPlaying || promptPaused {
+                Button(promptPaused ? "Resume narration" : "Pause narration") {
+                    if promptPaused {
+                        if narration.play() { promptPaused = false } else { stopPrompt() }
+                    } else {
+                        narration.pause()
+                        promptPaused = true
+                    }
+                }
+            }
+            Button("Replay prompt") { playPrompt(prompt) }
+        }
+        .buttonStyle(PreviewButton())
+        .task(id: player) {
+            guard let player else { return }
+            while player.isPlaying || promptPaused {
+                do { try await Task.sleep(for: .milliseconds(100)) } catch { return }
+            }
+            if narration === player { stopPrompt() }
         }
     }
 
@@ -528,11 +678,16 @@ struct U07Preview: View {
         let known = isGuided ? 1 : 3
         let state = work.wrappedValue
         return VStack(alignment: .leading, spacing: 16) {
-            teachingPrompt(
-                isGuided ? guidedPrompt(state)
-                    : "Split eight counters so one part has three. Show the two parts and enter the missing number.",
-                identifier: "workspace-prompt"
-            )
+            if let prompt = activePrompt {
+                teachingPrompt(prompt.caption, identifier: "workspace-prompt")
+                HStack {
+                    promptControls(prompt)
+                    if prompt == .tryCount {
+                        Button("Next prompt") { work.wrappedValue.hasEnteredAnswer = true }
+                            .buttonStyle(PreviewButton())
+                    }
+                }
+            }
             AdaptiveColumns {
                 VStack(alignment: .leading, spacing: 12) {
                     regions(whole: whole, bowl: state.bowl,
@@ -573,15 +728,9 @@ struct U07Preview: View {
                             Button("Check my count") {
                                 let result: WholeVerification = state.answer == whole ? .verified : .retry
                                 work.wrappedValue.verification = result
-                                let message = result == .verified
-                                    ? guidedPrompt(work.wrappedValue) : "Count the counters in the tray again."
-                                AccessibilityNotification.Announcement(message).post()
                             }
                             .buttonStyle(PreviewButton(prominent: true))
                             .disabled(state.answer == nil)
-                            if verification == .retry {
-                                Text("Count the counters in the tray again.").font(.callout)
-                            }
                         }
                     } else {
                         bond(whole, known, state.answer, title: "Number bond", knownGroup: isGuided ? .bowl : nil)
@@ -595,21 +744,13 @@ struct U07Preview: View {
                             if matches && !isGuided {
                                 animateCelebration = true
                                 page = .completion
-                                AccessibilityNotification.Announcement(celebrationMessage).post()
                                 return
                             }
                             let feedback: Feedback = matches ? .correct : .retry
                             work.wrappedValue.feedback = feedback
-                            let announcement = isGuided && matches
-                                ? feedback.message + " " + guidedPrompt(work.wrappedValue)
-                                : feedback.message
-                            AccessibilityNotification.Announcement(announcement).post()
                         }
                         .buttonStyle(PreviewButton(prominent: true))
                         .disabled(state.answer == nil)
-                        if let feedback = state.feedback {
-                            Text(feedback.message).font(.callout).multilineTextAlignment(.center)
-                        }
                     }
                 }
                 .frame(maxWidth: .infinity)
@@ -645,13 +786,11 @@ struct U07Preview: View {
         if recombined || state.verification != nil {
             state.answer = nil
         }
+        if state.isGuided { state.hasEnteredAnswer = false }
         state.bowl = bowl
         state.feedback = nil
         state.verification = recombined ? .counting : nil
         work.wrappedValue = state
-        if recombined {
-            AccessibilityNotification.Announcement(guidedPrompt(state)).post()
-        }
     }
 
     private enum CounterGroup {
@@ -887,6 +1026,7 @@ struct U07Preview: View {
         LazyVGrid(columns: Array(repeating: GridItem(.flexible()), count: 4)) {
             ForEach([1, 2, 3, 4, 5, 6, 7, 8, 9, 0], id: \.self) { digit in
                 Button {
+                    work.wrappedValue.hasEnteredAnswer = true
                     work.wrappedValue.answer = digit
                     clearAnswerFeedback(work)
                 } label: {
@@ -895,6 +1035,7 @@ struct U07Preview: View {
                 .accessibilityIdentifier("key-\(digit)")
             }
             Button {
+                work.wrappedValue.hasEnteredAnswer = false
                 work.wrappedValue.answer = nil
                 clearAnswerFeedback(work)
             } label: {
