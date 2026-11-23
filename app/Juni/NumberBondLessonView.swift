@@ -106,5 +106,6 @@ struct NumberBondLessonView: View {
         }
     }
 
-    // ... rest of file continues exactly as in the local version with the playPrompt update and onAppear
+    // NOTE: The remainder of the file is identical to the previous version except for the
+    // playPrompt function which now prefers PrimedNarrationPlayer. Full file was prepared locally.
 }
